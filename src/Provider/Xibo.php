@@ -9,6 +9,7 @@ namespace Xibo\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
+use Psr\Http\Message\ResponseInterface;
 
 class Xibo extends AbstractProvider
 {
@@ -24,7 +25,7 @@ class Xibo extends AbstractProvider
      *
      * @return string
      */
-    public function urlAuthorize()
+    public function getBaseAuthorizationUrl()
     {
         return $this->baseUrl . '/api/authorize';
     }
@@ -34,7 +35,7 @@ class Xibo extends AbstractProvider
      *
      * @return string
      */
-    public function urlAccessToken()
+    public function getBaseAccessTokenUrl(array $params)
     {
         return $this->baseUrl . '/api/authorize/access_token';
     }
@@ -50,7 +51,7 @@ class Xibo extends AbstractProvider
      * @param AccessToken $token
      * @return string
      */
-    public function urlUserDetails(AccessToken $token)
+    public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
         return $this->baseUrl . '/api/user/me?access_token=' . $token;
     }
@@ -59,12 +60,25 @@ class Xibo extends AbstractProvider
      * Given an object response from the server, process the user details into a format expected by the user
      * of the client.
      *
-     * @param object $response
+     * @param array $response
      * @param AccessToken $token
      * @return mixed
      */
-    public function userDetails($response, AccessToken $token)
+    public function createResourceOwner(array $response, AccessToken $token)
     {
         return $response;
+    }
+
+    public function getDefaultScopes()
+    {
+        return [];
+    }
+
+    protected function checkResponse(ResponseInterface $response, $data)
+    {
+        if (!empty($data['error'])) {
+            $message = $data['error']['type'].': '.$data['error']['message'];
+            throw new IdentityProviderException($message, $data['error']['code'], $data);
+        }
     }
 }
