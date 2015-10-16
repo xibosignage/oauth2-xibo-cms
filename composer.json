@@ -24,7 +24,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "league/oauth2-client": "~0.7"
+    "league/oauth2-client": "~1"
   },
   "autoload": {
     "psr-4": { "Xibo\\OAuth2\\Client\\" : "src/" }

@@ -23,7 +23,7 @@ if (!isset($_GET['code'])) {
     // Get the URL
     $authUrl = $provider->getAuthorizationUrl();
 
-    $_SESSION['oauth2state'] = $provider->state;
+    $_SESSION['oauth2state'] = $provider->getState();
 
     // Go to the auth URL
     header('Location: ' . $authUrl);
@@ -44,7 +44,7 @@ if (!isset($_GET['code'])) {
     echo json_encode($token);
 
     // Get me :)
-    $me = $provider->getUserDetails($token);
+    $me = $provider->getResourceOwner($token);
 
     echo json_encode($me);
 }
