@@ -30,6 +30,15 @@ class XiboEntityProvider
     }
 
     /**
+     * Get Provider
+     * @return Xibo
+     */
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    /**
      * Get Access Token
      * @return AccessToken
      * @throws \Exception
