@@ -12,39 +12,14 @@ ini_set('display_errors', 1);
 
 // Create a provider
 $provider = new \Xibo\OAuth2\Client\Provider\Xibo([
-    'clientId' => 'Uzp5Ro0Wz55WbFdyCdvTZdCf4iCSOpdGRswLdb94',    // The client ID assigned to you by the provider
-    'clientSecret' => 'RM7yVOKgLgqSLXr4MkHJ2ZlJ0JJwlEKIiezdCTchyhThBroN3y8XXtotN7RjtQxp0MhdfSuYe9SkWMZkmbXnOVTgmXTj97V7q5SkXSTHt4Idtb3dgIvRciNvgVmM0OShIuvZNAIpxC2INjL9yzIdZtUtz6pZXD4LR98P0rZhsDMjOSwsbhfOrDXhGKaTipYfaST0juLFtDXl00Ey41OUNxuEqtV0ZIAAMagzIiIgaq9xxwOk0nzCm6ZbNeZejo',   // The client password assigned to you by the provider
-    'redirectUri' => 'http://172.28.128.4/example/simple.php',
-    'baseUrl' => 'http://172.28.128.3'
+    'clientId' => 'p8kh8tq2mknOqMFx7qcgl7FGtFGDlDAlDOxb6TP1',    // The client ID assigned to you by the provider
+    'clientSecret' => 'KjHPCQHm0ztqA4bcqP1dszYpLpcZqyAvaFlGbFZsq6HUn15ND8d8bZZhpFiPHWqMOQx5sXsAPgdtahICgtdhgFxxOAtlv59kl1GZZLe6dRNvOYQLQyXP9NtxfQkHgHj2wmJwhhhBwqvyPnp9pn13eevMCbDnqfyZJzMkUoG3fofxQPq6Kl9Mh5DtFtiEgXs2XE7zhKfGPOLWH1pUZxn3FLixOehSRUyuUB7SLDqnulPxlFMbV6L4EN4pAG5cRN',   // The client password assigned to you by the provider
+    'redirectUri' => '',
+    'baseUrl' => 'http://192.168.0.25'
 ]);
 
-// Our code will be passed around in the URL
-if (!isset($_GET['code'])) {
-    // Get the URL
-    $authUrl = $provider->getAuthorizationUrl();
+$entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider);
 
-    $_SESSION['oauth2state'] = $provider->getState();
+$displayGroup = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->getById(20);
 
-    // Go to the auth URL
-    header('Location: ' . $authUrl);
-} else if (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
-
-    // The state we saved during the original request is different to the one we have received, therefore deny
-    unset($_SESSION['oauth2state']);
-    exit('Invalid state');
-
-} else {
-
-    // Try to get an access token (using the authorization code grant)
-    $token = $provider->getAccessToken('authorization_code', [
-        'code' => $_GET['code']
-    ]);
-
-    // Output the token - you would usually store this somewhere private.
-    echo json_encode($token);
-
-    // Get me :)
-    $me = $provider->getResourceOwner($token);
-
-    echo json_encode($me);
-}
+echo 'Display Group ID ' . $displayGroup->displayGroupId;
