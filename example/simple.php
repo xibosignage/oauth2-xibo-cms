@@ -20,11 +20,16 @@ $provider = new \Xibo\OAuth2\Client\Provider\Xibo([
 
 $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider);
 
-$displayGroup = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->getById(20);
+//$displayGroup = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->getById(20);
 
-echo 'Display Group ID ' . $displayGroup->displayGroupId;
+//echo 'Display Group ID ' . $displayGroup->displayGroupId;
 
 // Try creating a new one
-$new = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->getById(44)->delete();
+//$new = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->getById(44)->delete();
+
+//var_export($new);
+
+// Try creating a campaign
+$new = (new \Xibo\OAuth2\Client\Entity\XiboCampaign($entityProvider))->create('test campaign');
 
 var_export($new);

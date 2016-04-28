@@ -63,7 +63,11 @@ class XiboCampaign extends XiboEntity
         $this->ownerId = $this->getEntityProvider()->getMe()->getId();
         $this->campaign = $campaign;
 
-        $response = $this->doPost($this->url, $this->toArray());
+        // Rewrite parameter mismatch
+        $array = $this->toArray();
+        $array['name'] = $array['campaign'];
+
+        $response = $this->doPost($this->url, $array);
 
         return $this->hydrate($response);
     }
@@ -77,7 +81,11 @@ class XiboCampaign extends XiboEntity
         $this->ownerId = $this->getEntityProvider()->getMe()->getId();
         $this->campaign = $campaign;
 
-        $response = $this->doPut($this->url . '/' . $this->campaignId, $this->toArray());
+        // Rewrite parameter mismatch
+        $array = $this->toArray();
+        $array['name'] = $array['campaign'];
+
+        $response = $this->doPut($this->url . '/' . $this->campaignId, $array);
 
         return $this->hydrate($response);
     }

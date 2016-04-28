@@ -88,7 +88,7 @@ class Xibo extends AbstractProvider
     protected function checkResponse(ResponseInterface $response, $data)
     {
         // Check HTTP status
-        if ($response->getStatusCode() != 200 && $response->getStatusCode() != 204)
+        if ($response->getStatusCode() != 200 && $response->getStatusCode() != 201 && $response->getStatusCode() != 204)
             throw new XiboApiException($response->getBody());
 
         if (!empty($data['error'])) {
