@@ -81,33 +81,31 @@ class XiboDisplayGroup extends XiboEntity
 
     /**
      * Edit
-     * @param $displayGroupId
      * @param $groupName
      * @param $groupDescription
      * @param $isDynamic
      * @param $dynamicCriteria
      * @return XiboEntity
      */
-    public function edit($displayGroupId, $groupName, $groupDescription, $isDynamic, $dynamicCriteria)
+    public function edit($groupName, $groupDescription, $isDynamic, $dynamicCriteria)
     {
         $this->displayGroup = $groupName;
         $this->description = $groupDescription;
         $this->isDynamic = $isDynamic;
         $this->dynamicCriteria = $dynamicCriteria;
 
-        $response = $this->doPut('/displaygroup/' . $displayGroupId, $this->toArray());
+        $response = $this->doPut('/displaygroup/' . $this->displayGroupId, $this->toArray());
 
         return $this->hydrate($response);
     }
 
     /**
      * Delete
-     * @param $displayGroupId
      * @return bool
      */
-    public function delete($displayGroupId)
+    public function delete()
     {
-        $this->doDelete('/displaygroup/' . $displayGroupId);
+        $this->doDelete('/displaygroup/' . $this->displayGroupId);
 
         return true;
     }

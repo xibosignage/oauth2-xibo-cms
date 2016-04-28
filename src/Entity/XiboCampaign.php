@@ -55,12 +55,12 @@ class XiboCampaign extends XiboEntity
         return $this->hydrate($response);
     }
 
-    public function edit($campaignId, $campaign)
+    public function edit($campaign)
     {
         $this->ownerId = $this->getEntityProvider()->getMe()->getId();
         $this->campaign = $campaign;
 
-        $response = $this->doPut($this->url . '/' . $campaignId, $this->toArray());
+        $response = $this->doPut($this->url . '/' . $this->campaignId, $this->toArray());
 
         return $this->hydrate($response);
     }
