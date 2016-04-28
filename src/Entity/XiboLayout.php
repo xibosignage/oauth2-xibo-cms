@@ -34,17 +34,13 @@ class XiboLayout extends XiboEntity
     public $duration;
 
     /**
-     * @param int $start
-     * @param int $length
+     * @param array $params
      * @return array|XiboLayout
      */
-    public function get($start = 0, $length = 10)
+    public function get(array $params = [])
     {
         $entries = [];
-        $response = $this->doGet($this->url, [
-            'start' => $start,
-            'length' => $length
-        ]);
+        $response = $this->doGet($this->url, $params);
 
         foreach ($response as $item) {
             $entries[] = $this->hydrate($item);
