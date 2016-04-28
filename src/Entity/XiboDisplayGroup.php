@@ -26,15 +26,20 @@ class XiboDisplayGroup extends XiboEntity
     public $userId = 0;
 
     /**
+     * @param int $start
+     * @param int $length
      * @return array[XiboDisplayGroup]
      */
-    public function get()
+    public function get($start = 0, $length = 10)
     {
         $entries = [];
-        $response = $this->doGet('/displaygroup');
+        $response = $this->doGet('/displaygroup', [
+            'start' => $start,
+            'length' => $length
+        ]);
 
         foreach ($response as $item) {
-            $entries[] = $this->hydrate($item);
+            $entries[] = clone $this->hydrate($item);
         }
 
         return $entries;

@@ -22,12 +22,17 @@ class XiboCampaign extends XiboEntity
     public $numberLayouts;
 
     /**
+     * @param int $start
+     * @param int $length
      * @return array|XiboCampaign
      */
-    public function get()
+    public function get($start = 0, $length = 10)
     {
         $entries = [];
-        $response = $this->doGet($this->url);
+        $response = $this->doGet($this->url, [
+            'start' => $start,
+            'length' => $length
+        ]);
 
         foreach ($response as $item) {
             $entries[] = $this->hydrate($item);
