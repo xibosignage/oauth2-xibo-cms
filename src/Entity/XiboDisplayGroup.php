@@ -18,14 +18,34 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
 class XiboDisplayGroup extends XiboEntity
 {
     public $displayGroupId;
+    public $displayGroup;
+    public $description;
+    public $isDisplaySpecific = 0;
+    public $isDynamic = 0;
+    public $dynamicCriteria;
+    public $userId = 0;
 
-    private function fromResponse(array $attributes = [])
+    /**
+     * @return array[XiboDisplayGroup]
+     */
+    public function get()
     {
-        $this->displayGroupId = $attributes['displayGroupId'];
+        $entries = [];
+        $response = $this->doGet('/displaygroup');
 
-        return $this;
+        foreach ($response as $item) {
+            $entries[] = $this->hydrate($item);
+        }
+
+        return $entries;
     }
 
+    /**
+     * Get by Id
+     * @param $id
+     * @return $this|XiboDisplayGroup
+     * @throws XiboApiException
+     */
     public function getById($id)
     {
         $response = $this->doGet('/displaygroup', [
@@ -35,21 +55,60 @@ class XiboDisplayGroup extends XiboEntity
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single display group, found ' . count($response));
 
-        return $this->fromResponse($response[0]);
+        return $this->hydrate($response[0]);
     }
 
+    /**
+     * Create
+     * @param $groupName
+     * @param $groupDescription
+     * @param $isDynamic
+     * @param $dynamicCriteria
+     * @return XiboEntity
+     */
     public function create($groupName, $groupDescription, $isDynamic, $dynamicCriteria)
     {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->displayGroup = $groupName;
+        $this->description = $groupDescription;
+        $this->isDynamic = $isDynamic;
+        $this->dynamicCriteria = $dynamicCriteria;
 
+        $response = $this->doPost('/displaygroup', $this->toArray());
+
+        return $this->hydrate($response);
     }
 
-    public function edit()
+    /**
+     * Edit
+     * @param $displayGroupId
+     * @param $groupName
+     * @param $groupDescription
+     * @param $isDynamic
+     * @param $dynamicCriteria
+     * @return XiboEntity
+     */
+    public function edit($displayGroupId, $groupName, $groupDescription, $isDynamic, $dynamicCriteria)
     {
+        $this->displayGroup = $groupName;
+        $this->description = $groupDescription;
+        $this->isDynamic = $isDynamic;
+        $this->dynamicCriteria = $dynamicCriteria;
 
+        $response = $this->doPut('/displaygroup/' . $displayGroupId, $this->toArray());
+
+        return $this->hydrate($response);
     }
 
-    public function delete()
+    /**
+     * Delete
+     * @param $displayGroupId
+     * @return bool
+     */
+    public function delete($displayGroupId)
     {
+        $this->doDelete('/displaygroup/' . $displayGroupId);
 
+        return true;
     }
 }

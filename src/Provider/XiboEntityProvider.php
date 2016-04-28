@@ -17,6 +17,9 @@ class XiboEntityProvider
     /** @var  Xibo */
     private $provider;
 
+    /** @var  XiboUser */
+    private $me;
+
     /** @var  AccessToken */
     private $token;
 
@@ -36,6 +39,19 @@ class XiboEntityProvider
     public function getProvider()
     {
         return $this->provider;
+    }
+
+    /**
+     * Get Me
+     * @return XiboUser
+     */
+    public function getMe()
+    {
+        if ($this->me == null) {
+            $this->me = $this->provider->getResourceOwner($this->getAccessToken());
+        }
+
+        return $this->me;
     }
 
     /**
@@ -59,58 +75,64 @@ class XiboEntityProvider
     /**
      * @param $url
      * @param $params
-     * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get($url, $params = [], $options = [])
+    public function get($url, $params = [])
     {
-        return $this->request('GET', $url . '?' . http_build_query($params), $options);
+        return $this->request('GET', $url . '?' . http_build_query($params));
     }
 
     /**
      * @param $url
      * @param array $params
-     * @param array $options
      * @return mixed
      */
-    public function post($url, $params = [], $options = [])
+    public function post($url, $params = [])
     {
-        return $this->request('POST', $url . '?' . http_build_query($params), $options);
+        return $this->request('POST', $url, $params);
     }
 
     /**
      * @param $url
      * @param array $params
-     * @param array $options
      * @return mixed
      */
-    public function put($url, $params = [], $options = [])
+    public function put($url, $params = [])
     {
-        return $this->request('PUT', $url, http_build_query($params), $options);
+        return $this->request('PUT', $url, $params);
     }
 
     /**
      * @param $url
      * @param array $params
-     * @param array $options
      * @return mixed
      */
-    public function delete($url, $params = [], $options = [])
+    public function delete($url, $params = [])
     {
-        return $this->request('DELETE', $url, http_build_query($params), $options);
+        return $this->request('DELETE', $url, $params);
     }
 
     /**
      * Request
      * @param $method
      * @param $url
-     * @param array $params
+     * @param array $body
      * @return mixed
      * @throws EmptyProviderException
      */
-    private function request($method, $url, $params = [])
+    private function request($method, $url, $body = [])
     {
-        $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $params);
+        $options = [
+            'header', 'body'
+        ];
+
+        if (count($body) > 0)
+            $options['body'] = http_build_query($body, null, '&');
+
+        if ($method == 'PUT')
+            $options['headers'] =  ['content-type' => 'application/x-www-form-urlencoded'];
+
+        $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
 
         return $this->provider->getResponse($request);
     }

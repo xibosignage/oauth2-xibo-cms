@@ -25,6 +25,45 @@ class XiboEntity
     }
 
     /**
+     * Hydrate an entity with properties
+     *
+     * @param array $properties
+     * @param array $options
+     *
+     * @return self
+     */
+    public function hydrate(array $properties, $options = [])
+    {
+        $intProperties = (array_key_exists('intProperties', $options)) ? $options['intProperties'] : [];
+        $stringProperties = (array_key_exists('stringProperties', $options)) ? $options['stringProperties'] : [];
+        $htmlStringProperties = (array_key_exists('htmlStringProperties', $options)) ? $options['htmlStringProperties'] : [];
+
+        foreach ($properties as $prop => $val) {
+            if (property_exists($this, $prop)) {
+
+                if (stripos(strrev($prop), 'dI') === 0 || in_array($prop, $intProperties))
+                    $val = intval($val);
+                else if (in_array($prop, $stringProperties))
+                    $val = filter_var($val, FILTER_SANITIZE_STRING);
+                else if (in_array($prop, $htmlStringProperties))
+                    $val = htmlentities($val);
+
+                $this->{$prop} =  $val;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return ObjectVars::getObjectVars($this);
+    }
+
+    /**
      * @return XiboEntityProvider
      */
     protected function getEntityProvider()

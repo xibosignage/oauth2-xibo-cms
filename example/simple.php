@@ -23,3 +23,8 @@ $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider)
 $displayGroup = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->getById(20);
 
 echo 'Display Group ID ' . $displayGroup->displayGroupId;
+
+// Try creating a new one
+$new = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->delete(44);
+
+var_export($new);
