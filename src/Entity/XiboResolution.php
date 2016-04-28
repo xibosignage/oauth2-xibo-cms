@@ -13,7 +13,7 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
 
 class XiboResolution extends XiboEntity
 {
-    public $url = 'resolution';
+    public $url = '/resolution';
 
     public $resolutionId;
     public $resolution;
