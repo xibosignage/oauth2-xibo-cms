@@ -87,12 +87,11 @@ class XiboCampaign extends XiboEntity
     }
 
     /**
-     * @param $campaignId
      * @return bool
      */
-    public function delete($campaignId)
+    public function delete()
     {
-        $this->doDelete($this->url . '/' . $campaignId);
+        $this->doDelete($this->url . '/' . $this->campaignId);
 
         return true;
     }
