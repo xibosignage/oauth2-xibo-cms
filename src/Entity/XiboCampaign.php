@@ -21,6 +21,9 @@ class XiboCampaign extends XiboEntity
     public $isLayoutSpecific = 0;
     public $numberLayouts;
 
+    /**
+     * @return array|XiboCampaign
+     */
     public function get()
     {
         $entries = [];
@@ -33,6 +36,11 @@ class XiboCampaign extends XiboEntity
         return $entries;
     }
 
+    /**
+     * @param $id
+     * @return XiboCampaign
+     * @throws XiboApiException
+     */
     public function getById($id)
     {
         $response = $this->doGet($this->url, [
@@ -45,6 +53,10 @@ class XiboCampaign extends XiboEntity
         return $this->hydrate($response[0]);
     }
 
+    /**
+     * @param $campaign
+     * @return XiboCampaign
+     */
     public function create($campaign)
     {
         $this->ownerId = $this->getEntityProvider()->getMe()->getId();
@@ -55,6 +67,10 @@ class XiboCampaign extends XiboEntity
         return $this->hydrate($response);
     }
 
+    /**
+     * @param $campaign
+     * @return XiboCampaign
+     */
     public function edit($campaign)
     {
         $this->ownerId = $this->getEntityProvider()->getMe()->getId();
@@ -65,6 +81,10 @@ class XiboCampaign extends XiboEntity
         return $this->hydrate($response);
     }
 
+    /**
+     * @param $campaignId
+     * @return bool
+     */
     public function delete($campaignId)
     {
         $this->doDelete($this->url . '/' . $campaignId);

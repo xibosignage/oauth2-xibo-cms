@@ -64,7 +64,7 @@ class XiboDisplayGroup extends XiboEntity
      * @param $groupDescription
      * @param $isDynamic
      * @param $dynamicCriteria
-     * @return XiboEntity
+     * @return XiboDisplayGroup
      */
     public function create($groupName, $groupDescription, $isDynamic, $dynamicCriteria)
     {
@@ -85,7 +85,7 @@ class XiboDisplayGroup extends XiboEntity
      * @param $groupDescription
      * @param $isDynamic
      * @param $dynamicCriteria
-     * @return XiboEntity
+     * @return XiboDisplayGroup
      */
     public function edit($groupName, $groupDescription, $isDynamic, $dynamicCriteria)
     {
