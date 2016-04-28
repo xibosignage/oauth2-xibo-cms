@@ -32,6 +32,7 @@ class XiboLayout extends XiboEntity
     public $height;
     public $displayOrder;
     public $duration;
+    public $tags;
 
     /**
      * @param array $params
