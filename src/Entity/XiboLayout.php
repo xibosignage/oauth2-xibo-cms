@@ -58,7 +58,7 @@ class XiboLayout extends XiboEntity
     public function getById($id)
     {
         $response = $this->doGet($this->url, [
-            'layoutId' => $id
+            'layoutId' => $id, 'retired' => -1
         ]);
 
         if (count($response) <= 0)
