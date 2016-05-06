@@ -8,8 +8,10 @@
 namespace Xibo\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
+use Xibo\OAuth2\Client\Exception\XiboApiException;
 
 class Xibo extends AbstractProvider
 {
@@ -18,6 +20,15 @@ class Xibo extends AbstractProvider
     public function setCmsUrl($url)
     {
         $this->baseUrl = rtrim($url, '/');
+    }
+
+    /**
+     * Get CMS Api URL
+     * @return string
+     */
+    public function getCmsApiUrl()
+    {
+        return rtrim($this->baseUrl, '/') . '/api';
     }
 
     /**
@@ -62,11 +73,11 @@ class Xibo extends AbstractProvider
      *
      * @param array $response
      * @param AccessToken $token
-     * @return mixed
+     * @return XiboUser
      */
     public function createResourceOwner(array $response, AccessToken $token)
     {
-        return $response;
+        return new XiboUser($response);
     }
 
     public function getDefaultScopes()
@@ -76,9 +87,20 @@ class Xibo extends AbstractProvider
 
     protected function checkResponse(ResponseInterface $response, $data)
     {
+        // Check HTTP status
+        if ($response->getStatusCode() != 200 && $response->getStatusCode() != 201 && $response->getStatusCode() != 204)
+            throw new XiboApiException($response->getBody());
+
         if (!empty($data['error'])) {
             $message = $data['error']['type'].': '.$data['error']['message'];
             throw new IdentityProviderException($message, $data['error']['code'], $data);
         }
+    }
+
+    protected function getAuthorizationHeaders($token = null)
+    {
+        $token = ($token instanceof AccessToken) ? $token->getToken() : $token;
+
+        return ['Authorization' => 'Bearer ' . $token];
     }
 }
