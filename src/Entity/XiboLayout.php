@@ -66,4 +66,87 @@ class XiboLayout extends XiboEntity
 
         return $this->hydrate($response[0]);
     }
+
+    /**
+     * Create
+     * @param $layoutName
+     * @param $layoutDescription
+     * @param $layoutTemplateId
+     * @param $layoutResolutionId
+     */
+    public function create($layoutName, $layoutDescription, $layoutTemplateId, $layoutResolutionId)
+    {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->name = $layoutName;
+        $this->description = $layoutDescription;
+        //not entirely sure about this one
+        $this->layoutId = $layoutTemplateId;
+        $this->resolutionId = $layoutResolutionId;
+        $response = $this->doPost('/layout', $this->toArray());
+        
+        return $this->hydrate($response);
+    }
+
+    /**
+     * Edit
+     * @param $layoutName;
+     * @param $layoutDescription;
+     * @param $layoutTags;
+     * @param $layoutRetired;
+     * @param $layoutBackgroundC;
+     * @param $layoutBackgroundImg;
+     * @param $layoutBackgroundzIndex;
+     * @param $layoutResolutionId;
+     * @return XiboLayout
+     */
+    public function edit($layoutName, $layoutDescription, $layoutTags, $layoutRetired, $layoutBackgroundC,$layoutBackgroundImg, $layoutBackgroundzIndex, $layoutResolutionId)
+    {
+        $this->name = $layoutName;
+        $this->description = $layoutDescription;
+        $this->tags = $layoutTags;
+        $this->retired = $layoutRetired;
+        $this->backgroundColor = $layoutBackgroundC;
+        $this->backgroundImageId = $layoutBackgroundImg;
+        $this->backgroundzIndex = $layoutBackgroundzIndex;
+        $this->resolutionId = $layoutResolutionId;
+        $response = $this->doPut('/layout/' . $this->layoutId, $this->toArray());
+        
+        return $this->hydrate($response);
+    }
+
+
+    /**
+     * Delete
+     * @return bool
+     */
+    public function delete()
+    {
+        $this->doDelete('/layout/' . $this->layoutId);
+        
+        return true;
+    }
+
+
+    /**
+    * TO DO
+    * Regions
+    */
+
+
+    /**
+     * Copy
+     * @param $layoutName
+     * @param $layoutDescription
+     * @param $layoutCopyFiles
+     */
+    public function copy($layoutName, $layoutDescription, $layoutCopyFiles)
+    {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->name = $layoutName;
+        $this->description = $layoutDescription;
+        $this->copyMediaFiles = $layoutCopyFiles;
+        $response = $this->doPost('/layout/copy/' . $this->layoutId, $this->toArray());
+        
+        return $this->hydrate($response);
+    }
 }
