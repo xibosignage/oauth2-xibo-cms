@@ -132,8 +132,6 @@ class XiboEntityProvider
 
         $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
 
-        echo PHP_EOL . var_export($request->getBody()->getContents(), true) . PHP_EOL;
-
         return $this->provider->getResponse($request);
     }
 }
