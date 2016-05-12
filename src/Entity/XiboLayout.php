@@ -79,7 +79,6 @@ class XiboLayout extends XiboEntity
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $layoutName;
         $this->description = $layoutDescription;
-        //not entirely sure about this one
         $this->layoutId = $layoutTemplateId;
         $this->resolutionId = $layoutResolutionId;
         $response = $this->doPost('/layout', $this->toArray());
@@ -128,12 +127,6 @@ class XiboLayout extends XiboEntity
 
 
     /**
-    * TO DO
-    * Regions
-    */
-
-
-    /**
      * Copy
      * @param $layoutName
      * @param $layoutDescription
@@ -148,5 +141,55 @@ class XiboLayout extends XiboEntity
         $response = $this->doPost('/layout/copy/' . $this->layoutId, $this->toArray());
         
         return $this->hydrate($response);
+    }
+
+
+    /**
+     * Create Region
+     */
+
+    public function createRegion($regionWidth, $regionHeight, $regionTop, $regionLeft)
+    {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->width = $regionWidth;
+        $this->height = $regionHeight;
+        $this->top = $regionTop;
+        $this->left = $regionLeft; 
+
+        $response = $this->doPost('/region/' . $this->layoutId, $this->toArray());
+        
+        return $this->hydrate($response);
+
+
+    }
+
+    /**
+     * Edit Region
+     */
+
+    public function editRegion($regionWidth, $regionHeight, $regionTop, $regionLeft, $regionzIndex, $regionLoop)
+    {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->width = $regionWidth;
+        $this->height = $regionHeight;
+        $this->top = $regionTop;
+        $this->left = $regionLeft; 
+        $this->zIndex = $regionzIndex;
+        $this->loop = $regionLoop;
+
+        $response = $this->doPut('/region/' . $this->regionId, $this->toArray());
+        
+        return $this->hydrate($response);
+    }
+
+    /**
+     * Delete Region
+     * @return bool
+     */
+    public function deleteRegion()
+    {
+        $this->doDelete('/region/' . $this->regionId);
+        
+        return true;
     }
 }

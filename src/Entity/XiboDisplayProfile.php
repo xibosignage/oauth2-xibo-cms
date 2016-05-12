@@ -2,7 +2,7 @@
 /*
  * Spring Signage Ltd - http://www.springsignage.com
  * Copyright (C) 2016 Spring Signage Ltd
- * (XiboProfile.php)
+ * (XiboDisplayProfile.php)
  */
 
 
@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboProfile extends XiboEntity
+class XiboDisplayProfile extends XiboEntity
 {
 	private $url = '/displayprofile';
 	public $displayProfileId;
@@ -39,7 +39,7 @@ class XiboProfile extends XiboEntity
 
 	/**
 	 * @param $id
-	 * @return XiboProfile
+	 * @return XiboDisplayProfile
 	 * @throws XiboApiException
 	 */
 	public function getById($id)
@@ -77,7 +77,7 @@ class XiboProfile extends XiboEntity
 	 * @param $profileName
 	 * @param $profileType
 	 * @param $proileIsDefault
-	 * @return XiboProfile
+	 * @return XiboDisplayProfile
 	 */
 	public function edit($profileName, $profileType, $profileIsDefault)
 	{
