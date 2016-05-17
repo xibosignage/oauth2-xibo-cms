@@ -13,6 +13,7 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
 class XiboSchedule extends XiboEntity
 {
 	private $url = '/schedule';
+    private $url2 = '/schedule/data/events';
 	public $eventId;
 	public $eventTypeId;
 	public $toDt;
@@ -38,7 +39,7 @@ class XiboSchedule extends XiboEntity
     public function get(array $params = [])
     {
         $entries = [];
-        $response = $this->doGet($this->url, $params);
+        $response = $this->doGet($this->url2, $params);
 
         foreach ($response as $item) {
             $entries[] = $this->hydrate($item);
@@ -54,7 +55,7 @@ class XiboSchedule extends XiboEntity
      */
     public function getById($id)
     {
-        $response = $this->doGet($this->url, [
+        $response = $this->doGet($this->url2, [
             'eventId' => $id
         ]);
 
