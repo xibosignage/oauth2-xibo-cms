@@ -10,7 +10,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
-class XiboLibrary extends XiboEntity
+class XiboSchedule extends XiboEntity
 {
 	private $url = '/schedule';
 	public $eventId;
