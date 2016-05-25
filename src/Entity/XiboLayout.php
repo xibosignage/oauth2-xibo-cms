@@ -202,8 +202,8 @@ class XiboLayout extends XiboEntity
      */
     public function getByTemplateId($id)
     {
-        $response = $this->doGet($this->url, [
-            'layoutId' => $id, 'retired' => -1, 'excludeTemplates' => -1
+        $response = $this->doGet('/template', [
+            'templateId' => $id
         ]);
 
         if (count($response) <= 0)
