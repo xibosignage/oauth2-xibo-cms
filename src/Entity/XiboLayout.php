@@ -160,7 +160,9 @@ class XiboLayout extends XiboEntity
         
         return $this->hydrate($response);
 
-
+        // Create a new XiboRegion
+        // call create with the params AND the layout Id of $this
+        // return new the XiboRegion object.
     }
 
     /**
@@ -191,5 +193,22 @@ class XiboLayout extends XiboEntity
         $this->doDelete('/region/' . $this->regionId);
         
         return true;
+    }
+
+    /**
+     * @param $id
+     * @return XiboLayout
+     * @throws XiboApiException
+     */
+    public function getByTemplateId($id)
+    {
+        $response = $this->doGet($this->url, [
+            'layoutId' => $id, 'retired' => -1, 'excludeTemplates' => -1
+        ]);
+
+        if (count($response) <= 0)
+            throw new XiboApiException('Expecting a single record, found ' . count($response));
+
+        return $this->hydrate($response[0]);
     }
 }
