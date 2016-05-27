@@ -78,6 +78,7 @@ class XiboSchedule extends XiboEntity
      * @param $scheduleRecurrenceRange
      * @param $scheduleOrder
      * @param $scheduleIsPriority
+     * @return XiboSchedule
      */
     public function createEventLayout($scheduleFrom, $scheduleTo, $scheduleCampaignId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
@@ -109,6 +110,7 @@ class XiboSchedule extends XiboEntity
      * @param $scheduleRecurrenceRange
      * @param $scheduleOrder
      * @param $scheduleIsPriority
+     * @return XiboSchedule
      */
     public function createEventCommand($scheduleFrom, $scheduleCommandId, $scheduleDisplays, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
@@ -140,6 +142,7 @@ class XiboSchedule extends XiboEntity
      * @param $scheduleRecurrenceRange
      * @param $scheduleOrder
      * @param $scheduleIsPriority
+     * @return XiboSchedule
      */
     public function createEvetOverlay($scheduleFrom, $scheduleTo, $scheduleCampaignId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
@@ -174,6 +177,7 @@ class XiboSchedule extends XiboEntity
      * @param $scheduleRecurrenceRange
      * @param $scheduleOrder
      * @param $scheduleIsPriority
+     * @return XiboSchedule
      */
     public function edit($scheduleType, $scheduleFrom, $scheduleTo, $scheduleCampaignId,$scheduleCommandId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
