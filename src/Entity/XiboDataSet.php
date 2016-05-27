@@ -194,7 +194,7 @@ class XiboDataSet extends XiboEntity
     public function getByRowId($id)
     {
         $response = $this->doGet('/dataset/data/'. $this->dataSetId, [
-            'dataSet' => $id
+            'rowId' => $id
         ]);
 
         if (count($response) <= 0)
@@ -211,20 +211,20 @@ class XiboDataSet extends XiboEntity
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->dataSetColumnId_ID = $rowData;
-        $response = $this->doPost('/dataset/data'. $this->dataSetId, $this->toArray());
+        $response = $this->doPost('/dataset/data/'. $this->dataSetId, $this->toArray());
         
         return $this->hydrate($response);
     }
 
     /**
      * Edit Row
-     * @param $columnName
+     * @param $rowData
      */
     public function editRow($rowData)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->dataSetColumnId_ID = $rowData;
-        $response = $this->doPut('/dataset/data'. $this->dataSetId . $this->rowId, $this->toArray());
+        $response = $this->doPut('/dataset/data/'. $this->dataSetId . $this->rowId, $this->toArray());
         
         return $this->hydrate($response);
     }
@@ -235,7 +235,7 @@ class XiboDataSet extends XiboEntity
      */
     public function deleteRow()
     {
-        $this->doDelete('/dataset/data' . $this->dataSetId . $this->rowId);
+        $this->doDelete('/dataset/data/' . $this->dataSetId . $this->rowId);
         
         return true;
     }
