@@ -44,7 +44,7 @@ class XiboLayout extends XiboEntity
         $response = $this->doGet($this->url, $params);
 
         foreach ($response as $item) {
-            $entries[] = $this->hydrate($item);
+            $entries[] = clone $this->hydrate($item);
         }
 
         return $entries;
@@ -159,10 +159,6 @@ class XiboLayout extends XiboEntity
         $response = $this->doPost('/region/' . $this->layoutId, $this->toArray());
         
         return $this->hydrate($response);
-
-        // Create a new XiboRegion
-        // call create with the params AND the layout Id of $this
-        // return new the XiboRegion object.
     }
 
     /**

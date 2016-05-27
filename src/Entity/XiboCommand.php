@@ -32,7 +32,7 @@ class XiboCommand extends XiboEntity
 		$entries = [];
 		$response = $this->doGet($this->url, $params);
 		foreach ($response as $item) {
-			$entries[] = $this->hydrate($item);
+			$entries[] = clone $this->hydrate($item);
 		}
 	
 		return $entries;

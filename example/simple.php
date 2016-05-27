@@ -15,7 +15,7 @@ $provider = new \Xibo\OAuth2\Client\Provider\Xibo([
     'clientId' => 'UrFJuLgLAUempvleHp76IfRp1cKyNZcKELowDzzf',    // The client ID assigned to you by the provider
     'clientSecret' => 'YeZBaNUyOcN7gFwQ90oZ86Om3bsbvo8279ZYaG5HluYKXpe3xI9wUvcMuVhex3UljQufpLcAke8g7I9Bo30f0S1OG6oMcWeN0TGUd8OdagxDj2JTeukUhKlBTFVfVbwczuk8M7481d1wb8bQSaPPgRUUcefxOmvWyrKVhLmMvFQN3Oeo6TOyCDW0NX4kSEwLWYxZlVv78Byv8rid0UzoM08TvXRTNYshZI1z2U3M9gLnAWqFSpLAHHdCS8rAT0',   // The client password assigned to you by the provider
     'redirectUri' => '',
-    'baseUrl' => 'http://192.168.0.16'
+    'baseUrl' => 'http://192.168.0.12'
 ]);
 
 $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider);
@@ -46,6 +46,18 @@ $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider)
 //$new = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->create('phpunit test group', 'Api', 0, 0, '', null);
 //var_export($new);
 
-$new = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('test layout', 'test description', '', 9);
+//$new = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('test layout', 'test description', '', 9);
 
-echo json_encode($new, JSON_PRETTY_PRINT);
+//echo json_encode($new, JSON_PRETTY_PRINT);
+
+//$new = (new \Xibo\OAuth2\Client\Entity\XiboDisplayProfile($entityProvider))->create('test profile', 'android', 0);
+
+//echo json_encode($new, JSON_PRETTY_PRINT);
+
+$newLayout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('test layout', 'test description', '', 9);
+
+$newRegion = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($newLayout->layoutId,200,300,75,125);
+
+$region = $newRegion->regionId;
+
+echo json_encode($region, JSON_PRETTY_PRINT);

@@ -42,7 +42,7 @@ class XiboSchedule extends XiboEntity
         $response = $this->doGet($this->url2, $params);
 
         foreach ($response as $item) {
-            $entries[] = $this->hydrate($item);
+            $entries[] = clone $this->hydrate($item);
         }
 
         return $entries;
@@ -66,12 +66,11 @@ class XiboSchedule extends XiboEntity
     }
 
     /**
-     * Create
+     * Create Campaign/Layout event
      * @param $scheduleType
      * @param $scheduleFrom
      * @param $scheduleTo
      * @param $scheduleCampaignId
-     * @param $scheduleCommandId
      * @param $scheduleDisplays
      * @param $scheduledayPartId
      * @param $scheduleRecurrenceType
@@ -80,14 +79,75 @@ class XiboSchedule extends XiboEntity
      * @param $scheduleOrder
      * @param $scheduleIsPriority
      */
-    public function create($scheduleType, $scheduleFrom, $scheduleTo, $scheduleCampaignId,$scheduleCommandId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
+    public function createEventLayout($scheduleFrom, $scheduleTo, $scheduleCampaignId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
     $this->userId = $this->getEntityProvider()->getMe()->getId();
-    $this->eventTypeId = $scheduleType;
+    $this->eventTypeId = 1;
     $this->fromDt = $scheduleFrom;
     $this->toDt = $scheduleTo;
     $this->campaignId = $scheduleCampaignId;
+    $this->displayGroupIds = $scheduleDisplays;
+    $this->dayPartId = $scheduledayPartId;
+    $this->recurrenceType = $scheduleRecurrenceType;
+    $this->recurrenceDetail = $scheduleRecurrenceDetail;
+    $this->recurrenceRange = $scheduleRecurrenceRange;
+    $this->displayOrder = $scheduleOrder;
+    $this->isPriority = $scheduleIsPriority;
+    $response = $this->doPost('/schedule', $this->toArray());
+   
+    return $this->hydrate($response);
+    }
+
+    /**
+     * Create Command event
+     * @param $scheduleType
+     * @param $scheduleFrom
+     * @param $scheduleCommandId
+     * @param $scheduleDisplays
+     * @param $scheduleRecurrenceType
+     * @param $scheduleRecurrenceDetail
+     * @param $scheduleRecurrenceRange
+     * @param $scheduleOrder
+     * @param $scheduleIsPriority
+     */
+    public function createEventCommand($scheduleFrom, $scheduleCommandId, $scheduleDisplays, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
+    {
+    $this->userId = $this->getEntityProvider()->getMe()->getId();
+    $this->eventTypeId = 2;
+    $this->fromDt = $scheduleFrom;
     $this->commandId = $scheduleCommandId;
+    $this->displayGroupIds = $scheduleDisplays;
+    $this->recurrenceType = $scheduleRecurrenceType;
+    $this->recurrenceDetail = $scheduleRecurrenceDetail;
+    $this->recurrenceRange = $scheduleRecurrenceRange;
+    $this->displayOrder = $scheduleOrder;
+    $this->isPriority = $scheduleIsPriority;
+    $response = $this->doPost('/schedule', $this->toArray());
+   
+    return $this->hydrate($response);
+    }
+
+    /**
+     * Create Overlay event
+     * @param $scheduleType
+     * @param $scheduleFrom
+     * @param $scheduleTo
+     * @param $scheduleCampaignId
+     * @param $scheduleDisplays
+     * @param $scheduledayPartId
+     * @param $scheduleRecurrenceType
+     * @param $scheduleRecurrenceDetail
+     * @param $scheduleRecurrenceRange
+     * @param $scheduleOrder
+     * @param $scheduleIsPriority
+     */
+    public function createEvetOverlay($scheduleFrom, $scheduleTo, $scheduleCampaignId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
+    {
+    $this->userId = $this->getEntityProvider()->getMe()->getId();
+    $this->eventTypeId = 3;
+    $this->fromDt = $scheduleFrom;
+    $this->toDt = $scheduleTo;
+    $this->campaignId = $scheduleCampaignId;
     $this->displayGroupIds = $scheduleDisplays;
     $this->dayPartId = $scheduledayPartId;
     $this->recurrenceType = $scheduleRecurrenceType;
