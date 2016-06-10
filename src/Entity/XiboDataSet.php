@@ -113,6 +113,19 @@ class XiboDataSet extends XiboEntity
     }
 
     /**
+     * Delete wih data
+     * @return bool
+     */
+    public function deleteWData()
+    {
+        $this->doDelete('/dataset/' . $this->dataSetId, [
+            'deleteData' => 1
+            ]);
+        
+        return true;
+    }
+
+    /**
      * Create Column
      * @param $columnName
      * @param $columnListContent
@@ -207,10 +220,10 @@ class XiboDataSet extends XiboEntity
      * Create Row
      * @param $rowData
      */
-    public function createRow($rowData)
+    public function createRow($columnId, $rowData)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->dataSetColumnId_ID = $rowData;
+        $this->dataSetColumnId_ . $columnId = $rowData;
         $response = $this->doPost('/dataset/data/'. $this->dataSetId, $this->toArray());
         
         return $this->hydrate($response);
@@ -220,10 +233,10 @@ class XiboDataSet extends XiboEntity
      * Edit Row
      * @param $rowData
      */
-    public function editRow($rowData)
+    public function editRow($columnId, $rowData)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->dataSetColumnId_ID = $rowData;
+        $this->dataSetColumnId_ . $columnId = $rowData;
         $response = $this->doPut('/dataset/data/'. $this->dataSetId . $this->rowId, $this->toArray());
         
         return $this->hydrate($response);
