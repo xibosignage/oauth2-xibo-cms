@@ -82,6 +82,36 @@ class XiboDisplay extends XiboEntity
         return $this->hydrate($response[0]);
     }
     /**
+     * Edit
+     * @param $displayName;
+     * @param $displayDescription;
+     * @param $displayIsAuditing;
+     * @param $displayDefaultLayoutId
+     * @param $displaLicensed;
+     * @param $displayHardwareKey;
+     * @param $displayIncSchedule;
+     * @param $displayEmailAlert;
+     * @param $displayWoL
+     * @param $displayBroadcast
+     * @return XiboLayout
+     */
+    public function edit($displayName, $displayDescription, $displayIsAuditing, $displayDefaultLayoutId, $displayLicensed, $displayHardwareKey, $displayIncSchedule, $displayEmailAlert, $displayWoL, $displayBroadcast)
+    {
+        $this->display = $displayName;
+        $this->description = $displayDescription;
+        $this->isAuditing = $displayIsAuditing;
+        $this->defaultLayoutId = $displayDefaultLayoutId;
+        $this->licensed = $displayLicensed;
+        $this->license = $displayHardwareKey;
+        $this->incSchedule = $displayIncSchedule;
+        $this->emailAlert = $displayEmailAlert;
+        $this->wakeOnLanTime = $displayWoL;
+        $this->broadCastAddress = $displayBroadcast;
+        $response = $this->doPut('/display/' . $this->displayId, $this->toArray());
+        
+        return $this->hydrate($response);
+    }
+    /**
       * Delete
       * @return bool
       */
