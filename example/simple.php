@@ -15,7 +15,7 @@ $provider = new \Xibo\OAuth2\Client\Provider\Xibo([
     'clientId' => 'UrFJuLgLAUempvleHp76IfRp1cKyNZcKELowDzzf',    // The client ID assigned to you by the provider
     'clientSecret' => 'YeZBaNUyOcN7gFwQ90oZ86Om3bsbvo8279ZYaG5HluYKXpe3xI9wUvcMuVhex3UljQufpLcAke8g7I9Bo30f0S1OG6oMcWeN0TGUd8OdagxDj2JTeukUhKlBTFVfVbwczuk8M7481d1wb8bQSaPPgRUUcefxOmvWyrKVhLmMvFQN3Oeo6TOyCDW0NX4kSEwLWYxZlVv78Byv8rid0UzoM08TvXRTNYshZI1z2U3M9gLnAWqFSpLAHHdCS8rAT0',   // The client password assigned to you by the provider
     'redirectUri' => '',
-    'baseUrl' => 'http://192.168.0.12'
+    'baseUrl' => 'http://192.168.0.16'
 ]);
 
 $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider);
@@ -54,10 +54,18 @@ $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider)
 
 //echo json_encode($new, JSON_PRETTY_PRINT);
 
-$newLayout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('test layout', 'test description', '', 9);
+//$newLayout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('test layout', 'test description', '', 9);
 
-$newRegion = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($newLayout->layoutId,200,300,75,125);
+//$newRegion = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($newLayout->layoutId,200,300,75,125);
 
-$region = $newRegion->regionId;
+//$region = $newRegion->regionId;
 
-echo json_encode($region, JSON_PRETTY_PRINT);
+//echo json_encode($region, JSON_PRETTY_PRINT);
+
+
+$dataSetNew = (new \Xibo\OAuth2\Client\Entity\XiboDataSet($entityProvider))->create('dataset name', 'dataset desc');
+$columnNew = (new \Xibo\OAuth2\Client\Entity\XiboDataSetColumn($entityProvider))->create($dataSetNew->dataSetId, 'column name','', 2, 1, 1, '');
+$column = $columnNew->dataSetColumnId;
+$rowNew = (new \Xibo\OAuth2\Client\Entity\XiboDataSetRow($entityProvider))->create($dataSetNew->dataSetId, $columnNew->dataSetColumnId,'Cabbage');
+$row = $rowNew->rowId;
+echo json_encode($row, JSON_PRETTY_PRINT);

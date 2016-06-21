@@ -44,6 +44,7 @@ class XiboDataSetColumn extends XiboEntity
      * @param $columnDataSetColumnTypeId
      * @param $columnFormula
      * @param $columnDataSetId
+     * @return XiboDataSetColumn
      */
     public function create($columnDataSetId, $columnName, $columnListContent, $columnOrd, $columnDataTypeId, $columnDataSetColumnTypeId, $columnFormula)
     {
@@ -62,7 +63,7 @@ class XiboDataSetColumn extends XiboEntity
 
     /**
      * @param $id
-     * @return XiboDataSet
+     * @return XiboDataSetColumn
      * @throws XiboApiException
      */
     public function getById($columnDataSetId, $id)
@@ -86,6 +87,7 @@ class XiboDataSetColumn extends XiboEntity
      * @param $columnDataTypeId
      * @param $columnDataSetColumnTypeId
      * @param $columnFormula
+     * @return XiboDataSetColumn
      */
     public function edit($columnName, $columnListContent, $columnOrd, $columnDataTypeId, $columnDataSetColumnTypeId, $columnFormula)
     {
