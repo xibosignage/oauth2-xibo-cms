@@ -110,4 +110,52 @@ class XiboDisplayGroup extends XiboEntity
 
         return true;
     }
+    
+    /**
+     * Assign display
+     * @param $groupDisplay
+     * @return XiboDisplayGroup
+     */
+    public function assignDisplay($groupDisplay)
+    {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+
+        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/assign', [
+                            'displayId' => $groupDisplay
+                             ], $this->toArray());
+
+        return $this->hydrate($response);
+    }
+
+    /**
+     * Assign display group
+     * @param $groupDisplayGroup
+     * @return XiboDisplayGroup
+     */
+    public function assignDisplayGroup($groupDisplayGroup)
+    {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+
+        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/assign', [
+        'displayGroupId' => $groupDisplayGroup
+        ], $this->toArray());
+
+        return $this->hydrate($response);
+    }
+
+    /**
+     * Assign layout
+     * @param $groupLayout
+     * @return XiboDisplayGroup
+     */
+    public function assignLayout($groupLayout)
+    {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+
+        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/layout/assign', [
+            'layoutId' => $groupLayout
+            ], $this->toArray());
+
+        return $this->hydrate($response);
+    }
 }
