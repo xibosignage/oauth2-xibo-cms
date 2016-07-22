@@ -19,6 +19,7 @@ class XiboDataSetRow extends XiboEntity
     public $dataSetId;
     public $dataSetColumnId;
     public $rowId;
+    public $rowDataSetId;
     public $dataSet;
     public $description;
     public $userId;
@@ -41,6 +42,7 @@ class XiboDataSetRow extends XiboEntity
      * @param $id
      * @return XiboDataSetRow
      * @throws XiboApiException
+     * @return XiboDataSetRow
      */
     public function getById($rowDataSetId, $id)
     {
@@ -52,37 +54,43 @@ class XiboDataSetRow extends XiboEntity
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single record, found ' . count($response));
 
-        return $this->hydrate($response[0]);
+        return $response[0];
     }
 
     /**
      * Create Row
      * @param $rowData
+     * @param $rowDataSetId
+     * @param $columnId
      * @return XiboDataSetRow
      */
-    public function create($rowdataSetId, $dataSetColumnId, $rowData)
+    public function create($rowdataSetId, $columnId, $rowData)
     {
         $this->dataSetId = $rowDataSetId;
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->dataSetColumnId_ . $dataSetColumnId = $rowData;
-        $response = $this->doPost('/dataset/data/'. $this->dataSetId, $this->toArray());
+        $response = $this->doPost('/dataset/data/'. $this->dataSetId, [
+            'dataSetColumnId_' . $columnId => $rowData
+            ]);
         
-        return $this->hydrate($response);
+        return $response;
     }
 
     /**
      * Edit Row
      * @param $rowData
+     * @param $rowDataSetId
+     * @param $columnId
      * @return XiboDataSetRow
      */
     public function edit($rowDataSetId, $columnId, $rowData)
     {
         $this->dataSetId = $rowDataSetId;
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->dataSetColumnId_ . $columnId = $rowData;
-        $response = $this->doPut('/dataset/data/'. $this->dataSetId . $this->rowId, $this->toArray());
+        $response = $this->doPut('/dataset/data/'. $this->dataSetId . $this->rowId, [
+            'dataSetColumnId_' . $columnId => $rowData
+            ]);
         
-        return $this->hydrate($response);
+        return $response;
     }
 
     /**
@@ -95,7 +103,4 @@ class XiboDataSetRow extends XiboEntity
         
         return true;
     }
-
-
-
 }

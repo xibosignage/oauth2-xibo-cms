@@ -7,8 +7,7 @@
 
 
 namespace Xibo\OAuth2\Client\Provider;
-
-
+use GuzzleHttp\Psr7\MultipartStream;
 use League\OAuth2\Client\Token\AccessToken;
 use Xibo\OAuth2\Client\Exception\EmptyProviderException;
 
@@ -16,13 +15,11 @@ class XiboEntityProvider
 {
     /** @var  Xibo */
     private $provider;
-
     /** @var  XiboUser */
     private $me;
-
     /** @var  AccessToken */
     private $token;
-
+    
     /**
      * Set Provider
      * @param Xibo $provider
@@ -31,7 +28,7 @@ class XiboEntityProvider
     {
         $this->provider = $provider;
     }
-
+    
     /**
      * Get Provider
      * @return Xibo
@@ -40,7 +37,7 @@ class XiboEntityProvider
     {
         return $this->provider;
     }
-
+    
     /**
      * Get Me
      * @return XiboUser
@@ -50,10 +47,9 @@ class XiboEntityProvider
         if ($this->me == null) {
             $this->me = $this->provider->getResourceOwner($this->getAccessToken());
         }
-
         return $this->me;
     }
-
+    
     /**
      * Get Access Token
      * @return AccessToken
@@ -63,15 +59,13 @@ class XiboEntityProvider
     {
         if ($this->provider === null)
             throw new EmptyProviderException();
-
         if ($this->token == null || $this->token->hasExpired()) {
             // Get and store a new token
             $this->token = $this->provider->getAccessToken('client_credentials');
         }
-
         return $this->token;
     }
-
+    
     /**
      * @param $url
      * @param $params
@@ -81,7 +75,7 @@ class XiboEntityProvider
     {
         return $this->request('GET', $url . '?' . http_build_query($params));
     }
-
+    
     /**
      * @param $url
      * @param array $params
@@ -91,7 +85,7 @@ class XiboEntityProvider
     {
         return $this->request('POST', $url, $params);
     }
-
+    
     /**
      * @param $url
      * @param array $params
@@ -101,7 +95,7 @@ class XiboEntityProvider
     {
         return $this->request('PUT', $url, $params);
     }
-
+    
     /**
      * @param $url
      * @param array $params
@@ -111,27 +105,33 @@ class XiboEntityProvider
     {
         return $this->request('DELETE', $url, $params);
     }
-
+    
     /**
      * Request
      * @param $method
      * @param $url
-     * @param array $body
+     * @param array $params
      * @return mixed
      * @throws EmptyProviderException
      */
-    private function request($method, $url, $body = [])
+    private function request($method, $url, $params = [])
     {
-        $options = [];
+        $options = [
+            'header', 'body'
+        ];
+        // Multipart
+        if (array_key_exists('multipart', $params)) {
+            // Build the multipart message
+            $options['body'] = new MultipartStream($params['multipart']);
+        } else if (count($params) > 0) {
+            $options['body'] = http_build_query($params, null, '&');
+        }
 
-        if (count($body) > 0)
-            $options['body'] = http_build_query($body, null, '&');
-
-        if ($method == 'PUT' || $method == 'DELETE')
+        if ($method == 'PUT')
             $options['headers'] =  ['content-type' => 'application/x-www-form-urlencoded'];
-
+        
         $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
-
+        
         return $this->provider->getResponse($request);
     }
 }

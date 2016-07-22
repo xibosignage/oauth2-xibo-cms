@@ -54,6 +54,20 @@ class XiboLibrary extends XiboEntity
 		return $this->hydrate($response[0]);
 	}
 
+	public function create($name, $fileLocation)
+	{
+		$this->doPost('/library',['multipart' => [
+            [
+                'name' => 'name',
+                'contents' => $name
+            ],
+            [
+                'name' => 'files',
+                'contents' => fopen($fileLocation, 'r')
+            ]
+        ]]);
+	}
+
 	/**
 	 * Edit
 	 * @param $mediaName

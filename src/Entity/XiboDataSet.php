@@ -150,19 +150,12 @@ class XiboDataSet extends XiboEntity
 
     /**
      * @param $id
-     * @return XiboDataSet
+     * @return XiboDataSetColumn
      * @throws XiboApiException
      */
     public function getByColumnId($id)
     {
-        $response = $this->doGet('/dataset/'. $this->dataSetId .'/column' , [
-            'dataSetColumnId' => $id
-        ]);
-
-        if (count($response) <= 0)
-            throw new XiboApiException('Expecting a single record, found ' . count($response));
-
-        return $this->hydrate($response[0]);
+        return (new XiboDataSetColumn())->getById($this->dataSetId, $id);
     }
 
     /**
@@ -204,7 +197,7 @@ class XiboDataSet extends XiboEntity
      * @return XiboDataSet
      * @throws XiboApiException
      */
-    public function getByRowId($id)
+    public function getDataByRowId($id)
     {
         $response = $this->doGet('/dataset/data/'. $this->dataSetId, [
             'rowId' => $id
@@ -213,7 +206,7 @@ class XiboDataSet extends XiboEntity
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single record, found ' . count($response));
 
-        return $this->hydrate($response[0]);
+        return $response[0];
     }
 
     /**
@@ -223,10 +216,11 @@ class XiboDataSet extends XiboEntity
     public function createRow($columnId, $rowData)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->dataSetColumnId_ . $columnId = $rowData;
-        $response = $this->doPost('/dataset/data/'. $this->dataSetId, $this->toArray());
+        $response = $this->doPost('/dataset/data/'. $this->dataSetId, [
+            'dataSetColumnId_' . $columnId => $rowData
+            ]);
         
-        return $this->hydrate($response);
+        return $response;
     }
 
     /**
@@ -236,10 +230,11 @@ class XiboDataSet extends XiboEntity
     public function editRow($columnId, $rowData)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->dataSetColumnId_ . $columnId = $rowData;
-        $response = $this->doPut('/dataset/data/'. $this->dataSetId . $this->rowId, $this->toArray());
+        $response = $this->doPut('/dataset/data/'. $this->dataSetId, [
+            'dataSetColumnId_' . $columnId => $rowData
+            ]);
         
-        return $this->hydrate($response);
+        return $response;
     }
 
     /**
