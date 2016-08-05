@@ -54,7 +54,7 @@ class XiboResolution extends XiboEntity
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single record, found ' . count($response));
 
-        return $this->hydrate($response[0]);
+        return clone $this->hydrate($response[0]);
     }
 
     /**

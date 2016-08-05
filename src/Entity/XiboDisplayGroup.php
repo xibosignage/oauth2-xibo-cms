@@ -56,7 +56,7 @@ class XiboDisplayGroup extends XiboEntity
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single display group, found ' . count($response));
 
-        return $this->hydrate($response[0]);
+        return clone $this->hydrate($response[0]);
     }
 
     /**
@@ -121,8 +121,8 @@ class XiboDisplayGroup extends XiboEntity
     {
 
         $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/assign', [
-                            'displayId' => $groupDisplay
-                             ]);
+            'displayId' => $groupDisplay
+            ]);
 
         return $this->hydrate($response);
     }

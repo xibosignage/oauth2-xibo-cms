@@ -51,12 +51,12 @@ class XiboLibrary extends XiboEntity
 		if (count($response) <= 0)
 		throw new XiboApiException('Expecting a single record, found ' . count($response));
 		
-		return $this->hydrate($response[0]);
+		return clone $this->hydrate($response[0]);
 	}
 
 	public function create($name, $fileLocation)
 	{
-		$this->doPost('/library',['multipart' => [
+		$response = $this->doPost('/library',['multipart' => [
             [
                 'name' => 'name',
                 'contents' => $name
@@ -66,18 +66,20 @@ class XiboLibrary extends XiboEntity
                 'contents' => fopen($fileLocation, 'r')
             ]
         ]]);
+
+        return $this->hydrate($response);
 	}
 
 	/**
 	 * Edit
 	 * @param $mediaName
 	 * @param $mediaDuration
-	 * @param $lmediaRetired // there is a wrong thing in API doc 'flag indicating if this layout is retired'
+	 * @param $mediaRetired // there is a wrong description in API doc 'flag indicating if this layout is retired'
 	 * @param $mediaTags
 	 * @param $mediaUpdate
 	 * @return XiboLayout
 	 */
-	public function edit($mediaName, $mediaDuration, $lmediaRetired, $mediaTags, $mediaUpdate)
+	public function edit($mediaName, $mediaDuration, $mediaRetired, $mediaTags, $mediaUpdate)
 	{
 		$this->name = $mediaName;
 		$this->duration = $mediaDuration;

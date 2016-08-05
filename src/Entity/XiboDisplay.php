@@ -79,7 +79,7 @@ class XiboDisplay extends XiboEntity
         ]);
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single display, found ' . count($response));
-        return $this->hydrate($response[0]);
+        return clone $this->hydrate($response[0]);
     }
     /**
      * Edit
