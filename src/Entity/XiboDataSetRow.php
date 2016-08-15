@@ -64,7 +64,7 @@ class XiboDataSetRow extends XiboEntity
      * @param $columnId
      * @return XiboDataSetRow
      */
-    public function create($rowdataSetId, $columnId, $rowData)
+    public function create($rowDataSetId, $columnId, $rowData)
     {
         $this->dataSetId = $rowDataSetId;
         $this->userId = $this->getEntityProvider()->getMe()->getId();

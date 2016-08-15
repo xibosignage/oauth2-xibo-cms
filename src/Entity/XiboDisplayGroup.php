@@ -124,7 +124,7 @@ class XiboDisplayGroup extends XiboEntity
             'displayId' => $groupDisplay
             ]);
 
-        return $this->hydrate($response);
+        return $this;
     }
 
     /**
@@ -139,7 +139,7 @@ class XiboDisplayGroup extends XiboEntity
         $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/assign', [
         'displayGroupId' => $groupDisplayGroup
         ]);
-        return $this->hydrate($response);
+        return $this;
     }
 
     /**
@@ -155,6 +155,22 @@ class XiboDisplayGroup extends XiboEntity
             'layoutId' => $groupLayout
             ]);
 
-        return $this->hydrate($response);
+        return $this;
+    }
+
+    /**
+     * Assign media
+     * @param $groupMedia
+     * @param int $displayGroupId
+     * @return XiboDisplayGroup
+     */
+    public function assignMedia($groupMedia)
+    {
+
+        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/assign', [
+            'mediaId' => $groupMedia
+            ]);
+
+        return $this;
     }
 }

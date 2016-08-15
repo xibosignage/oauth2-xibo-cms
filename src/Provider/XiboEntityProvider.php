@@ -127,7 +127,7 @@ class XiboEntityProvider
             $options['body'] = http_build_query($params, null, '&');
         }
 
-        if ($method == 'PUT')
+        if ($method == 'PUT' || $method == 'DELETE')
             $options['headers'] =  ['content-type' => 'application/x-www-form-urlencoded'];
         
         $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
