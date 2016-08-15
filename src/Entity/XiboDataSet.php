@@ -155,7 +155,7 @@ class XiboDataSet extends XiboEntity
      */
     public function getByColumnId($id)
     {
-        return (new XiboDataSetColumn())->getById($this->dataSetId, $id);
+        return (new XiboDataSetColumn($this->getEntityProvider()))->getById($this->dataSetId, $id);
     }
 
     /**
