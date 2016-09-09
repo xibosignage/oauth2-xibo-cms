@@ -56,7 +56,7 @@ class XiboDisplayGroup extends XiboEntity
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single display group, found ' . count($response));
 
-        return $this->hydrate($response[0]);
+        return clone $this->hydrate($response[0]);
     }
 
     /**
@@ -109,5 +109,68 @@ class XiboDisplayGroup extends XiboEntity
         $this->doDelete('/displaygroup/' . $this->displayGroupId);
 
         return true;
+    }
+    
+    /**
+     * Assign display
+     * @param $groupDisplay
+     * @param int $displayGroupId
+     * @return XiboDisplayGroup
+     */
+    public function assignDisplay($groupDisplay)
+    {
+
+        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/assign', [
+            'displayId' => $groupDisplay
+            ]);
+
+        return $this;
+    }
+
+    /**
+     * Assign display group
+     * @param $groupDisplayGroup
+     * @param int $displayGroupId
+     * @return XiboDisplayGroup
+     */
+    public function assignDisplayGroup($groupDisplayGroup)
+    {
+
+        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/assign', [
+        'displayGroupId' => $groupDisplayGroup
+        ]);
+        return $this;
+    }
+
+    /**
+     * Assign layout
+     * @param $groupLayout
+     * @param int $displayGroupId
+     * @return XiboDisplayGroup
+     */
+    public function assignLayout($groupLayout)
+    {
+
+        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/layout/assign', [
+            'layoutId' => $groupLayout
+            ]);
+
+        return $this;
+    }
+
+    /**
+     * Assign media
+     * @param $groupMedia
+     * @param int $displayGroupId
+     * @return XiboDisplayGroup
+     */
+    public function assignMedia($groupMedia)
+    {
+
+        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/assign', [
+            'mediaId' => $groupMedia
+            ]);
+
+        return $this;
     }
 }

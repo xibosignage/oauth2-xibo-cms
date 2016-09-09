@@ -31,7 +31,7 @@ class XiboCampaign extends XiboEntity
         $response = $this->doGet($this->url, $params);
 
         foreach ($response as $item) {
-            $entries[] = $this->hydrate($item);
+            $entries[] = clone $this->hydrate($item);
         }
 
         return $entries;
@@ -51,7 +51,7 @@ class XiboCampaign extends XiboEntity
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single record, found ' . count($response));
 
-        return $this->hydrate($response[0]);
+        return clone $this->hydrate($response[0]);
     }
 
     /**
