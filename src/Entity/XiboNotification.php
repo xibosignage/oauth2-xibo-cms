@@ -45,7 +45,7 @@ class XiboNotification extends XiboEntity
         $this->isInterrupt = $isInterruptN;
         $this->displayGroupIds = $displayGroupN;
 
-        $response = $this->client->post('/notification', $this->toArray());
+        $response = $this->doPost('/notification', $this->toArray());
 
         return $this->hydrate($response);
     }
