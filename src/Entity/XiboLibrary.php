@@ -55,9 +55,9 @@ class XiboLibrary extends XiboEntity
 		return clone $this->hydrate($response[0]);
 	}
 
-	public function create($name, $fileLocation)
-	{
-		$response = $this->doPost('/library',['multipart' => [
+public function create($name, $fileLocation)
+        {
+                $response = $this->doPost('/library',['multipart' => [
             [
                 'name' => 'name',
                 'contents' => $name
@@ -67,9 +67,27 @@ class XiboLibrary extends XiboEntity
                 'contents' => fopen($fileLocation, 'r')
             ]
         ]]);
-
-		return $this->hydrate($response);
-	}
+        // Response will have the format:
+        /*{
+            "files":[{
+                "name": "Name",
+                "size": 52770969,
+                "type": "video/mp4",
+                "mediaId": 2344,
+                "storedas": "2344.mp4",
+                "error": ""
+            }]
+        }*/
+        if (!isset($response['files']) || count($response['files']) != 1)
+            throw new XiboApiException('Invalid return from library add');
+        if (!empty($response['files'][0]['error']))
+            throw new XiboApiException($response['files'][0]['error']);
+        // Modify some of the return
+        unset($response['files'][0]['url']);
+        $response['files'][0]['storedAs'] = $response['files'][0]['storedas'];
+        $media = new XiboLibrary($this->getEntityProvider());
+        return $media->hydrate($response['files'][0]);
+        }
 
 	/**
 	 * Edit
