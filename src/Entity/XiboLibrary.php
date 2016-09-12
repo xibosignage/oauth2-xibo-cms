@@ -20,6 +20,7 @@ class XiboLibrary extends XiboEntity
 	public $mediaType;
 	public $storedAs;
 	public $fileName;
+	public $error;
 
 
 	/**
@@ -67,7 +68,7 @@ class XiboLibrary extends XiboEntity
             ]
         ]]);
 
-        return $this->hydrate($response);
+		return $this->hydrate($response);
 	}
 
 	/**
@@ -77,7 +78,7 @@ class XiboLibrary extends XiboEntity
 	 * @param $mediaRetired // there is a wrong description in API doc 'flag indicating if this layout is retired'
 	 * @param $mediaTags
 	 * @param $mediaUpdate
-	 * @return XiboLayout
+	 * @return XiboLibrary
 	 */
 	public function edit($mediaName, $mediaDuration, $mediaRetired, $mediaTags, $mediaUpdate)
 	{
