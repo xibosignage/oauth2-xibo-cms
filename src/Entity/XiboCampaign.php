@@ -112,7 +112,7 @@ class XiboCampaign extends XiboEntity
         $response = $this->doPost('/campaign/layout/assign/' . $this->campaignId, [
             'layoutId' => [
                 [
-                    'layoutId' => $layout->layoutId,
+                    'layoutId' => $campLayout,
                     'displayOrder' => 1
                 ]
             ]
