@@ -82,21 +82,21 @@ class XiboSchedule extends XiboEntity
      */
     public function createEventLayout($scheduleFrom, $scheduleTo, $scheduleCampaignId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
-    $this->userId = $this->getEntityProvider()->getMe()->getId();
-    $this->eventTypeId = 1;
-    $this->fromDt = $scheduleFrom;
-    $this->toDt = $scheduleTo;
-    $this->campaignId = $scheduleCampaignId;
-    $this->displayGroupIds = $scheduleDisplays;
-    $this->dayPartId = $scheduledayPartId;
-    $this->recurrenceType = $scheduleRecurrenceType;
-    $this->recurrenceDetail = $scheduleRecurrenceDetail;
-    $this->recurrenceRange = $scheduleRecurrenceRange;
-    $this->displayOrder = $scheduleOrder;
-    $this->isPriority = $scheduleIsPriority;
-    $response = $this->doPost('/schedule', $this->toArray());
-   
-    return $this->hydrate($response);
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->eventTypeId = 1;
+        $this->fromDt = $scheduleFrom;
+        $this->toDt = $scheduleTo;
+        $this->campaignId = $scheduleCampaignId;
+        $this->displayGroupIds = $scheduleDisplays;
+        $this->dayPartId = $scheduledayPartId;
+        $this->recurrenceType = $scheduleRecurrenceType;
+        $this->recurrenceDetail = $scheduleRecurrenceDetail;
+        $this->recurrenceRange = $scheduleRecurrenceRange;
+        $this->displayOrder = $scheduleOrder;
+        $this->isPriority = $scheduleIsPriority;
+        $response = $this->doPost('/schedule', $this->toArray());
+       
+        return $this->hydrate($response);
     }
 
     /**
@@ -114,19 +114,19 @@ class XiboSchedule extends XiboEntity
      */
     public function createEventCommand($scheduleFrom, $scheduleCommandId, $scheduleDisplays, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
-    $this->userId = $this->getEntityProvider()->getMe()->getId();
-    $this->eventTypeId = 2;
-    $this->fromDt = $scheduleFrom;
-    $this->commandId = $scheduleCommandId;
-    $this->displayGroupIds = $scheduleDisplays;
-    $this->recurrenceType = $scheduleRecurrenceType;
-    $this->recurrenceDetail = $scheduleRecurrenceDetail;
-    $this->recurrenceRange = $scheduleRecurrenceRange;
-    $this->displayOrder = $scheduleOrder;
-    $this->isPriority = $scheduleIsPriority;
-    $response = $this->doPost('/schedule', $this->toArray());
-   
-    return $this->hydrate($response);
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->eventTypeId = 2;
+        $this->fromDt = $scheduleFrom;
+        $this->commandId = $scheduleCommandId;
+        $this->displayGroupIds = $scheduleDisplays;
+        $this->recurrenceType = $scheduleRecurrenceType;
+        $this->recurrenceDetail = $scheduleRecurrenceDetail;
+        $this->recurrenceRange = $scheduleRecurrenceRange;
+        $this->displayOrder = $scheduleOrder;
+        $this->isPriority = $scheduleIsPriority;
+        $response = $this->doPost('/schedule', $this->toArray());
+       
+        return $this->hydrate($response);
     }
 
     /**
@@ -146,21 +146,21 @@ class XiboSchedule extends XiboEntity
      */
     public function createEvetOverlay($scheduleFrom, $scheduleTo, $scheduleCampaignId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
-    $this->userId = $this->getEntityProvider()->getMe()->getId();
-    $this->eventTypeId = 3;
-    $this->fromDt = $scheduleFrom;
-    $this->toDt = $scheduleTo;
-    $this->campaignId = $scheduleCampaignId;
-    $this->displayGroupIds = $scheduleDisplays;
-    $this->dayPartId = $scheduledayPartId;
-    $this->recurrenceType = $scheduleRecurrenceType;
-    $this->recurrenceDetail = $scheduleRecurrenceDetail;
-    $this->recurrenceRange = $scheduleRecurrenceRange;
-    $this->displayOrder = $scheduleOrder;
-    $this->isPriority = $scheduleIsPriority;
-    $response = $this->doPost('/schedule', $this->toArray());
-   
-    return $this->hydrate($response);
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->eventTypeId = 3;
+        $this->fromDt = $scheduleFrom;
+        $this->toDt = $scheduleTo;
+        $this->campaignId = $scheduleCampaignId;
+        $this->displayGroupIds = $scheduleDisplays;
+        $this->dayPartId = $scheduledayPartId;
+        $this->recurrenceType = $scheduleRecurrenceType;
+        $this->recurrenceDetail = $scheduleRecurrenceDetail;
+        $this->recurrenceRange = $scheduleRecurrenceRange;
+        $this->displayOrder = $scheduleOrder;
+        $this->isPriority = $scheduleIsPriority;
+        $response = $this->doPost('/schedule', $this->toArray());
+       
+        return $this->hydrate($response);
     }
 
     /**
@@ -181,22 +181,22 @@ class XiboSchedule extends XiboEntity
      */
     public function edit($scheduleType, $scheduleFrom, $scheduleTo, $scheduleCampaignId,$scheduleCommandId, $scheduleDisplays, $scheduledayPartId, $scheduleRecurrenceType, $scheduleRecurrenceDetail, $scheduleRecurrenceRange, $scheduleOrder, $scheduleIsPriority)
     {
-    $this->userId = $this->getEntityProvider()->getMe()->getId();
-    $this->eventTypeId = $scheduleType;
-    $this->fromDt = $scheduleFrom;
-    $this->toDt = $scheduleTo;
-    $this->campaignId = $scheduleCampaignId;
-    $this->commandId = $scheduleCommandId;
-    $this->displayGroupIds = $scheduleDisplays;
-    $this->dayPartId = $scheduledayPartId;
-    $this->recurrenceType = $scheduleRecurrenceType;
-    $this->recurrenceDetail = $scheduleRecurrenceDetail;
-    $this->recurrenceRange = $scheduleRecurrenceRange;
-    $this->displayOrder = $scheduleOrder;
-    $this->isPriority = $scheduleIsPriority;
-    $response = $this->doPut('/schedule/' . $this->eventId, $this->toArray());
-   
-    return $this->hydrate($response);
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->eventTypeId = $scheduleType;
+        $this->fromDt = $scheduleFrom;
+        $this->toDt = $scheduleTo;
+        $this->campaignId = $scheduleCampaignId;
+        $this->commandId = $scheduleCommandId;
+        $this->displayGroupIds = $scheduleDisplays;
+        $this->dayPartId = $scheduledayPartId;
+        $this->recurrenceType = $scheduleRecurrenceType;
+        $this->recurrenceDetail = $scheduleRecurrenceDetail;
+        $this->recurrenceRange = $scheduleRecurrenceRange;
+        $this->displayOrder = $scheduleOrder;
+        $this->isPriority = $scheduleIsPriority;
+        $response = $this->doPut('/schedule/' . $this->eventId, $this->toArray());
+       
+        return $this->hydrate($response);
     }
 
 
@@ -206,8 +206,8 @@ class XiboSchedule extends XiboEntity
      */
     public function delete()
     {
-    $this->doDelete('/schedule/' . $this->eventId);
-    return true;
+        $this->doDelete('/schedule/' . $this->eventId);
+        return true;
     }
 
 }

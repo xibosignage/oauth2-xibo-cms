@@ -99,4 +99,20 @@ class XiboCampaign extends XiboEntity
 
         return true;
     }
+
+    /**
+     * Assign layout
+     * @param $campLayout
+     * @param int $campaignId
+     * @return XiboCampaign
+     */
+    public function assignLayout($campLayout)
+    {
+
+        $response = $this->doPost('/campaign/layout/assign/' . $this->campaignId, [
+            'layoutId' => $campLayout
+            ]);
+
+        return $this;
+    }
 }
