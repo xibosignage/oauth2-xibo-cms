@@ -13,14 +13,18 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
 class XiboLibrary extends XiboEntity
 {
 	private $url = '/library';
+	public $duration;
+	public $error;
+	public $fileName;
 	public $mediaId;
+	public $mediaType;
+	public $name;
 	public $ownerId;
 	public $parentId;
-	public $name;
-	public $mediaType;
+    public $retired;
 	public $storedAs;
-	public $fileName;
-	public $error;
+    public $tags;
+    public $updateInLayouts;
 
 
 	/**
@@ -120,4 +124,9 @@ public function create($name, $fileLocation)
 		
 		return true;
 	}
+
+	public function revise($fileLocation)
+    {
+    	
+    }
 }
