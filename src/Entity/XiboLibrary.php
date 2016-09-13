@@ -17,6 +17,8 @@ class XiboLibrary extends XiboEntity
 	public $duration;
 	public $error;
 	public $fileName;
+	public $fileSize;
+	public $md5;
 	public $mediaId;
 	public $mediaType;
 	public $name;
@@ -26,7 +28,6 @@ class XiboLibrary extends XiboEntity
 	public $storedAs;
     public $tags;
     public $updateInLayouts;
-
 
 	/**
 	 * @param array $params
@@ -109,7 +110,7 @@ class XiboLibrary extends XiboEntity
         return $media->hydrate($response['files'][0]);
     }
         
-        public function revise($fileLocation)
+    public function revise($fileLocation)
     {
         return $this->create($this->name, $fileLocation, $this->mediaId, $this->updateInLayouts, $this->deleteOldRevisions);
     }
