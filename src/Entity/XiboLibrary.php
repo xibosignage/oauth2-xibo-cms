@@ -13,6 +13,7 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
 class XiboLibrary extends XiboEntity
 {
 	private $url = '/library';
+	public $deleteOldRevisions;
 	public $duration;
 	public $error;
 	public $fileName;
@@ -59,9 +60,9 @@ class XiboLibrary extends XiboEntity
 		return clone $this->hydrate($response[0]);
 	}
 
-public function create($name, $fileLocation)
-        {
-                $response = $this->doPost('/library',['multipart' => [
+	public function create($name, $fileLocation, $oldMediaId = null, $updateInLayouts = null, $deleteOldRevisions = null)
+    {
+            $payload = [
             [
                 'name' => 'name',
                 'contents' => $name
@@ -70,18 +71,33 @@ public function create($name, $fileLocation)
                 'name' => 'files',
                 'contents' => fopen($fileLocation, 'r')
             ]
-        ]]);
-        // Response will have the format:
-        /*{
-            "files":[{
-                "name": "Name",
-                "size": 52770969,
-                "type": "video/mp4",
-                "mediaId": 2344,
-                "storedas": "2344.mp4",
-                "error": ""
-            }]
-        }*/
+        ];
+        if ($oldMediaId != null) {
+            $payload[] = [
+                'name' => 'oldMediaId',
+                'contents' => $oldMediaId
+            ];
+            $payload[] = [
+                'name' => 'updateInLayouts',
+                'contents' => $updateInLayouts
+            ];
+            $payload[] = [
+                'name' => 'deleteOldRevisions',
+                'contents' => $deleteOldRevisions
+            ];
+    	}
+            $response = $this->doPost('/library', ['multipart' => $payload]);
+        	// Response will have the format:
+        	/*{
+            	"files":[{
+                	"name": "Name",
+                	"size": 52770969,
+                	"type": "video/mp4",
+                	"mediaId": 2344,
+                	"storedas": "2344.mp4",
+                	"error": ""
+            	}]
+        	}*/
         if (!isset($response['files']) || count($response['files']) != 1)
             throw new XiboApiException('Invalid return from library add');
         if (!empty($response['files'][0]['error']))
@@ -91,7 +107,12 @@ public function create($name, $fileLocation)
         $response['files'][0]['storedAs'] = $response['files'][0]['storedas'];
         $media = new XiboLibrary($this->getEntityProvider());
         return $media->hydrate($response['files'][0]);
-        }
+    }
+        
+        public function revise($fileLocation)
+    {
+        return $this->create($this->name, $fileLocation, $this->mediaId, $this->updateInLayouts, $this->deleteOldRevisions);
+    }
 
 	/**
 	 * Edit
@@ -124,9 +145,4 @@ public function create($name, $fileLocation)
 		
 		return true;
 	}
-
-	public function revise($fileLocation)
-    {
-    	
-    }
 }
