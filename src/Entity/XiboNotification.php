@@ -40,7 +40,7 @@ class XiboNotification extends XiboEntity
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->subject = $subjectN;
         $this->body = $bodyN;
-        $this->releseDt = $releaseDtN;
+        $this->releaseDt = $releaseDtN;
         $this->isEmail = $isEmailN;
         $this->isInterrupt = $isInterruptN;
         $this->displayGroupIds = $displayGroupN;
