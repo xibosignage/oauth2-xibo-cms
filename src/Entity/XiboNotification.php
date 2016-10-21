@@ -24,6 +24,21 @@ class XiboNotification extends XiboEntity
     public $userId;
     public $displayGroupId;
 
+    /**
+     * @param array $params
+     * @return array[XiboNotification]
+     */
+    public function get(array $params = [])
+    {
+        $entries = [];
+        $response = $this->doGet('/notification', $params);
+
+        foreach ($response as $item) {
+            $entries[] = clone $this->hydrate($item);
+        }
+
+        return $entries;
+    }
 
     /**
      * Create
