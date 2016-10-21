@@ -35,17 +35,18 @@ class XiboPlaylist extends XiboEntity
     public function assign($playlistMedia, $playlistRegion)
     {
         $this->playlistId = $playlistRegion;
+        $this->media = $playlistMedia;
         $response = $this->doPost('/playlist/library/assign/' . $playlistRegion, [
-        	'media' => [$playlistMedia]
+        	'media' => $playlistMedia
         	]);
 
         // Parse response
         //  set properties
         $this->playlistId = $response['playlistId'];
-
+        
         // Set widgets property (with XiboWidget objects)
         foreach ($response['widgets'] as $widget) {
-            $this->widgets[] = (new XiboWidget())->hydrate($widget);
+            $this->widgets[] = (new XiboWidget($this->getEntityProvider()))->hydrate($widget);
         }
 
         return $this;
