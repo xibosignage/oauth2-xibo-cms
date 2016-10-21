@@ -56,7 +56,7 @@ class XiboNotification extends XiboEntity
      */
     public function delete()
     {
-        $this->doDelete('/notificaion/' . $this->notificationId);
+        $this->doDelete('/notification/' . $this->notificationId);
         return true;
     }
 }
