@@ -148,6 +148,19 @@ class XiboLibrary extends XiboEntity
 	}
 
 	/**
+     * Delete assined media
+     * @return bool
+     */
+    public function deleteAssigned()
+    {
+        $this->doDelete('/library/' . $this->mediaId, [
+            'forceDelete' => 1
+            ]);
+        
+        return true;
+    }
+
+	/**
 	 * Add tag
 	 * @param $mediaTags
 	 * @return XiboLibrary
