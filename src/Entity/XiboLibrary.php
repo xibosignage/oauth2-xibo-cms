@@ -146,4 +146,25 @@ class XiboLibrary extends XiboEntity
 		
 		return true;
 	}
+
+	/**
+	 * Add tag
+	 * @param $mediaTags
+	 * @return XiboLibrary
+	 */
+	public function AddTag($mediaTags)
+	{
+		$this->tag = $mediaTags;
+		$response = $this->doPost('/library/' . $this->mediaId . '/tag', [
+			'tag' => [$mediaTags]
+			]);
+		
+		$tags = $this->hydrate($response);
+		foreach ($response['tags'] as $item) {
+			$tag = new XiboLibrary($this->getEntityProvider());
+			$tag->hydrate($item);
+			$tags->tags[] = $tag;
+		}
+		return $this;
+	}
 }
