@@ -207,4 +207,19 @@ class XiboLayout extends XiboEntity
 
         return $this->hydrate($response[0]);
     }
+
+    /**
+     * Add tag
+     * @param $layoutTags
+     * @return XiboLayout
+     */
+    public function addTag($layoutTags)
+    {
+        $this->tag = $layoutTags;
+        $response = $this->doPost('/layout/' . $this->layoutId . '/tag', [
+            'tag' => [$layoutTags]
+            ]);
+
+        return $this;
+    }
 }
