@@ -83,7 +83,16 @@ class XiboLayout extends XiboEntity
         $this->resolutionId = $layoutResolutionId;
         $response = $this->doPost('/layout', $this->toArray());
         
-        return $this->hydrate($response);
+        $layout = $this->hydrate($response);
+        
+        foreach ($response['regions'] as $item) {
+            $region = new XiboRegion($this->getEntityProvider());
+            $region->hydrate($item);
+            // Add to parent object
+            $layout->regions[] = $region;
+        }
+        
+        return $layout;
     }
 
     /**
