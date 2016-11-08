@@ -129,9 +129,9 @@ class XiboEntityProvider
             $options['headers'] = ['content-type' => 'application/json'];
         } else if ($method == 'POST' || $method == 'PUT' || $method == 'DELETE') {
             $options['headers'] = ['content-type' => 'application/x-www-form-urlencoded'];
-        }
-        if (count($params) > 0) {
-            $options['body'] = http_build_query($params, null, '&');
+            if (count($params) > 0) {
+                $options['body'] = http_build_query($params, null, '&');
+            }
         }
         $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
         return $this->provider->getResponse($request);
