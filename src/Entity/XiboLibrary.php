@@ -13,14 +13,21 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
 class XiboLibrary extends XiboEntity
 {
 	private $url = '/library';
+	public $deleteOldRevisions;
+	public $duration;
+	public $error;
+	public $fileName;
+	public $fileSize;
+	public $md5;
 	public $mediaId;
+	public $mediaType;
+	public $name;
 	public $ownerId;
 	public $parentId;
-	public $name;
-	public $mediaType;
+    public $retired;
 	public $storedAs;
-	public $fileName;
-
+    public $tags;
+    public $updateInLayouts;
 
 	/**
 	 * @param array $params
@@ -54,9 +61,9 @@ class XiboLibrary extends XiboEntity
 		return clone $this->hydrate($response[0]);
 	}
 
-	public function create($name, $fileLocation)
-	{
-		$response = $this->doPost('/library',['multipart' => [
+	public function create($name, $fileLocation, $oldMediaId = null, $updateInLayouts = null, $deleteOldRevisions = null)
+    {
+            $payload = [
             [
                 'name' => 'name',
                 'contents' => $name
@@ -65,10 +72,48 @@ class XiboLibrary extends XiboEntity
                 'name' => 'files',
                 'contents' => fopen($fileLocation, 'r')
             ]
-        ]]);
-
-        return $this->hydrate($response);
-	}
+        ];
+        if ($oldMediaId != null) {
+            $payload[] = [
+                'name' => 'oldMediaId',
+                'contents' => $oldMediaId
+            ];
+            $payload[] = [
+                'name' => 'updateInLayouts',
+                'contents' => $updateInLayouts
+            ];
+            $payload[] = [
+                'name' => 'deleteOldRevisions',
+                'contents' => $deleteOldRevisions
+            ];
+    	}
+            $response = $this->doPost('/library', ['multipart' => $payload]);
+        	// Response will have the format:
+        	/*{
+            	"files":[{
+                	"name": "Name",
+                	"size": 52770969,
+                	"type": "video/mp4",
+                	"mediaId": 2344,
+                	"storedas": "2344.mp4",
+                	"error": ""
+            	}]
+        	}*/
+        if (!isset($response['files']) || count($response['files']) != 1)
+            throw new XiboApiException('Invalid return from library add');
+        if (!empty($response['files'][0]['error']))
+            throw new XiboApiException($response['files'][0]['error']);
+        // Modify some of the return
+        unset($response['files'][0]['url']);
+        $response['files'][0]['storedAs'] = $response['files'][0]['storedas'];
+        $media = new XiboLibrary($this->getEntityProvider());
+        return $media->hydrate($response['files'][0]);
+    }
+        
+    public function revise($fileLocation)
+    {
+        return $this->create($this->name, $fileLocation, $this->mediaId, $this->updateInLayouts, $this->deleteOldRevisions);
+    }
 
 	/**
 	 * Edit
@@ -77,7 +122,7 @@ class XiboLibrary extends XiboEntity
 	 * @param $mediaRetired // there is a wrong description in API doc 'flag indicating if this layout is retired'
 	 * @param $mediaTags
 	 * @param $mediaUpdate
-	 * @return XiboLayout
+	 * @return XiboLibrary
 	 */
 	public function edit($mediaName, $mediaDuration, $mediaRetired, $mediaTags, $mediaUpdate)
 	{
@@ -100,5 +145,39 @@ class XiboLibrary extends XiboEntity
 		$this->doDelete('/library/' . $this->mediaId);
 		
 		return true;
+	}
+
+	/**
+     * Delete assined media
+     * @return bool
+     */
+    public function deleteAssigned()
+    {
+        $this->doDelete('/library/' . $this->mediaId, [
+            'forceDelete' => 1
+            ]);
+        
+        return true;
+    }
+
+	/**
+	 * Add tag
+	 * @param $mediaTags
+	 * @return XiboLibrary
+	 */
+	public function AddTag($mediaTags)
+	{
+		$this->tag = $mediaTags;
+		$response = $this->doPost('/library/' . $this->mediaId . '/tag', [
+			'tag' => [$mediaTags]
+			]);
+		
+		$tags = $this->hydrate($response);
+		foreach ($response['tags'] as $item) {
+			$tag = new XiboLibrary($this->getEntityProvider());
+			$tag->hydrate($item);
+			$tags->tags[] = $tag;
+		}
+		return $this;
 	}
 }

@@ -123,15 +123,16 @@ class XiboEntityProvider
         if (array_key_exists('multipart', $params)) {
             // Build the multipart message
             $options['body'] = new MultipartStream($params['multipart']);
+        } else if (array_key_exists('json', $params)) {
+            // Build the JSON body and content type
+            $options['body'] = json_encode($params['json']);
+            $options['headers'] = ['content-type' => 'application/json'];
         } else if (count($params) > 0) {
             $options['body'] = http_build_query($params, null, '&');
         }
-
         if ($method == 'PUT' || $method == 'DELETE')
             $options['headers'] =  ['content-type' => 'application/x-www-form-urlencoded'];
-        
         $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
-        
         return $this->provider->getResponse($request);
     }
 }

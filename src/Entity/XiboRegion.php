@@ -24,6 +24,8 @@ class XiboRegion extends XiboEntity
 	public $left;
 	public $zIndex;
 
+    public $playlists;
+
 	/**
      * Create Region
      * @param $layoutId
@@ -43,10 +45,25 @@ class XiboRegion extends XiboEntity
         $this->left = $regionLeft; 
         $this->layoutId = $regionLayoutId;
 
+        // Array response from CMS
         $response = $this->doPost('/region/' . $this->layoutId, $this->toArray());
-        
-        return $this->hydrate($response);
 
+        // Hydrate the Region object
+        $region = $this->hydrate($response);
+
+        // Response Array from the CMS will contain a playlists entry, which holds the attributes for 
+        // each Playlist.
+        foreach ($response['playlists'] as $item) {
+            $playlist = new XiboPlaylist($this->getEntityProvider());
+            
+            // Hydrate the Playlist object with the items from region->playlists
+            $playlist->hydrate($item);
+
+            // Add to parent object
+            $region->playlists[] = $playlist;
+        }
+        
+        return $region;
     }
 
     /**

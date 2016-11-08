@@ -38,7 +38,7 @@ class Xibo extends AbstractProvider
      */
     public function getBaseAuthorizationUrl()
     {
-        return $this->baseUrl . '/api/authorize';
+        return $this->getCmsApiUrl() . '/authorize';
     }
 
     /**
