@@ -52,6 +52,7 @@ class XiboShellCommand extends XiboEntity
      * Create
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $windowsCommand
      * @param $linuxCommand
      * @param $launchThroughCmd
@@ -59,11 +60,12 @@ class XiboShellCommand extends XiboEntity
      * @param $useTaskKill
      * @param $commandCode
      */
-    public function create($name, $duration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $playlistId)
+    public function create($name, $duration, $useDuration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->windowsCommand = $windowsCommand;
         $this->linuxCommand = $linuxCommand;
         $this->launchThroughCmd = $launchThroughCmd;
@@ -80,6 +82,7 @@ class XiboShellCommand extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $windowsCommand
      * @param $linuxCommand
      * @param $launchThroughCmd
@@ -87,11 +90,12 @@ class XiboShellCommand extends XiboEntity
      * @param $useTaskKill
      * @param $commandCode
      */
-    public function edit($name, $duration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $widgetId)
+    public function edit($name, $duration, $useDuration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->windowsCommand = $windowsCommand;
         $this->linuxCommand = $linuxCommand;
         $this->launchThroughCmd = $launchThroughCmd;

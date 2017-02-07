@@ -76,26 +76,27 @@ class XiboDataSetView extends XiboEntity
      * Edit
      * @param $dataSetColumnId
      * @param $name
-     * @param duration
-     * @param updateInterval
-     * @param showHeadings
-     * @param upperLimit
-     * @param lowerLimit
-     * @param filter
-     * @param ordering
-     * @param templateId
-     * @param overrideTemplate
-     * @param useOrderingClause
-     * @param useFilteringClause
-     * @param noDataMessage
+     * @param $duration
+     * @param $updateInterval
+     * @param $showHeadings
+     * @param $upperLimit
+     * @param $lowerLimit
+     * @param $filter
+     * @param $ordering
+     * @param $templateId
+     * @param $overrideTemplate
+     * @param $useOrderingClause
+     * @param $useFilteringClause
+     * @param $noDataMessage
      * @param $dataSetId
      */
-    public function edit($dataSetColumnId, $name, $duration, $updateInterval, $rowsPerPage, $showHeadings, $upperLimit, $lowerLimit, $filter, $ordering, $templateId, $overrideTemplate, $useOrderingClause, $useFilteringClause, $noDataMessage, $widgetId)
+    public function edit($dataSetColumnId, $name, $duration, $useDuration, $updateInterval, $rowsPerPage, $showHeadings, $upperLimit, $lowerLimit, $filter, $ordering, $templateId, $overrideTemplate, $useOrderingClause, $useFilteringClause, $noDataMessage, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->dataSetColumnId = $dataSetColumnId;
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->updateInterval = $updateInterval;
         $this->rowsPerPage = $rowsPerPage;
         $this->showHeadings = $showHeadings;

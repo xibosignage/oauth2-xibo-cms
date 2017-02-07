@@ -52,17 +52,19 @@ class XiboEmbedded extends XiboEntity
      * Create
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $transparency
      * @param $scaleContent
      * @param $embedHtml
      * @param $embedScript
      * @param $embedStyle
      */
-    public function create($name, $duration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $playlistId)
+    public function create($name, $duration, $useDuration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->transparency = $transparency;
         $this->scaleContent = $scaleContent;
         $this->embedHtml = $embedHtml;
@@ -78,17 +80,19 @@ class XiboEmbedded extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $transparency
      * @param $scaleContent
      * @param $embedHtml
      * @param $embedScript
      * @param $embedStyle
      */
-    public function edit($name, $duration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $widgetId)
+    public function edit($name, $duration, $useDuration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->transparency = $transparency;
         $this->scaleContent = $scaleContent;
         $this->embedHtml = $embedHtml;

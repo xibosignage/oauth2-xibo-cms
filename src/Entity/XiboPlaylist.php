@@ -25,6 +25,7 @@ class XiboPlaylist extends XiboEntity
     public $widgets;
     public $permissions;
     public $displayOrder;
+    public $duration;
 	
 	/**
      * Assign media to playlist
@@ -32,12 +33,13 @@ class XiboPlaylist extends XiboEntity
      * @param $playlistRegion
      * @return XiboPlaylist
      */
-    public function assign($playlistMedia, $playlistRegion)
+    public function assign($playlistMedia, $duration, $playlistRegion)
     {
         $this->playlistId = $playlistRegion;
         $this->media = $playlistMedia;
         $response = $this->doPost('/playlist/library/assign/' . $playlistRegion, [
-        	'media' => $playlistMedia
+        	'media' => $playlistMedia,
+            'duration' => $duration
         	]);
 
         // Parse response

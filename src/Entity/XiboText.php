@@ -53,6 +53,7 @@ class XiboText extends XiboEntity
      * Create
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $effect
      * @param $speed
      * @param $backgroundColor
@@ -60,11 +61,12 @@ class XiboText extends XiboEntity
      * @param $text
      * @param $javaScript
      */
-    public function create($name, $duration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $playlistId)
+    public function create($name, $duration, $useDuration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->effect = $effect;
         $this->speed = $speed;
         $this->backgroundColor = $backgroundColor;
@@ -88,11 +90,12 @@ class XiboText extends XiboEntity
      * @param $text
      * @param $javaScript
      */
-    public function edit($name, $duration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $widgetId)
+    public function edit($name, $duration, $useDuration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->effect = $effect;
         $this->speed = $speed;
         $this->backgroundColor = $backgroundColor;

@@ -56,6 +56,7 @@ class XiboWebpage extends XiboEntity
      * Create
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $transparency
      * @param $uri
      * @param $scaling
@@ -65,11 +66,12 @@ class XiboWebpage extends XiboEntity
      * @param $pageHeight
      * @param $modeId
      */
-    public function create($name, $duration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $playlistId)
+    public function create($name, $duration, $useDuration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->transparency = $transparency;
         $this->uri = $uri;
         $this->scaling = $scaling;
@@ -88,6 +90,7 @@ class XiboWebpage extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $transparency
      * @param $uri
      * @param $scaling
@@ -97,11 +100,12 @@ class XiboWebpage extends XiboEntity
      * @param $pageHeight
      * @param $modeId
      */
-    public function edit($name, $duration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $widgetId)
+    public function edit($name, $duration, $useDuration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->transparency = $transparency;
         $this->uri = $uri;
         $this->scaling = $scaling;

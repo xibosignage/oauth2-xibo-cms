@@ -49,15 +49,17 @@ class XiboVideo extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $scaleTypeId
      * @param $mute
      * @param $loop
      */
-    public function edit($name, $useDuration, $duration, $scaleTypeId, $mute, $loop, $widgetId)
+    public function edit($name, $duration, $useDuration, $scaleTypeId, $mute, $loop, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
         $this->loop = $loop;

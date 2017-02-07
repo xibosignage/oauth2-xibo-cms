@@ -46,12 +46,14 @@ class XiboPdf extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
+     * @param $useDuration
      */
-    public function edit($name, $duration, $widgetId)
+    public function edit($name, $duration, $useDuration, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->widgetId = $widgetId;
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

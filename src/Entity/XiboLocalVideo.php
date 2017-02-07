@@ -48,14 +48,16 @@ class XiboLocalVideo extends XiboEntity
      * Create
      * @param $uri
      * @param $duration
+     * @param $useDuration
      * @param $scaleTypeId
      * @param $mute
      */
-    public function create($uri, $duration, $scaleTypeId, $mute, $playlistId)
+    public function create($uri, $duration, $useDuration, $scaleTypeId, $mute, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->uri = $uri;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
         $this->playlistId = $playlistId;
@@ -67,14 +69,16 @@ class XiboLocalVideo extends XiboEntity
      * Edit
      * @param $uri
      * @param $duration
+     * @param $useDuration
      * @param $scaleTypeId
      * @param $mute
      */
-    public function edit($uri, $duration, $scaleTypeId, $mute, $widgetId)
+    public function edit($uri, $duration, $useDuration, $scaleTypeId, $mute, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->uri = $uri;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
         $this->widgetId = $widgetId;

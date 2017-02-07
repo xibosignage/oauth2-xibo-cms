@@ -49,15 +49,17 @@ class XiboImage extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $scaleTypeId
      * @param $alignId
      * @param $valignId
      */
-    public function edit($name, $duration, $scaleTypeId, $alignId, $valignId, $widgetId)
+    public function edit($name, $duration, $useDuration, $scaleTypeId, $alignId, $valignId, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->scaleTypeId = $scaleTypeId;
         $this->alignId = $alignId;
         $this->valignId = $valignId;

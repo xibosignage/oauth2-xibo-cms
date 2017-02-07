@@ -50,16 +50,18 @@ class XiboGoogleTraffic extends XiboEntity
      * Create
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $useDisplayLocation
      * @param $longitude
      * @param $latitude
      * @param $zoom
      */
-    public function create($name, $duration, $useDisplayLocation, $longitude, $latitude, $zoom, $playlistId)
+    public function create($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $zoom, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->useDisplayLocation = $useDisplayLocation;
         $this->longitude = $longitude;
         $this->latitude = $latitude;
@@ -74,6 +76,7 @@ class XiboGoogleTraffic extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $useDisplayLocation
      * @param $longitude
      * @param $latitude

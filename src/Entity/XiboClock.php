@@ -52,6 +52,7 @@ class XiboClock extends XiboEntity
      * Create
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $theme
      * @param $clockTypeId
      * @param $offset
@@ -59,11 +60,12 @@ class XiboClock extends XiboEntity
      * @param $showSeconds
      * @param $clockFace
      */
-    public function create($name, $duration, $theme, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $playlistId)
+    public function create($name, $duration, $useDuration, $theme, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->theme = $theme;
         $this->clockTypeId = $clockTypeId;
         $this->offset = $offset;
@@ -80,6 +82,7 @@ class XiboClock extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
+     * @param $useDuration
      * @param $theme
      * @param $clockTypeId
      * @param $offset
@@ -87,11 +90,12 @@ class XiboClock extends XiboEntity
      * @param $showSeconds
      * @param $clockFace
      */
-    public function edit($name, $duration, $theme, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $widgetId)
+    public function edit($name, $duration, $useDuration, $theme, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
+        $this->useDuration = $useDuration;
         $this->theme = $theme;
         $this->clockTypeId = $clockTypeId;
         $this->offset = $offset;

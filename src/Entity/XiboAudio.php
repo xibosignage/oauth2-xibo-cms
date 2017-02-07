@@ -56,6 +56,7 @@ class XiboAudio extends XiboEntity
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
+        $this->useDuration = $useDuration;
         $this->duration = $duration;
         $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
