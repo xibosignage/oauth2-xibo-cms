@@ -119,7 +119,7 @@ class XiboLibrary extends XiboEntity
 	 * Edit
 	 * @param $mediaName
 	 * @param $mediaDuration
-	 * @param $mediaRetired // there is a wrong description in API doc 'flag indicating if this layout is retired'
+	 * @param $mediaRetired
 	 * @param $mediaTags
 	 * @param $mediaUpdate
 	 * @return XiboLibrary
@@ -148,7 +148,7 @@ class XiboLibrary extends XiboEntity
 	}
 
 	/**
-     * Delete assined media
+     * Delete assigned media
      * @return bool
      */
     public function deleteAssigned()
