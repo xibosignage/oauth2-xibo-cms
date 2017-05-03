@@ -46,7 +46,7 @@ class XiboFinance extends XiboEntity
     /**
      * Get by Id
      * @param $id
-     * @return $this|XiboCurrencies
+     * @return $this|XiboFinance
      * @throws XiboApiException
      */
     public function getById($id)
