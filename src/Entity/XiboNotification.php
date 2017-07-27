@@ -42,23 +42,23 @@ class XiboNotification extends XiboEntity
 
     /**
      * Create
-     * @param $subjectN
-     * @param $bodyN
-     * @param $releaseDtN
-     * @param $isEmailN
-     * @param $isInterruptN
-     * @param $displaygroupN
+     * @param $subject
+     * @param $body
+     * @param $releaseDt
+     * @param $isEmail
+     * @param $isInterrupt
+     * @param $displayGroup
      * @return XiboNotification
      */
-    public function create($subjectN, $bodyN, $releaseDtN, $isEmailN, $isInterruptN, $displayGroupN)
+    public function create($subject, $body, $releaseDt, $isEmail, $isInterrupt, $displayGroup)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->subject = $subjectN;
-        $this->body = $bodyN;
-        $this->releaseDt = $releaseDtN;
-        $this->isEmail = $isEmailN;
-        $this->isInterrupt = $isInterruptN;
-        $this->displayGroupIds = $displayGroupN;
+        $this->subject = $subject;
+        $this->body = $body;
+        $this->releaseDt = $releaseDt;
+        $this->isEmail = $isEmail;
+        $this->isInterrupt = $isInterrupt;
+        $this->displayGroupIds = $displayGroup;
 
         $response = $this->doPost('/notification', $this->toArray());
 

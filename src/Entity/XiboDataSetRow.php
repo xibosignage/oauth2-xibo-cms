@@ -19,7 +19,6 @@ class XiboDataSetRow extends XiboEntity
     public $dataSetId;
     public $dataSetColumnId;
     public $rowId;
-    public $rowDataSetId;
     public $dataSet;
     public $description;
     public $userId;
@@ -44,9 +43,9 @@ class XiboDataSetRow extends XiboEntity
      * @throws XiboApiException
      * @return XiboDataSetRow
      */
-    public function getById($rowDataSetId, $id)
+    public function getById($dataSetId, $id)
     {
-        $this->dataSetId = $rowDataSetId;
+        $this->dataSetId = $dataSetId;
         $response = $this->doGet('/dataset/data/'. $this->dataSetId, [
             'rowId' => $id
         ]);
@@ -60,13 +59,13 @@ class XiboDataSetRow extends XiboEntity
     /**
      * Create Row
      * @param $rowData
-     * @param $rowDataSetId
+     * @param $dataSetId
      * @param $columnId
      * @return XiboDataSetRow
      */
-    public function create($rowDataSetId, $columnId, $rowData)
+    public function create($dataSetId, $columnId, $rowData)
     {
-        $this->dataSetId = $rowDataSetId;
+        $this->dataSetId = $dataSetId;
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $response = $this->doPost('/dataset/data/'. $this->dataSetId, [
             'dataSetColumnId_' . $columnId => $rowData
@@ -78,13 +77,13 @@ class XiboDataSetRow extends XiboEntity
     /**
      * Edit Row
      * @param $rowData
-     * @param $rowDataSetId
+     * @param $dataSetId
      * @param $columnId
      * @return XiboDataSetRow
      */
-    public function edit($rowDataSetId, $columnId, $rowData)
+    public function edit($dataSetId, $columnId, $rowData)
     {
-        $this->dataSetId = $rowDataSetId;
+        $this->dataSetId = $dataSetId;
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $response = $this->doPut('/dataset/data/'. $this->dataSetId . $this->rowId, [
             'dataSetColumnId_' . $columnId => $rowData

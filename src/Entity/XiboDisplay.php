@@ -15,7 +15,7 @@ class XiboDisplay extends XiboEntity
     public $displayId;
     public $display;
     public $description;
-    public $isAuditing = 0;
+    public $auditingUntil = 0;
     public $defaultLayoutId = 0;
     public $license;
     public $licensed;
@@ -83,30 +83,34 @@ class XiboDisplay extends XiboEntity
     }
     /**
      * Edit
-     * @param $displayName;
-     * @param $displayDescription;
-     * @param $displayIsAuditing;
-     * @param $displayDefaultLayoutId
-     * @param $displaLicensed;
-     * @param $displayHardwareKey;
-     * @param $displayIncSchedule;
-     * @param $displayEmailAlert;
-     * @param $displayWoL
-     * @param $displayBroadcast
+     * @param $display;
+     * @param $description;
+     * @param $auditingUntil;
+     * @param $defaultLayoutId
+     * @param $licensed;
+     * @param $license;
+     * @param $incSchedule;
+     * @param $emailAlert;
+     * @param $wakeOnLanEnabled
+     * @param $boradCastAddress
+     * @param $clearCachedData
+     * @param $rekeyXmr
      * @return XiboLayout
      */
-    public function edit($displayName, $displayDescription, $displayIsAuditing, $displayDefaultLayoutId, $displayLicensed, $displayHardwareKey, $displayIncSchedule, $displayEmailAlert, $displayWoL, $displayBroadcast)
+    public function edit($display, $description, $auditingUntil, $defaultLayoutId, $licensed, $license, $incSchedule, $emailAlert, $wakeOnLanEnabled, $boradCastAddress, $clearCachedData, $rekeyXmr)
     {
-        $this->display = $displayName;
-        $this->description = $displayDescription;
-        $this->isAuditing = $displayIsAuditing;
-        $this->defaultLayoutId = $displayDefaultLayoutId;
-        $this->licensed = $displayLicensed;
-        $this->license = $displayHardwareKey;
-        $this->incSchedule = $displayIncSchedule;
-        $this->emailAlert = $displayEmailAlert;
-        $this->wakeOnLanTime = $displayWoL;
-        $this->broadCastAddress = $displayBroadcast;
+        $this->display = $display;
+        $this->description = $description;
+        $this->auditingUntil = $auditingUntil;
+        $this->defaultLayoutId = $defaultLayoutId;
+        $this->licensed = $licensed;
+        $this->license = $license;
+        $this->incSchedule = $incSchedule;
+        $this->emailAlert = $emailAlert;
+        $this->wakeOnLanEnabled = $wakeOnLanEnabled;
+        $this->broadCastAddress = $boradCastAddress;
+        $this->clearCachedData = $clearCachedData;
+        $this->rekeyXmr = $rekeyXmr;
         $response = $this->doPut('/display/' . $this->displayId, $this->toArray());
         
         return $this->hydrate($response);

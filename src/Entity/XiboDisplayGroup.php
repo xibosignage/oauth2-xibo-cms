@@ -61,17 +61,17 @@ class XiboDisplayGroup extends XiboEntity
 
     /**
      * Create
-     * @param $groupName
-     * @param $groupDescription
+     * @param $displayGroup
+     * @param $description
      * @param $isDynamic
      * @param $dynamicCriteria
      * @return XiboDisplayGroup
      */
-    public function create($groupName, $groupDescription, $isDynamic, $dynamicCriteria)
+    public function create($displayGroup, $description, $isDynamic, $dynamicCriteria)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->displayGroup = $groupName;
-        $this->description = $groupDescription;
+        $this->displayGroup = $displayGroup;
+        $this->description = $description;
         $this->isDynamic = $isDynamic;
         $this->dynamicCriteria = $dynamicCriteria;
 
@@ -82,16 +82,16 @@ class XiboDisplayGroup extends XiboEntity
 
     /**
      * Edit
-     * @param $groupName
-     * @param $groupDescription
+     * @param $displayGroup
+     * @param $description
      * @param $isDynamic
      * @param $dynamicCriteria
      * @return XiboDisplayGroup
      */
-    public function edit($groupName, $groupDescription, $isDynamic, $dynamicCriteria)
+    public function edit($displayGroup, $description, $isDynamic, $dynamicCriteria)
     {
-        $this->displayGroup = $groupName;
-        $this->description = $groupDescription;
+        $this->displayGroup = $displayGroup;
+        $this->description = $description;
         $this->isDynamic = $isDynamic;
         $this->dynamicCriteria = $dynamicCriteria;
 
@@ -113,15 +113,14 @@ class XiboDisplayGroup extends XiboEntity
     
     /**
      * Assign display
-     * @param $groupDisplay
-     * @param int $displayGroupId
+     * @param $displayId
      * @return XiboDisplayGroup
      */
-    public function assignDisplay($groupDisplay)
+    public function assignDisplay($displayId)
     {
 
         $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/assign', [
-            'displayId' => $groupDisplay
+            'displayId' => $displayId
             ]);
 
         return $this;
@@ -129,30 +128,28 @@ class XiboDisplayGroup extends XiboEntity
 
     /**
      * Assign display group
-     * @param $groupDisplayGroup
      * @param int $displayGroupId
      * @return XiboDisplayGroup
      */
-    public function assignDisplayGroup($groupDisplayGroup)
+    public function assignDisplayGroup($displayGroupId)
     {
 
         $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/assign', [
-        'displayGroupId' => $groupDisplayGroup
+        'displayGroupId' => $displayGroupId
         ]);
         return $this;
     }
 
     /**
      * Assign layout
-     * @param $groupLayout
-     * @param int $displayGroupId
+     * @param $layoutId
      * @return XiboDisplayGroup
      */
-    public function assignLayout($groupLayout)
+    public function assignLayout($layoutId)
     {
 
         $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/layout/assign', [
-            'layoutId' => $groupLayout
+            'layoutId' => $layoutId
             ]);
 
         return $this;
@@ -160,15 +157,14 @@ class XiboDisplayGroup extends XiboEntity
 
     /**
      * Assign media
-     * @param $groupMedia
-     * @param int $displayGroupId
+     * @param $mediaId
      * @return XiboDisplayGroup
      */
-    public function assignMedia($groupMedia)
+    public function assignMedia($mediaId)
     {
 
         $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/assign', [
-            'mediaId' => $groupMedia
+            'mediaId' => $mediaId
             ]);
 
         return $this;

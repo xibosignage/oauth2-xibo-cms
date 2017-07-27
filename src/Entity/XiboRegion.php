@@ -29,21 +29,21 @@ class XiboRegion extends XiboEntity
 	/**
      * Create Region
      * @param $layoutId
-     * @param $regionWidth
-     * @param $regionHeight
-     * @param $regionTop
-     * @param $regionLeft
+     * @param $width
+     * @param $height
+     * @param $top
+     * @param $left
      * @return XiboRegion
      */
 
-    public function create($regionLayoutId, $regionWidth, $regionHeight, $regionTop, $regionLeft)
+    public function create($layoutId, $width, $height, $top, $left)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->width = $regionWidth;
-        $this->height = $regionHeight;
-        $this->top = $regionTop;
-        $this->left = $regionLeft; 
-        $this->layoutId = $regionLayoutId;
+        $this->width = $width;
+        $this->height = $height;
+        $this->top = $top;
+        $this->left = $left; 
+        $this->layoutId = $layoutId;
 
         // Array response from CMS
         $response = $this->doPost('/region/' . $this->layoutId, $this->toArray());
@@ -68,24 +68,24 @@ class XiboRegion extends XiboEntity
 
     /**
      * Edit Region
-     * @param $regionWidth
-     * @param $regionHeight
-     * @param $regionTop
-     * @param $regionLeft
-     * @param $regionzIndex
-     * @param $regionLoop
+     * @param $width
+     * @param $height
+     * @param $top
+     * @param $left
+     * @param $zindex
+     * @param $loop
      * @return XiboRegion
      */
 
-    public function edit($regionWidth, $regionHeight, $regionTop, $regionLeft, $regionzIndex, $regionLoop)
+    public function edit($width, $height, $top, $left, $zindex, $loop)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->width = $regionWidth;
-        $this->height = $regionHeight;
-        $this->top = $regionTop;
-        $this->left = $regionLeft; 
-        $this->zIndex = $regionzIndex;
-        $this->loop = $regionLoop;
+        $this->width = $width;
+        $this->height = $height;
+        $this->top = $top;
+        $this->left = $left; 
+        $this->zIndex = $zindex;
+        $this->loop = $loop;
 
         $response = $this->doPut('/region/' . $this->regionId, $this->toArray());
         

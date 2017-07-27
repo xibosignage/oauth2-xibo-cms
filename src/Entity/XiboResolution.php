@@ -59,16 +59,16 @@ class XiboResolution extends XiboEntity
 
     /**
      * Create
-     * @param $resolutionName
-     * @param $resolutionWidth
-     * @param $resolutionHeight
+     * @param $resolution
+     * @param $width
+     * @param $height
      */
-    public function create($resolutionName, $resolutionWidth, $resolutionHeight)
+    public function create($resolution, $width, $height)
     {
     $this->userId = $this->getEntityProvider()->getMe()->getId();
-    $this->resolution = $resolutionName;
-    $this->width = $resolutionWidth;
-    $this->height = $resolutionHeight;
+    $this->resolution = $resolution;
+    $this->width = $width;
+    $this->height = $height;
     $response = $this->doPost('/resolution', $this->toArray());
    
     return $this->hydrate($response);
@@ -76,16 +76,16 @@ class XiboResolution extends XiboEntity
 
     /**
      * Edit
-     * @param $resolutionName
-     * @param $resolutionWidth
-     * @param $resolutionHeight
+     * @param $resolution
+     * @param $width
+     * @param $height
      * @return XiboResolution
      */
-    public function edit($resolutionName, $resolutionWidth, $resolutionHeight)
+    public function edit($resolution, $width, $height)
     {
-    $this->resolution = $resolutionName;
-    $this->width = $resolutionWidth;
-    $this->height = $resolutionHeight;
+    $this->resolution = $resolution;
+    $this->width = $width;
+    $this->height = $height;
     $response = $this->doPut('/resolution/' . $this->resolutionId, $this->toArray());
     return $this->hydrate($response);
     }

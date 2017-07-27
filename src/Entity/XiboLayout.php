@@ -69,18 +69,18 @@ class XiboLayout extends XiboEntity
 
     /**
      * Create
-     * @param $layoutName
-     * @param $layoutDescription
-     * @param $layoutTemplateId
-     * @param $layoutResolutionId
+     * @param $name
+     * @param $description
+     * @param $layoutId
+     * @param $resolutionId
      */
-    public function create($layoutName, $layoutDescription, $layoutTemplateId, $layoutResolutionId)
+    public function create($name, $description, $layoutId, $resolutionId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->name = $layoutName;
-        $this->description = $layoutDescription;
-        $this->layoutId = $layoutTemplateId;
-        $this->resolutionId = $layoutResolutionId;
+        $this->name = $name;
+        $this->description = $description;
+        $this->layoutId = $layoutId;
+        $this->resolutionId = $resolutionId;
         $response = $this->doPost('/layout', $this->toArray());
         
         $layout = $this->hydrate($response);
@@ -97,26 +97,26 @@ class XiboLayout extends XiboEntity
 
     /**
      * Edit
-     * @param $layoutName;
-     * @param $layoutDescription;
-     * @param $layoutTags;
-     * @param $layoutRetired;
-     * @param $layoutBackgroundC;
-     * @param $layoutBackgroundImg;
-     * @param $layoutBackgroundzIndex;
-     * @param $layoutResolutionId;
+     * @param $name;
+     * @param $description;
+     * @param $tags;
+     * @param $retired;
+     * @param $backgroundColor;
+     * @param $backgroundImageId;
+     * @param $backgroundzIndex;
+     * @param $resolutionId;
      * @return XiboLayout
      */
-    public function edit($layoutName, $layoutDescription, $layoutTags, $layoutRetired, $layoutBackgroundC,$layoutBackgroundImg, $layoutBackgroundzIndex, $layoutResolutionId)
+    public function edit($name, $description, $tags, $retired, $backgroundColor,$backgroundImageId, $backgroundzIndex, $resolutionId)
     {
-        $this->name = $layoutName;
-        $this->description = $layoutDescription;
-        $this->tags = $layoutTags;
-        $this->retired = $layoutRetired;
-        $this->backgroundColor = $layoutBackgroundC;
-        $this->backgroundImageId = $layoutBackgroundImg;
-        $this->backgroundzIndex = $layoutBackgroundzIndex;
-        $this->resolutionId = $layoutResolutionId;
+        $this->name = $name;
+        $this->description = $description;
+        $this->tags = $tags;
+        $this->retired = $retired;
+        $this->backgroundColor = $backgroundColor;
+        $this->backgroundImageId = $backgroundImageId;
+        $this->backgroundzIndex = $backgroundzIndex;
+        $this->resolutionId = $resolutionId;
         $response = $this->doPut('/layout/' . $this->layoutId, $this->toArray());
         
         return $this->hydrate($response);
@@ -137,16 +137,16 @@ class XiboLayout extends XiboEntity
 
     /**
      * Copy
-     * @param $layoutName
-     * @param $layoutDescription
-     * @param $layoutCopyFiles
+     * @param $name
+     * @param $description
+     * @param $copyMediaFiles
      */
-    public function copy($layoutName, $layoutDescription, $layoutCopyFiles)
+    public function copy($name, $description, $copyMediaFiles)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->name = $layoutName;
-        $this->description = $layoutDescription;
-        $this->copyMediaFiles = $layoutCopyFiles;
+        $this->name = $name;
+        $this->description = $description;
+        $this->copyMediaFiles = $copyMediaFiles;
         $response = $this->doPost('/layout/copy/' . $this->layoutId, $this->toArray());
         
         return $this->hydrate($response);
@@ -157,13 +157,13 @@ class XiboLayout extends XiboEntity
      * Create Region
      */
 
-    public function createRegion($regionWidth, $regionHeight, $regionTop, $regionLeft)
+    public function createRegion($width, $height, $top, $left)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->width = $regionWidth;
-        $this->height = $regionHeight;
-        $this->top = $regionTop;
-        $this->left = $regionLeft; 
+        $this->width = $width;
+        $this->height = $height;
+        $this->top = $top;
+        $this->left = $left; 
 
         $response = $this->doPost('/region/' . $this->layoutId, $this->toArray());
         
@@ -174,15 +174,15 @@ class XiboLayout extends XiboEntity
      * Edit Region
      */
 
-    public function editRegion($regionWidth, $regionHeight, $regionTop, $regionLeft, $regionzIndex, $regionLoop)
+    public function editRegion($width, $height, $top, $left, $zIndex, $loop)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->width = $regionWidth;
-        $this->height = $regionHeight;
-        $this->top = $regionTop;
-        $this->left = $regionLeft; 
-        $this->zIndex = $regionzIndex;
-        $this->loop = $regionLoop;
+        $this->width = $width;
+        $this->height = $height;
+        $this->top = $top;
+        $this->left = $left; 
+        $this->zIndex = $zIndex;
+        $this->loop = $loop;
 
         $response = $this->doPut('/region/' . $this->regionId, $this->toArray());
         
@@ -219,16 +219,22 @@ class XiboLayout extends XiboEntity
 
     /**
      * Add tag
-     * @param $layoutTags
+     * @param $tags
      * @return XiboLayout
      */
-    public function addTag($layoutTags)
+    public function addTag($tags)
     {
-        $this->tag = $layoutTags;
+        $this->tag = $tags;
         $response = $this->doPost('/layout/' . $this->layoutId . '/tag', [
-            'tag' => [$layoutTags]
+            'tag' => [$tags]
             ]);
 
+        $tags = $this->hydrate($response);
+        foreach ($response['tags'] as $item) {
+            $tag = new XiboLayout($this->getEntityProvider());
+            $tag->hydrate($item);
+            $tags->tags[] = $tag;
+        }
         return $this;
     }
 }

@@ -29,16 +29,16 @@ class XiboPlaylist extends XiboEntity
 	
 	/**
      * Assign media to playlist
-     * @param $playlistMedia
-     * @param $playlistRegion
+     * @param $media
+     * @param $region
      * @return XiboPlaylist
      */
-    public function assign($playlistMedia, $duration, $playlistRegion)
+    public function assign($media, $duration, $region)
     {
-        $this->playlistId = $playlistRegion;
-        $this->media = $playlistMedia;
-        $response = $this->doPost('/playlist/library/assign/' . $playlistRegion, [
-        	'media' => $playlistMedia,
+        $this->playlistId = $region;
+        $this->media = $media;
+        $response = $this->doPost('/playlist/library/assign/' . $region, [
+        	'media' => $media,
             'duration' => $duration
         	]);
 

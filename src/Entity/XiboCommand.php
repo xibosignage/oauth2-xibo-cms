@@ -58,17 +58,17 @@ class XiboCommand extends XiboEntity
 
 	/**
 	 * Create
-	 * @param $commandName
-	 * @param $commandDescription
-	 * @param $commandCode
+	 * @param $name
+	 * @param $description
+	 * @param $code
 	 * @return XiboCommand
 	 */
-	public function create($commandName, $commandDescription, $commandCode)
+	public function create($name, $description, $code)
 	{
 		$this->userId = $this->getEntityProvider()->getMe()->getId();
-		$this->command = $commandName;
-		$this->description = $commandDescription;
-		$this->code = $commandCode;
+		$this->command = $name;
+		$this->description = $description;
+		$this->code = $code;
 		$response = $this->doPost('/command', $this->toArray());
 
 		return $this->hydrate($response);
@@ -77,16 +77,16 @@ class XiboCommand extends XiboEntity
 
 	/**
 	 * Edit
-	 * @param $commandName
-	 * @param $commandDescription
-	 * @param $commandCode
+	 * @param $name
+	 * @param $description
+	 * @param $code
 	 * @return XiboCommand
 	 */
-	public function edit($commandName, $commandDescription, $commandCode)
+	public function edit($name, $description, $code)
 	{
-		$this->command = $commandName;
-		$this->description = $commandDescription;
-		$this->code = $commandCode;
+		$this->command = $name;
+		$this->description = $description;
+		$this->code = $code;
 		$response = $this->doPut('/command/' . $this->commandId, $this->toArray());
 	
 		return $this->hydrate($response);

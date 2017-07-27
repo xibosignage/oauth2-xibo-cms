@@ -57,16 +57,16 @@ class XiboDisplayProfile extends XiboEntity
 
 	/**
 	* Create
-	* @param $profileName
-	* @param $profileType
-	* @param $proileIsDefault
+	* @param $name
+	* @param $type
+	* @param $isDefault
 	*/
-	public function create($profileName, $profileType, $profileIsDefault)
+	public function create($name, $type, $isDefault)
 	{
 		$this->userId = $this->getEntityProvider()->getMe()->getId();
-		$this->name = $profileName;
-		$this->type = $profileType;
-		$this->isDefault = $profileIsDefault;
+		$this->name = $name;
+		$this->type = $type;
+		$this->isDefault = $isDefault;
 		$response = $this->doPost('/displayprofile', $this->toArray());
 		
 		return $this->hydrate($response);
@@ -74,16 +74,16 @@ class XiboDisplayProfile extends XiboEntity
 
 	/**
 	 * Edit
-	 * @param $profileName
-	 * @param $profileType
-	 * @param $proileIsDefault
+	 * @param $name
+	 * @param $type
+	 * @param $isDefault
 	 * @return XiboDisplayProfile
 	 */
-	public function edit($profileName, $profileType, $profileIsDefault)
+	public function edit($name, $type, $isDefault)
 	{
-		$this->name = $profileName;
-		$this->type = $profileType;
-		$this->isDefault = $profileIsDefault;
+		$this->name = $name;
+		$this->type = $type;
+		$this->isDefault = $isDefault;
 		$response = $this->doPut('/displayprofile/' . $this->displayProfileId, $this->toArray());
 		
 		return $this->hydrate($response);

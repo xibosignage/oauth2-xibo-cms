@@ -37,25 +37,25 @@ class XiboDataSetColumn extends XiboEntity
 
      /**
      * Create Column
-     * @param $columnName
-     * @param $columnListContent
-     * @param $columnOrd
-     * @param $columnDataTypeId
-     * @param $columnDataSetColumnTypeId
-     * @param $columnFormula
-     * @param $columnDataSetId
+     * @param $heading
+     * @param $listContent
+     * @param $columnOrder
+     * @param $dataTypeId
+     * @param $dataSetColumnTypeId
+     * @param $formula
+     * @param $dataSetId
      * @return XiboDataSetColumn
      */
-    public function create($columnDataSetId, $columnName, $columnListContent, $columnOrd, $columnDataTypeId, $columnDataSetColumnTypeId, $columnFormula)
+    public function create($dataSetId, $heading, $listContent, $columnOrder, $dataTypeId, $dataSetColumnTypeId, $formula)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->heading = $columnName;
-        $this->listContent = $columnListContent;
-        $this->columnOrder = $columnOrd;
-        $this->dataTypeId = $columnDataTypeId;
-        $this->dataSetColumnTypeId = $columnDataSetColumnTypeId;
-        $this->formula = $columnFormula;
-        $this->dataSetId = $columnDataSetId;
+        $this->heading = $heading;
+        $this->listContent = $listContent;
+        $this->columnOrder = $columnOrder;
+        $this->dataTypeId = $dataTypeId;
+        $this->dataSetColumnTypeId = $dataSetColumnTypeId;
+        $this->formula = $formula;
+        $this->dataSetId = $dataSetId;
         $response = $this->doPost('/dataset/'. $this->dataSetId . '/column', $this->toArray());
         
         return $this->hydrate($response);
@@ -66,9 +66,9 @@ class XiboDataSetColumn extends XiboEntity
      * @return XiboDataSetColumn
      * @throws XiboApiException
      */
-    public function getById($columnDataSetId, $id)
+    public function getById($dataSetId, $id)
     {
-        $this->dataSetId = $columnDataSetId;
+        $this->dataSetId = $dataSetId;
         $response = $this->doGet('/dataset/'. $this->dataSetId .'/column' , [
             'dataSetColumnId' => $id
         ]);
@@ -81,23 +81,23 @@ class XiboDataSetColumn extends XiboEntity
 
     /**
      * Edit Column
-     * @param $columnName
-     * @param $columnListContent
-     * @param $columnOrd
-     * @param $columnDataTypeId
-     * @param $columnDataSetColumnTypeId
-     * @param $columnFormula
+     * @param $heading
+     * @param $listContent
+     * @param $columnOrder
+     * @param $dataTypeId
+     * @param $dataSetColumnTypeId
+     * @param $formula
      * @return XiboDataSetColumn
      */
-    public function edit($columnName, $columnListContent, $columnOrd, $columnDataTypeId, $columnDataSetColumnTypeId, $columnFormula)
+    public function edit($heading, $listContent, $columnOrder, $dataTypeId, $dataSetColumnTypeId, $formula)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $this->heading = $columnName;
-        $this->listContent = $columnListContent;
-        $this->columnOrder = $columnOrd;
-        $this->dataTypeId = $columnDataTypeId;
-        $this->dataSetColumnTypeId = $columnDataSetColumnTypeId;
-        $this->formula = $columnFormula;
+        $this->heading = $heading;
+        $this->listContent = $listContent;
+        $this->columnOrder = $columnOrder;
+        $this->dataTypeId = $dataTypeId;
+        $this->dataSetColumnTypeId = $dataSetColumnTypeId;
+        $this->formula = $formula;
         $response = $this->doPut('/dataset/'. $this->dataSetId . '/column/' . $this->dataSetColumnId, $this->toArray());
         
         return $this->hydrate($response);
