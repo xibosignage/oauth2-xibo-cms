@@ -117,20 +117,20 @@ class XiboLibrary extends XiboEntity
 
 	/**
 	 * Edit
-	 * @param $mediaName
-	 * @param $mediaDuration
-	 * @param $mediaRetired // there is a wrong description in API doc 'flag indicating if this layout is retired'
-	 * @param $mediaTags
-	 * @param $mediaUpdate
+	 * @param $name
+	 * @param $duration
+	 * @param $retired
+	 * @param $tags
+	 * @param $updateInLayouts
 	 * @return XiboLibrary
 	 */
-	public function edit($mediaName, $mediaDuration, $mediaRetired, $mediaTags, $mediaUpdate)
+	public function edit($name, $duration, $retired, $tags, $updateInLayouts)
 	{
-		$this->name = $mediaName;
-		$this->duration = $mediaDuration;
-		$this->tags = $mediaTags;
-		$this->retired = $mediaRetired;
-		$this->updateInLayouts = $mediaUpdate;
+		$this->name = $name;
+		$this->duration = $duration;
+		$this->retired = $retired;
+		$this->tags = $tags;
+		$this->updateInLayouts = $updateInLayouts;
 		$response = $this->doPut('/library/' . $this->mediaId, $this->toArray());
 		
 		return $this->hydrate($response);
@@ -148,7 +148,7 @@ class XiboLibrary extends XiboEntity
 	}
 
 	/**
-     * Delete assined media
+     * Delete assigned media
      * @return bool
      */
     public function deleteAssigned()
@@ -162,14 +162,14 @@ class XiboLibrary extends XiboEntity
 
 	/**
 	 * Add tag
-	 * @param $mediaTags
+	 * @param $tags
 	 * @return XiboLibrary
 	 */
-	public function AddTag($mediaTags)
+	public function AddTag($tags)
 	{
-		$this->tag = $mediaTags;
+		$this->tag = $tags;
 		$response = $this->doPost('/library/' . $this->mediaId . '/tag', [
-			'tag' => [$mediaTags]
+			'tag' => [$tags]
 			]);
 		
 		$tags = $this->hydrate($response);
