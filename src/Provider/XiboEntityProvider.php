@@ -59,7 +59,7 @@ class XiboEntityProvider
     {
         if ($this->provider === null)
             throw new EmptyProviderException();
-        if ($this->token == null || $this->token->hasExpired()) {
+        if ($this->token == null || $this->token->hasExpired() || $this->token->getExpires() <= time() + 10) {
             // Get and store a new token
             $this->token = $this->provider->getAccessToken('client_credentials');
         }

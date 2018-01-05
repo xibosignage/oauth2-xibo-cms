@@ -12,10 +12,10 @@ ini_set('display_errors', 1);
 
 // Create a provider
 $provider = new \Xibo\OAuth2\Client\Provider\Xibo([
-    'clientId' => 'p8kh8tq2mknOqMFx7qcgl7FGtFGDlDAlDOxb6TP1',    // The client ID assigned to you by the provider
-    'clientSecret' => 'KjHPCQHm0ztqA4bcqP1dszYpLpcZqyAvaFlGbFZsq6HUn15ND8d8bZZhpFiPHWqMOQx5sXsAPgdtahICgtdhgFxxOAtlv59kl1GZZLe6dRNvOYQLQyXP9NtxfQkHgHj2wmJwhhhBwqvyPnp9pn13eevMCbDnqfyZJzMkUoG3fofxQPq6Kl9Mh5DtFtiEgXs2XE7zhKfGPOLWH1pUZxn3FLixOehSRUyuUB7SLDqnulPxlFMbV6L4EN4pAG5cRN',   // The client password assigned to you by the provider
+    'clientId' => 'xM69rqgYM24IwOSvGcqV9UgngvnA1BlUz6LFF3kH',    // The client ID assigned to you by the provider
+    'clientSecret' => 'p8IRW5FmOYHbZjuOQJk43cugkxIwwxYaZv7K4FnMePkTfidbC6kmlV0u7PVHXtwSpxdMJG5cAO75Ii54zfh6kkQa31c5pxzCNsiCckSNoJECiA04iYDwKMrLpgVz3IH73c0zuzbEX5HopzmnyWBbXMZx9m58ncfG8vn4SiwlYrdTf4bwAQDrD1ueDpJimEHRgRXfMiPfGcA45NaF0GBFmjr5q0y3Iaj75YdXgiD9qzv2x1BFaX5HZGPjaOpl4h',   // The client password assigned to you by the provider
     'redirectUri' => '',
-    'baseUrl' => 'http://192.168.0.28'
+    'baseUrl' => 'http://192.168.0.26'
 ]);
 
 if (!isset($argv[1])) {
@@ -28,7 +28,7 @@ else
 try {
     // Prepare a file upload
     $guzzle = $provider->getHttpClient();
-    $response = $guzzle->request('POST', 'http://192.168.0.28/api/library', [
+    $response = $guzzle->request('POST', 'http://192.168.0.26/api/library', [
         'headers' => [
             'Authorization' => 'Bearer ' . $token
         ],
@@ -39,7 +39,7 @@ try {
             ],
             [
                 'name' => 'files',
-                'contents' => fopen('files/h264.mp4', 'r')
+                'contents' => fopen('C:\Users\Peter\Documents\oauth2-xibo-cms\files\dandan.jpg', 'r')
             ]
         ]
     ]);
