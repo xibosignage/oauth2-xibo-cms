@@ -134,6 +134,6 @@ class XiboEntityProvider
             }
         }
         $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
-        return $this->provider->getResponse($request);
+        return $this->provider->getParsedResponse($request);
     }
 }
