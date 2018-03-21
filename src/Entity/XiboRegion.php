@@ -24,9 +24,7 @@
 namespace Xibo\OAuth2\Client\Entity;
 
 
-use Xibo\OAuth2\Client\Exception\XiboApiException;
-
-class XiboRegion extends XiboEntity 
+class XiboRegion extends XiboEntity
 {
 	private $url = '/region';
 
