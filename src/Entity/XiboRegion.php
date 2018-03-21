@@ -9,9 +9,7 @@
 namespace Xibo\OAuth2\Client\Entity;
 
 
-use Xibo\OAuth2\Client\Exception\XiboApiException;
-
-class XiboRegion extends XiboEntity 
+class XiboRegion extends XiboEntity
 {
 	private $url = '/region';
 	public $regionId;
@@ -53,14 +51,27 @@ class XiboRegion extends XiboEntity
 
         // Response Array from the CMS will contain a playlists entry, which holds the attributes for 
         // each Playlist.
-        foreach ($response['playlists'] as $item) {
-            $playlist = new XiboPlaylist($this->getEntityProvider());
-            
-            // Hydrate the Playlist object with the items from region->playlists
-            $playlist->hydrate($item);
+        if (isset($response['playlists'])) {
+            foreach ($response['playlists'] as $item) {
+                $playlist = new XiboPlaylist($this->getEntityProvider());
 
-            // Add to parent object
-            $region->playlists[] = $playlist;
+                // Hydrate the Playlist object with the items from region->playlists
+                $playlist->hydrate($item);
+
+                // Add to parent object
+                $region->playlists[] = $playlist;
+            }
+        }
+
+        if (isset($response['regionPlaylist'])) {
+            if (isset($response['regionPlaylist'])) {
+                $playlist = new XiboPlaylist($this->getEntityProvider());
+
+                // Hydrate the Playlist object with the items from region->playlists
+                $playlist->hydrate($response['regionPlaylist']);
+
+                $this->regionPlaylist = $playlist;
+            }
         }
         
         return $region;
