@@ -10,12 +10,14 @@ namespace Xibo\OAuth2\Client\Entity;
 
 
 use Xibo\OAuth2\Client\Provider\XiboEntityProvider;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class XiboEntity
 {
     /** @var  XiboEntityProvider */
     private $entityProvider;
-
+    
     /**
      * @param XiboEntityProvider $provider
      */
@@ -34,6 +36,7 @@ class XiboEntity
      */
     public function hydrate(array $properties, $options = [])
     {
+        $this->getLogger()->debug('Hydrating the response');
         $intProperties = (array_key_exists('intProperties', $options)) ? $options['intProperties'] : [];
         $stringProperties = (array_key_exists('stringProperties', $options)) ? $options['stringProperties'] : [];
         $htmlStringProperties = (array_key_exists('htmlStringProperties', $options)) ? $options['htmlStringProperties'] : [];
@@ -110,4 +113,13 @@ class XiboEntity
     {
         return $this->getEntityProvider()->delete($url, $params);
     }
+
+    /**
+     * Get Logger
+     */
+    public function getLogger()
+    {
+        return $this->getEntityProvider()->getlogger();
+    }
+    
 }

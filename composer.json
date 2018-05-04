@@ -24,7 +24,11 @@
   ],
   "require": {
     "php": ">=5.6.0",
-    "league/oauth2-client": "2.2.*"
+    "league/oauth2-client": "2.2.*",
+    "psr/log": "dev-master"
+  },
+  "require-dev": {
+    "monolog/monolog": "^1.22"
   },
   "autoload": {
     "psr-4": { "Xibo\\OAuth2\\Client\\" : "src/" }
