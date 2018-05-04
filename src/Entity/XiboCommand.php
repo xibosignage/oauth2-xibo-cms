@@ -30,6 +30,7 @@ class XiboCommand extends XiboEntity
 	public function get(array $params = [])
 	{
 		$entries = [];
+		$this->getLogger()->info('Getting a list of display commands');
 		$response = $this->doGet($this->url, $params);
 		foreach ($response as $item) {
 			$entries[] = clone $this->hydrate($item);
@@ -46,6 +47,7 @@ class XiboCommand extends XiboEntity
 	 */
 	public function getById($id)
 	{
+		$this->getLogger()->info('Getting display command ID ' . $id);
 		$response = $this->doGet($this->url, [
 			'commandId' => $id
 		]);
@@ -69,6 +71,7 @@ class XiboCommand extends XiboEntity
 		$this->command = $name;
 		$this->description = $description;
 		$this->code = $code;
+		$this->getLogger()->info('Creating new display command ' . $name);
 		$response = $this->doPost('/command', $this->toArray());
 
 		return $this->hydrate($response);
@@ -87,6 +90,7 @@ class XiboCommand extends XiboEntity
 		$this->command = $name;
 		$this->description = $description;
 		$this->code = $code;
+		$this->getLogger()->info('Editing display command ID ' . $this->commandId);
 		$response = $this->doPut('/command/' . $this->commandId, $this->toArray());
 	
 		return $this->hydrate($response);
@@ -98,6 +102,7 @@ class XiboCommand extends XiboEntity
 	 */
 	public function delete()
 	{
+		$this->getLogger()->info('Deleting display command ID ' . $this->commandId);
 		$this->doDelete('/command/' . $this->commandId);
 	
 		return true;

@@ -30,6 +30,7 @@ class XiboNotification extends XiboEntity
      */
     public function get(array $params = [])
     {
+        $this->getLogger()->info('Getting a list of Notifications');
         $entries = [];
         $response = $this->doGet('/notification', $params);
 
@@ -47,10 +48,11 @@ class XiboNotification extends XiboEntity
      * @param $releaseDt
      * @param $isEmail
      * @param $isInterrupt
-     * @param $displayGroup
+     * @param $displayGroupIds
+     * @param $userGroupIds
      * @return XiboNotification
      */
-    public function create($subject, $body, $releaseDt, $isEmail, $isInterrupt, $displayGroup)
+    public function create($subject, $body, $releaseDt, $isEmail, $isInterrupt, $displayGroupIds = [], $userGroupIds = [])
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->subject = $subject;
@@ -58,9 +60,41 @@ class XiboNotification extends XiboEntity
         $this->releaseDt = $releaseDt;
         $this->isEmail = $isEmail;
         $this->isInterrupt = $isInterrupt;
-        $this->displayGroupIds = $displayGroup;
+        $this->displayGroupIds = $displayGroupIds;
+        $this->userGroupIds = $userGroupIds;
 
+        $this->getLogger()->info('Creating Notification ' . $subject);
         $response = $this->doPost('/notification', $this->toArray());
+
+        return $this->hydrate($response);
+    }
+
+    /**
+     * Edit
+     * @param $notificationId
+     * @param $subject
+     * @param $body
+     * @param $releaseDt
+     * @param $isEmail
+     * @param $isInterrupt
+     * @param $displayGroupIds
+     * @param $userGroupIds
+     * @return XiboNotification
+     */
+    public function edit($notificationId, $subject, $body, $releaseDt, $isEmail, $isInterrupt, $displayGroupIds = [], $userGroupIds = [])
+    {
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->notificationId = $notificationId;
+        $this->subject = $subject;
+        $this->body = $body;
+        $this->releaseDt = $releaseDt;
+        $this->isEmail = $isEmail;
+        $this->isInterrupt = $isInterrupt;
+        $this->displayGroupIds = $displayGroupIds;
+        $this->userGroupIds = $userGroupIds;
+        
+        $this->getLogger()->info('Editing Notification ID' . $notificationId);
+        $response = $this->doPut('/notification', $this->toArray());
 
         return $this->hydrate($response);
     }

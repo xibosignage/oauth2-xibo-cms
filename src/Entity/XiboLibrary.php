@@ -35,6 +35,7 @@ class XiboLibrary extends XiboEntity
 	 */
 	public function get(array $params = [])
 	{
+		$this->getLogger()->info('Getting list of Media files');
 		$entries = [];
 		$response = $this->doGet($this->url, $params);
 		foreach ($response as $item) {
@@ -52,6 +53,7 @@ class XiboLibrary extends XiboEntity
 	 */
 	public function getById($id)
 	{
+		$this->getLogger()->info('Getting media ID ' . $id);
 		$response = $this->doGet($this->url, [
 		'mediaId' => $id
 		]);
@@ -63,6 +65,7 @@ class XiboLibrary extends XiboEntity
 
 	public function create($name, $fileLocation, $oldMediaId = null, $updateInLayouts = null, $deleteOldRevisions = null)
     {
+    	$this->getLogger()->debug('Preparing media payload ');
             $payload = [
             [
                 'name' => 'name',
@@ -73,21 +76,26 @@ class XiboLibrary extends XiboEntity
                 'contents' => fopen($fileLocation, 'r')
             ]
         ];
+        $this->getLogger()->info('Uploading new media file ' . $name);
         if ($oldMediaId != null) {
+        	$this->getLogger()->debug('Replacing old media ID ' .$oldMediaId);
             $payload[] = [
                 'name' => 'oldMediaId',
                 'contents' => $oldMediaId
             ];
+            $this->getLogger()->debug('Updating Media in all layouts it is assigned to');
             $payload[] = [
                 'name' => 'updateInLayouts',
                 'contents' => $updateInLayouts
             ];
+            $this->getLogger()->debug('Deleting Old Revisions');
             $payload[] = [
                 'name' => 'deleteOldRevisions',
                 'contents' => $deleteOldRevisions
             ];
     	}
             $response = $this->doPost('/library', ['multipart' => $payload]);
+            $this->getLogger()->debug('Uploaded media ' . $response['files'][0]['name'] . ' Media ID ' . $response['files'][0]['mediaId'] . ' Stored as ' . $response['files'][0]['storedas']);
         	// Response will have the format:
         	/*{
             	"files":[{
@@ -108,10 +116,12 @@ class XiboLibrary extends XiboEntity
         $response['files'][0]['storedAs'] = $response['files'][0]['storedas'];
         $media = new XiboLibrary($this->getEntityProvider());
         return $media->hydrate($response['files'][0]);
+
     }
         
     public function revise($fileLocation)
     {
+    	$this->getLogger()->info('Revising file');
         return $this->create($this->name, $fileLocation, $this->mediaId, $this->updateInLayouts, $this->deleteOldRevisions);
     }
 
@@ -131,6 +141,7 @@ class XiboLibrary extends XiboEntity
 		$this->retired = $retired;
 		$this->tags = $tags;
 		$this->updateInLayouts = $updateInLayouts;
+		$this->getLogger()->info('Editing Media ID ' . $this->mediaId);
 		$response = $this->doPut('/library/' . $this->mediaId, $this->toArray());
 		
 		return $this->hydrate($response);
@@ -142,6 +153,7 @@ class XiboLibrary extends XiboEntity
 	 */
 	public function delete()
 	{
+		$this->getLogger()->info('Deleting media ID ' . $this->mediaId);
 		$this->doDelete('/library/' . $this->mediaId);
 		
 		return true;
@@ -153,6 +165,7 @@ class XiboLibrary extends XiboEntity
      */
     public function deleteAssigned()
     {
+		$this->getLogger()->info('Force deleting assigned media ID ' . $this->mediaId);
         $this->doDelete('/library/' . $this->mediaId, [
             'forceDelete' => 1
             ]);

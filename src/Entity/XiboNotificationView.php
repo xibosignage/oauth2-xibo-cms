@@ -1,8 +1,8 @@
 <?php
 /*
  * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
- * (XiboText.php)
+ * Copyright (C) 2018 Spring Signage Ltd
+ * (XiboNotificationView.php)
  */
 
 
@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboText extends XiboWidget
+class XiboNotificationView extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -22,47 +22,43 @@ class XiboText extends XiboWidget
     public $useDuration;
     public $calculatedDuration;
     public $widgetOptions;
-    public $mediaIds;
-    public $audio;
-    public $permissions;
-    public $module;
     public $name;
+    public $age;
+    public $noDataMessage;
     public $effect;
     public $speed;
-    public $backgroundColor;
-    public $marqueeInlineSelector;
-    public $text;
-    public $javaScript;
+    public $durationIsPerItem;
+    public $embedStyle;
 
     /**
      * Create
      * @param $name
      * @param $duration
      * @param $useDuration
-     * @param $effect
-     * @param $speed
-     * @param $backgroundColor
-     * @param $marqueeInlineSelector
-     * @param $text
-     * @param $javaScript
+     * @param $age
+     * @param $noDataMessage
+     * @param $effect;
+     * @param $speed;
+     * @param $durationIsPerItem
+     * @param $embedStyle
      * @param $playlistId
-     * @return XiboText
+     * @return XiboNotificationView
      */
-    public function create($name, $duration, $useDuration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $playlistId)
+    public function create($name, $duration, $useDuration, $age, $noDataMessage, $effect, $speed, $durationIsPerItem, $embedStyle = null, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
         $this->useDuration = $useDuration;
+        $this->age = $age;
+        $this->noDataMessage = $noDataMessage;
         $this->effect = $effect;
         $this->speed = $speed;
-        $this->backgroundColor = $backgroundColor;
-        $this->marqueeInlineSelector = $marqueeInlineSelector;
-        $this->text = $text;
-        $this->javaScript = $javaScript; 
+        $this->durationIsPerItem = $durationIsPerItem;
+        $this->embedStyle = $embedStyle;
         $this->playlistId = $playlistId;
-        $this->getLogger()->info('Creating a new Text widget in playlist ID ' . $playlistId);
-        $response = $this->doPost('/playlist/widget/text/' . $playlistId , $this->toArray());
+        $this->getLogger()->info('Creating Notification widget in playlist ID ' . $playlistId);
+        $response = $this->doPost('/playlist/widget/notificationview/' . $playlistId, $this->toArray());
 
         return $this->hydrate($response);
     }
@@ -72,38 +68,37 @@ class XiboText extends XiboWidget
      * @param $name
      * @param $duration
      * @param $useDuration
-     * @param $effect
-     * @param $speed
-     * @param $backgroundColor
-     * @param $marqueeInlineSelector
-     * @param $text
-     * @param $javaScript
+     * @param $age
+     * @param $noDataMessage
+     * @param $effect;
+     * @param $speed;
+     * @param $durationIsPerItem
+     * @param $embedStyle
      * @param $widgetId
-     * @return XiboText
+     * @return XiboNotificationView
      */
-    public function edit($name, $duration, $useDuration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $widgetId)
+    public function edit($name, $duration, $useDuration, $age, $noDataMessage, $effect, $speed, $durationIsPerItem, $embedStyle = null, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
         $this->useDuration = $useDuration;
+        $this->age = $age;
+        $this->noDataMessage = $noDataMessage;
         $this->effect = $effect;
         $this->speed = $speed;
-        $this->backgroundColor = $backgroundColor;
-        $this->marqueeInlineSelector = $marqueeInlineSelector;
-        $this->text = $text;
-        $this->javaScript = $javaScript; 
+        $this->durationIsPerItem = $durationIsPerItem;
+        $this->embedStyle = $embedStyle;
         $this->widgetId = $widgetId;
         $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
     }
-    
+
     /**
-     * Delete
-     * @return bool
-     */
+    * Delete
+    */
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();

@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboCurrencies extends XiboEntity
+class XiboCurrencies extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -48,21 +48,6 @@ class XiboCurrencies extends XiboEntity
     public $maxItemsPerPage;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboCurrencies
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-
-    /**
      * Create
      * @param $templateId
      * @param $name
@@ -79,6 +64,7 @@ class XiboCurrencies extends XiboEntity
      * @param $updateInterval
      * @param $durationIsPerPage
      * @param $playlistId
+     * @return XiboCurrencies
      */
     public function create($templateId, $name, $duration, $useDuration, $base, $items, $reverseConversion, $effect, $speed, $backgroundColor, $noRecordsMessage, $dateFormat, $updateInterval, $durationIsPerPage, $playlistId)
     {
@@ -99,6 +85,7 @@ class XiboCurrencies extends XiboEntity
         $this->updateInterval = $updateInterval;
         $this->durationIsPerPage = $durationIsPerPage;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating Currencies widget and assigning it to playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/currencies/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -120,7 +107,8 @@ class XiboCurrencies extends XiboEntity
      * @param $dateFormat
      * @param $updateInterval
      * @param $durationIsPerPage
-     * @param $playlistId
+     * @param $widgetId
+     * @return XiboCurrencies
      */
     public function edit($templateId, $name, $duration, $useDuration, $base, $items, $reverseConversion, $effect, $speed, $backgroundColor, $noRecordsMessage, $dateFormat, $updateInterval, $durationIsPerPage, $widgetId)
     {
@@ -141,6 +129,7 @@ class XiboCurrencies extends XiboEntity
         $this->updateInterval = $updateInterval;
         $this->durationIsPerPage = $durationIsPerPage;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing widget ID' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -152,7 +141,8 @@ class XiboCurrencies extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

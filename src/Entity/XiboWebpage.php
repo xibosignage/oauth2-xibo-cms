@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboWebpage extends XiboEntity
+class XiboWebpage extends XiboWidget
 {
 
     public $widgetId;
@@ -38,21 +38,6 @@ class XiboWebpage extends XiboEntity
     public $modeId;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboWebpage
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-
-    /**
      * Create
      * @param $name
      * @param $duration
@@ -65,6 +50,8 @@ class XiboWebpage extends XiboEntity
      * @param $pageWidth
      * @param $pageHeight
      * @param $modeId
+     * @param $playlistId
+     * @return XiboWebpage
      */
     public function create($name, $duration, $useDuration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $playlistId)
     {
@@ -81,6 +68,7 @@ class XiboWebpage extends XiboEntity
         $this->pageHeight = $pageHeight;
         $this->modeId = $modeId;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating a new Webpage widget in playlist ID ' .$playlistId);
         $response = $this->doPost('/playlist/widget/webpage/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -99,6 +87,8 @@ class XiboWebpage extends XiboEntity
      * @param $pageWidth
      * @param $pageHeight
      * @param $modeId
+     * @param $widgetId
+     * @return XiboWebpage
      */
     public function edit($name, $duration, $useDuration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $widgetId)
     {
@@ -115,7 +105,8 @@ class XiboWebpage extends XiboEntity
         $this->pageHeight = $pageHeight;
         $this->modeId = $modeId;
         $this->widgetId = $widgetId;
-        $response = $this->doPut('/playlist/widget/webpage/' . $playlistId , $this->toArray());
+        $this->getLogger()->info('Editing widget ID ' . $widgetId);
+        $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
     }
@@ -126,7 +117,8 @@ class XiboWebpage extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

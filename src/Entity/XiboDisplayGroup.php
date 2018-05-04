@@ -24,6 +24,12 @@ class XiboDisplayGroup extends XiboEntity
     public $isDynamic = 0;
     public $dynamicCriteria;
     public $userId = 0;
+    public $duration;
+    public $changeMode;
+    public $downloadRequired;
+    public $commandId;
+    public $layoutId;
+    public $mediaId;
 
     /**
      * @param array $params
@@ -31,6 +37,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function get(array $params = [])
     {
+        $this->getLogger()->info('Getting list of Display Groups');
         $entries = [];
         $response = $this->doGet('/displaygroup', $params);
 
@@ -49,6 +56,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function getById($id)
     {
+        $this->getLogger()->info('Getting Display Group ID ' . $id);
         $response = $this->doGet('/displaygroup', [
             'displayGroupId' => $id
         ]);
@@ -75,6 +83,7 @@ class XiboDisplayGroup extends XiboEntity
         $this->isDynamic = $isDynamic;
         $this->dynamicCriteria = $dynamicCriteria;
 
+        $this->getLogger()->info('Creating a new display Group ' . $displayGroup);
         $response = $this->doPost('/displaygroup', $this->toArray());
 
         return $this->hydrate($response);
@@ -95,6 +104,7 @@ class XiboDisplayGroup extends XiboEntity
         $this->isDynamic = $isDynamic;
         $this->dynamicCriteria = $dynamicCriteria;
 
+        $this->getLogger()->info('Editing Display Group ID ' . $this->displayGroupId);
         $response = $this->doPut('/displaygroup/' . $this->displayGroupId, $this->toArray());
 
         return $this->hydrate($response);
@@ -106,6 +116,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function delete()
     {
+        $this->getLogger()->info('Deleting Display Group ID ' . $this->displayGroupId);
         $this->doDelete('/displaygroup/' . $this->displayGroupId);
 
         return true;
@@ -118,8 +129,23 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function assignDisplay($displayId)
     {
+        $this->getLogger()->info('Assigning display ID ' . $displayId . ' To display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/assign', [
+            'displayId' => $displayId
+            ]);
 
-        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/assign', [
+        return $this;
+    }
+
+    /**
+     * Unassign display
+     * @param $displayId
+     * @return XiboDisplayGroup
+     */
+    public function unassignDisplay($displayId)
+    {
+        $this->getLogger()->info('Unassigning display ID ' . $displayId . ' From display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/unassign', [
             'displayId' => $displayId
             ]);
 
@@ -133,8 +159,22 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function assignDisplayGroup($displayGroupId)
     {
+        $this->getLogger()->info('Assigning display Group ID ' . $displayGroupId . ' To display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/assign', [
+        'displayGroupId' => $displayGroupId
+        ]);
+        return $this;
+    }
 
-        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/assign', [
+    /**
+     * Unassign display group
+     * @param int $displayGroupId
+     * @return XiboDisplayGroup
+     */
+    public function unassignDisplayGroup($displayGroupId)
+    {
+        $this->getLogger()->info('Unassigning display Group ID ' . $displayGroupId . ' From display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/unassign', [
         'displayGroupId' => $displayGroupId
         ]);
         return $this;
@@ -147,8 +187,23 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function assignLayout($layoutId)
     {
+        $this->getLogger()->info('Assigning Layout ID ' . $layoutId . ' To display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/layout/assign', [
+            'layoutId' => $layoutId
+            ]);
 
-        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/layout/assign', [
+        return $this;
+    }
+
+    /**
+     * Unassign layout
+     * @param $layoutId
+     * @return XiboDisplayGroup
+     */
+    public function unassignLayout($layoutId)
+    {
+        $this->getLogger()->info('Unassigning Layout ID ' . $layoutId . ' From display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/layout/unassign', [
             'layoutId' => $layoutId
             ]);
 
@@ -162,10 +217,127 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function assignMedia($mediaId)
     {
-
-        $response = $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/assign', [
+        $this->getLogger()->info('Assigning media ID ' . $mediaId . ' To display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/assign', [
             'mediaId' => $mediaId
             ]);
+
+        return $this;
+    }
+
+    /**
+     * Unassign media
+     * @param $mediaId
+     * @return XiboDisplayGroup
+     */
+    public function unassignMedia($mediaId)
+    {
+        $this->getLogger()->info('Unassigning media ID ' . $mediaId . ' From display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/unassign', [
+            'mediaId' => $mediaId
+            ]);
+
+        return $this;
+    }
+
+    /**
+     * Version Instructions
+     * @param $mediaId
+     * @return XiboDisplayGroup
+     */
+    public function version($mediaId)
+    {
+        $this->getLogger()->info('Assigning media ID ' . $mediaId . ' To display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/version', [
+            'mediaId' => $mediaId
+            ]);
+
+        return $this;
+    }
+
+    /**
+     * Collect Now
+     */
+    public function collectNow()
+    {
+        $this->getLogger()->info('Sending Collect Now action to display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/action/collectNow');
+
+        return $this;
+    }
+
+    /**
+     * Clear Stats and logs
+     */
+    public function clear()
+    {
+        $this->getLogger()->info('Sending Clear All stats and logs action to display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/action/clearStatsAndLogs');
+
+        return $this;
+    }
+
+    /**
+     * ChangeLayout
+     * @param $layoutId
+     * @param $duration
+     * @param $downloadRequired
+     * @param $changeMode
+     * @return XiboDisplayGroup
+     */
+    public function changeLayout($layoutId, $duration, $downloadRequired, $changeMode)
+    {
+        $this->getLogger()->info('Sending Change Layout action to display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/action/changeLayout', [
+            'layoutId' => $layoutId,
+            'duration' => $duration,
+            'downloadRequired' => $downloadRequired,
+            'changeMode' => $changeMode
+        ]);
+
+        return $this;
+    }
+    /**
+     * Revert to Schedule
+     */
+    public function revertToSchedule()
+    {
+        $this->getLogger()->info('Sending Revert to Schedule action to display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/action/revertToSchedule');
+
+        return $this;
+    }
+
+    /**
+     * Overlay Layout
+     * @param $layoutId
+     * @param $duration
+     * @param $downloadRequired
+     * @return XiboDisplayGroup
+     */
+    public function overlayLayout($layoutId, $duration, $downloadRequired)
+    {
+        $this->getLogger()->info('Sending Overlay Layout action to display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/action/overlayLayout', [
+            'layoutId' => $layoutId,
+            'duration' => $duration,
+            'downloadRequired' => $downloadRequired
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Command
+     * @param $commandId
+     * @return XiboDisplayGroup
+     */
+    public function command($commandId)
+    {
+        $this->getLogger()->info('Sending predefined Command to display Group ID ' . $this->displayGroupId);
+        $this->doPost('/displaygroup/' . $this->displayGroupId . '/action/command', [
+            'commandId' => $commandId,
+        ]);
 
         return $this;
     }

@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboClock extends XiboEntity
+class XiboClock extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -35,20 +35,6 @@ class XiboClock extends XiboEntity
     public $clockFace;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboClock
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-    /**
      * Create
      * @param $name
      * @param $duration
@@ -59,6 +45,8 @@ class XiboClock extends XiboEntity
      * @param $format
      * @param $showSeconds
      * @param $clockFace
+     * @param $playlistId
+     * @return XiboClock
      */
     public function create($name, $duration, $useDuration, $theme, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $playlistId)
     {
@@ -73,7 +61,8 @@ class XiboClock extends XiboEntity
         $this->showSeconds = $showSeconds;
         $this->clockFace = $clockFace;
         $this->playlistId = $playlistId;
-        $response = $this->doPost('/playlist/widget/clock/' . $playlistId , $this->toArray());
+        $this->getLogger()->info('Creating Clock widget and assigning it to playlist ID ' . $playlistId);
+        $response = $this->doPost('/playlist/widget/clock/' . $playlistId, $this->toArray());
 
         return $this->hydrate($response);
     }
@@ -89,6 +78,8 @@ class XiboClock extends XiboEntity
      * @param $format
      * @param $showSeconds
      * @param $clockFace
+     * @param $widgetId
+     * @return XiboClock
      */
     public function edit($name, $duration, $useDuration, $theme, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $widgetId)
     {
@@ -103,6 +94,7 @@ class XiboClock extends XiboEntity
         $this->showSeconds = $showSeconds;
         $this->clockFace = $clockFace;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -114,7 +106,8 @@ class XiboClock extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboPdf extends XiboEntity
+class XiboPdf extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -29,24 +29,12 @@ class XiboPdf extends XiboEntity
     public $name;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboPdf
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-    /**
      * Edit
      * @param $name
      * @param $duration
      * @param $useDuration
+     * @param $widgetId
+     * @return XiboPdf
      */
     public function edit($name, $duration, $useDuration, $widgetId)
     {
@@ -55,6 +43,7 @@ class XiboPdf extends XiboEntity
         $this->duration = $duration;
         $this->useDuration = $useDuration;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing PDF widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -66,7 +55,8 @@ class XiboPdf extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

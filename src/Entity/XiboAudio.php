@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboAudio extends XiboEntity
+class XiboAudio extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -31,39 +31,48 @@ class XiboAudio extends XiboEntity
     public $loop;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboAudio
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-    /**
      * Edit
      * @param $name
      * @param $duration
      * @param $useDuration
      * @param $mute
      * @param $loop
+     * @param $widgetId
+     * @return XiboAudio
      */
     public function edit($name, $useDuration, $duration, $mute, $loop, $widgetId)
     {
-        $this->userId = $this->getEntityProvider()->getMe()->getId();
+
         $this->name = $name;
         $this->useDuration = $useDuration;
         $this->duration = $duration;
-        $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
         $this->loop = $loop;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
+        $this->getLogger()->debug('Passing the response to Hydrate');
+        return $this->hydrate($response);
+    }
+
+    /**
+     * @param $mediaId
+     * @param $volume
+     * @param $loop
+     * @param $widgetId
+     * @return XiboWidget
+     */
+    public function assignToWidget($mediaId, $volume, $loop, $widgetId)
+    {
+        $this->mediaId = $mediaId;
+        $this->volume = $volume;
+        $this->loop = $loop;
+        $this->widgetId = $widgetId;
+        $this->getLogger()->info('Assigning audio file ID ' . $mediaId . ' To widget ID ' . $widgetId);
+        $response = $this->doPut('/playlist/widget/' . $widgetId . '/audio', $this->toArray());
+
+        $this->getLogger()->debug('Passing the response to Hydrate');
         return $this->hydrate($response);
     }
 
@@ -72,8 +81,8 @@ class XiboAudio extends XiboEntity
     */
     public function delete()
     {
-        $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

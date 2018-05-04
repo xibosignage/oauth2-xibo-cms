@@ -20,6 +20,7 @@ class XiboCampaign extends XiboEntity
     public $campaign;
     public $isLayoutSpecific = 0;
     public $numberLayouts;
+    public $totalDuration;
 
     /**
      * @param array $params
@@ -27,6 +28,7 @@ class XiboCampaign extends XiboEntity
      */
     public function get(array $params = [])
     {
+        $this->getLogger()->info('Getting list of Campaigns');
         $entries = [];
         $response = $this->doGet($this->url, $params);
 
@@ -44,6 +46,7 @@ class XiboCampaign extends XiboEntity
      */
     public function getById($id)
     {
+        $this->getLogger()->info('Getting Campaign ID ' . $id);
         $response = $this->doGet($this->url, [
             'campaignId' => $id
         ]);
@@ -60,15 +63,17 @@ class XiboCampaign extends XiboEntity
      */
     public function create($campaign)
     {
+        $this->getLogger()->debug('Getting Resource Owner');
         $this->ownerId = $this->getEntityProvider()->getMe()->getId();
         $this->campaign = $campaign;
 
         // Rewrite parameter mismatch
         $array = $this->toArray();
         $array['name'] = $array['campaign'];
-
+        $this->getLogger()->info('Creating Campaign ' . $this->campaign);
         $response = $this->doPost($this->url, $array);
 
+        $this->getLogger()->debug('Passing the response to Hydrate');
         return $this->hydrate($response);
     }
 
@@ -78,15 +83,17 @@ class XiboCampaign extends XiboEntity
      */
     public function edit($campaign)
     {
+        $this->getLogger()->debug('Getting Resource Owner');
         $this->ownerId = $this->getEntityProvider()->getMe()->getId();
         $this->campaign = $campaign;
 
         // Rewrite parameter mismatch
         $array = $this->toArray();
         $array['name'] = $array['campaign'];
-
+        $this->getLogger()->info('Editing Campaign ID ' . $this->campaignId);
         $response = $this->doPut($this->url . '/' . $this->campaignId, $array);
 
+        $this->getLogger()->debug('Passing the response to Hydrate');
         return $this->hydrate($response);
     }
 
@@ -95,6 +102,7 @@ class XiboCampaign extends XiboEntity
      */
     public function delete()
     {
+        $this->getLogger()->info('Deleting Campaign ID ' . $this->campaignId);
         $this->doDelete($this->url . '/' . $this->campaignId);
 
         return true;
@@ -102,17 +110,17 @@ class XiboCampaign extends XiboEntity
 
     /**
      * Assign layout
-     * @param $layout
+     * @param $layoutId
      * @param int $campaignId
      * @return XiboCampaign
      */
-    public function assignLayout($layout)
+    public function assignLayout($layoutId)
     {
-
+        $this->getLogger()->info('Assigning Layout ID ' . $layoutId . ' To Campaign ID ' . $this->campaignId);
         $response = $this->doPost('/campaign/layout/assign/' . $this->campaignId, [
             'layoutId' => [
                 [
-                    'layoutId' => $layout,
+                    'layoutId' => $layoutId,
                     'displayOrder' => 1
                 ]
             ]

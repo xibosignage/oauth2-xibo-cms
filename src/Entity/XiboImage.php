@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboImage extends XiboEntity
+class XiboImage extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -32,20 +32,6 @@ class XiboImage extends XiboEntity
     public $valignId;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboImage
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-    /**
      * Edit
      * @param $name
      * @param $duration
@@ -53,6 +39,8 @@ class XiboImage extends XiboEntity
      * @param $scaleTypeId
      * @param $alignId
      * @param $valignId
+     * @param $widgetId
+     * @return XiboImage
      */
     public function edit($name, $duration, $useDuration, $scaleTypeId, $alignId, $valignId, $widgetId)
     {
@@ -64,6 +52,7 @@ class XiboImage extends XiboEntity
         $this->alignId = $alignId;
         $this->valignId = $valignId;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing Image widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -75,7 +64,8 @@ class XiboImage extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

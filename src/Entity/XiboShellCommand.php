@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboShellCommand extends XiboEntity
+class XiboShellCommand extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -34,21 +34,6 @@ class XiboShellCommand extends XiboEntity
     public $commandCode;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboShellCommand
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-
-    /**
      * Create
      * @param $name
      * @param $duration
@@ -57,8 +42,10 @@ class XiboShellCommand extends XiboEntity
      * @param $linuxCommand
      * @param $launchThroughCmd
      * @param $terminateCommand
-     * @param $useTaskKill
+     * @param $useTaskkill
      * @param $commandCode
+     * @param $playlistId
+     * @return XiboShellCommand
      */
     public function create($name, $duration, $useDuration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $playlistId)
     {
@@ -73,6 +60,7 @@ class XiboShellCommand extends XiboEntity
         $this->useTaskkill = $useTaskkill;
         $this->commandCode = $commandCode;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating new Schell Command widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/shellCommand/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -87,8 +75,10 @@ class XiboShellCommand extends XiboEntity
      * @param $linuxCommand
      * @param $launchThroughCmd
      * @param $terminateCommand
-     * @param $useTaskKill
+     * @param $useTaskkill
      * @param $commandCode
+     * @param $widgetId
+     * @return XiboShellCommand
      */
     public function edit($name, $duration, $useDuration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $widgetId)
     {
@@ -103,6 +93,7 @@ class XiboShellCommand extends XiboEntity
         $this->useTaskkill = $useTaskkill;
         $this->commandCode = $commandCode;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing a widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -110,11 +101,13 @@ class XiboShellCommand extends XiboEntity
 
     /**
      * Delete
+     * @return bool
      */
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting a widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

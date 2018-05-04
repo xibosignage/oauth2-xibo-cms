@@ -31,6 +31,7 @@ class XiboDaypart extends XiboEntity
     public function get(array $params = [])
     {
         $entries = [];
+        $this->getLogger()->info('Getting dayparts ' . $this->name);
         $response = $this->doGet($this->url, $params);
 
         foreach ($response as $item) {
@@ -47,6 +48,7 @@ class XiboDaypart extends XiboEntity
      */
     public function getById($id)
     {
+        $this->getLogger()->info('Getting dayPart ID ' . $id);
         $response = $this->doGet($this->url, [
             'dayPartId' => $id
         ]);
@@ -68,7 +70,34 @@ class XiboDaypart extends XiboEntity
      * @param $exceptionEndTimes
      * @return XiboDaypart
      */
-    public function create($name, $description, $startTime, $endTime, $exceptionDays, $exceptionStartTimes, $exceptionEndTimes)
+    public function create($name, $description, $startTime, $endTime, $exceptionDays = [], $exceptionStartTimes = [], $exceptionEndTimes = [])
+    {
+        $this->name = $name;
+        $this->description = $description;
+        $this->startTime = $startTime;
+        $this->endTime = $endTime;
+        $this->exceptionDays = $exceptionDays;
+        $this->exceptionStartTimes = $exceptionStartTimes;
+        $this->exceptionEndTimes = $exceptionEndTimes;
+
+        $this->getLogger()->info('Creating dayPart ' . $name);
+        $response = $this->doPost('/daypart', $this->toArray());
+
+        return $this->hydrate($response);
+    }
+
+    /**
+     * Edit
+     * @param $name
+     * @param $description
+     * @param $startTime
+     * @param $endTime
+     * @param $exceptionDays
+     * @param $exceptionStartTimes
+     * @param $exceptionEndTimes
+     * @return XiboDaypart
+     */
+    public function edit($name, $description, $startTime, $endTime, $exceptionDays = [], $exceptionStartTimes = [], $exceptionEndTimes = [])
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -78,8 +107,9 @@ class XiboDaypart extends XiboEntity
         $this->exceptionDays = $exceptionDays;
         $this->exceptionStartTimes = $exceptionStartTimes;
         $this->exceptionEndTimes = $exceptionEndTimes;
-
-        $response = $this->doPost('/daypart', $this->toArray());
+        
+        $this->getLogger()->info('Editing dayPart ID ' . $this->dayPartId);
+        $response = $this->doPut('/daypart/' . $this->dayPartId, $this->toArray());
 
         return $this->hydrate($response);
     }
@@ -90,6 +120,7 @@ class XiboDaypart extends XiboEntity
      */
     public function delete()
     {
+        $this->getLogger()->info('Deleting dayPart ID ' . $this->dayPartId);
         $this->doDelete('/daypart/' . $this->dayPartId);
         
         return true;
