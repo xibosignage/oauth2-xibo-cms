@@ -39,7 +39,7 @@ try {
             ],
             [
                 'name' => 'files',
-                'contents' => fopen('C:\Users\Peter\Documents\oauth2-xibo-cms\files\dandan.jpg', 'r')
+                'contents' => fopen('files\example.jpg', 'r')
             ]
         ]
     ]);
