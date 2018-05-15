@@ -14,26 +14,58 @@ class XiboDataSetColumn extends XiboEntity
 
     private $url = '/dataset';
 
-    public $dataSetId;
     public $dataSetColumnId;
-    public $rowId;
-    public $dataSet;
-    public $description;
-    public $userId;
-    public $lastDataEdit;
-    public $owner;
-    public $groupsWithPermissions;
-    public $code;
-    public $isLookup;
+    public $dataSetId;
     public $heading;
-    public $listContent;
-    public $columnOrder;
     public $dataTypeId;
     public $dataSetColumnTypeId;
+    public $listContent;
+    public $columnOrder;
     public $formula;
     public $dataType;
+    public $remoteField;
+    public $showFilter;
+    public $showSort;
     public $dataSetColumnType;
-    public $dataSetColumnId_ID;
+
+    /**
+     * @param $dataSetId
+     * @param array $params
+     * @return array|XiboDataSetColumn
+     */
+    public function get($dataSetId, array $params = [])
+    {
+        $entries = [];
+        $this->dataSetId = $dataSetId;
+        $this->getLogger()->info('Getting list of columns from dataSet ID ' . $dataSetId);
+        $response = $this->doGet('/dataset/' . $dataSetId . '/column', $params);
+
+        foreach ($response as $item) {
+            $entries[] = clone $this->hydrate($item);
+        }
+
+        return $entries;
+    }
+
+    /**
+     * @param $dataSetId
+     * @param $id
+     * @return XiboDataSetColumn
+     * @throws XiboApiException
+     */
+    public function getById($dataSetId, $id)
+    {
+        $this->dataSetId = $dataSetId;
+        $this->getLogger()->info('Getting column ID ' . $id . ' From dataSet ID ' . $dataSetId);
+        $response = $this->doGet('/dataset/'. $dataSetId .'/column' , [
+            'dataSetColumnId' => $id
+        ]);
+
+        if (count($response) <= 0)
+            throw new XiboApiException('Expecting a single record, found ' . count($response));
+
+        return clone $this->hydrate($response[0]);
+    }
 
      /**
      * Create Column
@@ -56,27 +88,10 @@ class XiboDataSetColumn extends XiboEntity
         $this->dataSetColumnTypeId = $dataSetColumnTypeId;
         $this->formula = $formula;
         $this->dataSetId = $dataSetId;
+        $this->getLogger()->info('Creating a new column ' . $heading . ' In dataSet ID ' . $this->dataSetId);
         $response = $this->doPost('/dataset/'. $this->dataSetId . '/column', $this->toArray());
         
         return $this->hydrate($response);
-    }
-
-    /**
-     * @param $id
-     * @return XiboDataSetColumn
-     * @throws XiboApiException
-     */
-    public function getById($dataSetId, $id)
-    {
-        $this->dataSetId = $dataSetId;
-        $response = $this->doGet('/dataset/'. $this->dataSetId .'/column' , [
-            'dataSetColumnId' => $id
-        ]);
-
-        if (count($response) <= 0)
-            throw new XiboApiException('Expecting a single record, found ' . count($response));
-
-        return clone $this->hydrate($response[0]);
     }
 
     /**
@@ -98,6 +113,7 @@ class XiboDataSetColumn extends XiboEntity
         $this->dataTypeId = $dataTypeId;
         $this->dataSetColumnTypeId = $dataSetColumnTypeId;
         $this->formula = $formula;
+        $this->getLogger()->info('Editing column ID ' . $this->dataSetColumnId . ' In dataSet ID ' . $this->dataSetId);
         $response = $this->doPut('/dataset/'. $this->dataSetId . '/column/' . $this->dataSetColumnId, $this->toArray());
         
         return $this->hydrate($response);
@@ -109,6 +125,7 @@ class XiboDataSetColumn extends XiboEntity
      */
     public function delete()
     {
+        $this->getLogger()->info('Deleting column ID ' . $this->dataSetColumnId . ' From dataSet ID ' . $this->dataSetId);
         $this->doDelete('/dataset/' . $this->dataSetId . '/column/' . $this->dataSetColumnId);
         
         return true;

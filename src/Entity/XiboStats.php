@@ -30,6 +30,7 @@ class XiboStats extends XiboEntity
 	 */
 	public function get(array $params = [])
 	{
+		$this->getLogger()->info('Getting list of statistics ');
 		$entries = [];
 		$response = $this->doGet($this->url, $params);
 		foreach ($response as $item) {

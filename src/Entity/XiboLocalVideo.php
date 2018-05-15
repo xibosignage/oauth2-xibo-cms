@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboLocalVideo extends XiboEntity
+class XiboLocalVideo extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -31,26 +31,14 @@ class XiboLocalVideo extends XiboEntity
     public $mute;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboLocalVideo
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-    /**
      * Create
      * @param $uri
      * @param $duration
      * @param $useDuration
      * @param $scaleTypeId
      * @param $mute
+     * @param $playlistId
+     * @return XiboLocalVideo
      */
     public function create($uri, $duration, $useDuration, $scaleTypeId, $mute, $playlistId)
     {
@@ -61,6 +49,7 @@ class XiboLocalVideo extends XiboEntity
         $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating Local Video widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/localVideo/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -72,6 +61,8 @@ class XiboLocalVideo extends XiboEntity
      * @param $useDuration
      * @param $scaleTypeId
      * @param $mute
+     * @param $widgetId
+     * @return XiboLocalVideo
      */
     public function edit($uri, $duration, $useDuration, $scaleTypeId, $mute, $widgetId)
     {
@@ -82,6 +73,7 @@ class XiboLocalVideo extends XiboEntity
         $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing Local Video widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -93,7 +85,8 @@ class XiboLocalVideo extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

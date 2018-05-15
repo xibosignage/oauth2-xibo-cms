@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboFinance extends XiboEntity
+class XiboFinance extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -44,21 +44,6 @@ class XiboFinance extends XiboEntity
     public $resultIdentifier;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboFinance
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-
-    /**
      * Create
      * @param $templateId
      * @param $name
@@ -73,6 +58,7 @@ class XiboFinance extends XiboEntity
      * @param $updateInterval
      * @param $durationIsPerItem
      * @param $playlistId
+     * @return XiboFinance
      */
     public function create($templateId, $name, $duration, $useDuration, $item, $effect, $speed, $backgroundColor, $noRecordsMessage, $dateFormat, $updateInterval, $durationIsPerItem, $playlistId)
     {
@@ -91,6 +77,7 @@ class XiboFinance extends XiboEntity
         $this->updateInterval = $updateInterval;
         $this->durationIsPerItem = $durationIsPerItem;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating Finance widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/finance/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -111,6 +98,7 @@ class XiboFinance extends XiboEntity
      * @param $updateInterval
      * @param $durationIsPerItem
      * @param $playlistId
+     * @return XiboFinance
      */
     public function edit($templateId, $name, $duration, $useDuration, $item, $effect, $speed, $backgroundColor, $noRecordsMessage, $dateFormat, $updateInterval, $durationIsPerItem, $widgetId)
     {
@@ -129,6 +117,7 @@ class XiboFinance extends XiboEntity
         $this->updateInterval = $updateInterval;
         $this->durationIsPerItem = $durationIsPerItem;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing Finance widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -140,7 +129,8 @@ class XiboFinance extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

@@ -33,16 +33,21 @@ class XiboWidget extends XiboEntity
 
     /**
      * Get by Id
-     * @param $id
+     * @param $widgetId
      * @return $this|XiboWidget
      * @throws XiboApiException
      */
-    public function getById($id)
+    public function getById($widgetId)
     {
+        $this->getLogger()->info('Getting widget ID ' . $widgetId);
         $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
+            'widgetId' => $widgetId
         ]);
 
-        return clone $this->hydrate($response[0]);
+        $resonse = clone $this->hydrate($response[0]);
+        if ($response[0]['type'] != $this->type)
+            throw new XiboApiException('Invalid widget type');
+
+        return $this;
     }
 }

@@ -38,22 +38,16 @@ class XiboDataSetRow extends XiboEntity
     public $dataSetColumnId_ID;
 
     /**
-     * @param $id
-     * @return XiboDataSetRow
-     * @throws XiboApiException
+     * @param $dataSetId
      * @return XiboDataSetRow
      */
-    public function getById($dataSetId, $id)
+    public function get($dataSetId)
     {
         $this->dataSetId = $dataSetId;
-        $response = $this->doGet('/dataset/data/'. $this->dataSetId, [
-            'rowId' => $id
-        ]);
+        $this->getLogger()->info('Getting row data from dataSet ID ' . $dataSetId);
+        $response = $this->doGet('/dataset/data/'. $this->dataSetId);
 
-        if (count($response) <= 0)
-            throw new XiboApiException('Expecting a single record, found ' . count($response));
-
-        return $response[0];
+        return $response;
     }
 
     /**
@@ -67,7 +61,8 @@ class XiboDataSetRow extends XiboEntity
     {
         $this->dataSetId = $dataSetId;
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doPost('/dataset/data/'. $this->dataSetId, [
+        $this->getLogger()->info('Creating row in dataSet ID ' . $dataSetId . ' Column ID ' . $columnId);
+        $response = $this->doPost('/dataset/data/'. $dataSetId, [
             'dataSetColumnId_' . $columnId => $rowData
             ]);
         
@@ -85,6 +80,7 @@ class XiboDataSetRow extends XiboEntity
     {
         $this->dataSetId = $dataSetId;
         $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->getLogger()->info('Editing row ID' . $this->rowId . ' In dataSet ID ' . $dataSetId . ' Column ID' . $columnId);
         $response = $this->doPut('/dataset/data/'. $this->dataSetId . $this->rowId, [
             'dataSetColumnId_' . $columnId => $rowData
             ]);
@@ -98,6 +94,7 @@ class XiboDataSetRow extends XiboEntity
      */
     public function delete()
     {
+        $this->getLogger()->info('Deleting row ID ' . $this->rowId . ' From dataSet ID ' . $this->dataSetId);
         $this->doDelete('/dataset/data/' . $this->dataSetId . $this->rowId);
         
         return true;

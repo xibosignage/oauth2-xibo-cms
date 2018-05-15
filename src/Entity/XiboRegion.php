@@ -23,7 +23,10 @@ class XiboRegion extends XiboEntity
 	public $top;
 	public $left;
 	public $zIndex;
-
+    public $loop;
+    public $transitionType;
+    public $transitionDuration;
+    public $transitionDirection;
     public $playlists;
 
 	/**
@@ -44,21 +47,20 @@ class XiboRegion extends XiboEntity
         $this->top = $top;
         $this->left = $left; 
         $this->layoutId = $layoutId;
-
+        $this->getLogger()->info('Creating Region in Layout Id ' . $this->layoutId);
         // Array response from CMS
         $response = $this->doPost('/region/' . $this->layoutId, $this->toArray());
-
         // Hydrate the Region object
+        $this->getLogger()->debug('Passing the response to Hydrate');
         $region = $this->hydrate($response);
 
+        $this->getLogger()->debug('Creating child object Playlist and linking it to parent Region');
         // Response Array from the CMS will contain a playlists entry, which holds the attributes for 
         // each Playlist.
         foreach ($response['playlists'] as $item) {
             $playlist = new XiboPlaylist($this->getEntityProvider());
-            
             // Hydrate the Playlist object with the items from region->playlists
             $playlist->hydrate($item);
-
             // Add to parent object
             $region->playlists[] = $playlist;
         }
@@ -72,21 +74,25 @@ class XiboRegion extends XiboEntity
      * @param $height
      * @param $top
      * @param $left
-     * @param $zindex
+     * @param $zIndex
      * @param $loop
+     * @param string $transitionType
+     * @param $transitionDuration
+     * @param string $transitionDirection
      * @return XiboRegion
      */
 
-    public function edit($width, $height, $top, $left, $zindex, $loop)
+    public function edit($width, $height, $top, $left, $zIndex, $loop, $transitionType = '', $transitionDuration = null, $transitionDirection = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->width = $width;
         $this->height = $height;
         $this->top = $top;
         $this->left = $left; 
-        $this->zIndex = $zindex;
+        $this->zIndex = $zIndex;
         $this->loop = $loop;
 
+        $this->getLogger()->info('Editing Region ID ' . $this->regionId . ' In Layout Id ' . $this->layoutId);
         $response = $this->doPut('/region/' . $this->regionId, $this->toArray());
         
         return $this->hydrate($response);
@@ -98,6 +104,7 @@ class XiboRegion extends XiboEntity
      */
     public function delete()
     {
+        $this->getLogger()->info('Deleting Region ID ' . $this->regionId  . ' From Layout Id ' . $this->layoutId);
         $this->doDelete('/region/' . $this->regionId);
         
         return true;

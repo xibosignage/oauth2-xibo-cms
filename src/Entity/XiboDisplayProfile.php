@@ -20,14 +20,13 @@ class XiboDisplayProfile extends XiboEntity
 	public $isDefault;
 	public $userId;
 
-
-
 	/**
 	 * @param array $params
 	 * @return array|XiboDisplayProfile
 	 */
 	public function get(array $params = [])
 	{
+		$this->getLogger()->info('Getting list of Display Profiles');
 		$entries = [];
 		$response = $this->doGet($this->url, $params);
 		foreach ($response as $item) {
@@ -44,6 +43,7 @@ class XiboDisplayProfile extends XiboEntity
 	 */
 	public function getById($id)
 	{
+		$this->getLogger()->info('Getting Display Profile ID ' . $id);
 		$response = $this->doGet($this->url, [
 			'displayProfileId' => $id
 		]);
@@ -55,18 +55,20 @@ class XiboDisplayProfile extends XiboEntity
 }
 
 
-	/**
-	* Create
-	* @param $name
-	* @param $type
-	* @param $isDefault
-	*/
+    /**
+     * Create
+     * @param $name
+     * @param $type
+     * @param $isDefault
+     * @return XiboDisplayProfile
+     */
 	public function create($name, $type, $isDefault)
 	{
 		$this->userId = $this->getEntityProvider()->getMe()->getId();
 		$this->name = $name;
 		$this->type = $type;
 		$this->isDefault = $isDefault;
+		$this->getLogger()->info('Creating Display Profile ' . $name);
 		$response = $this->doPost('/displayprofile', $this->toArray());
 		
 		return $this->hydrate($response);
@@ -84,6 +86,7 @@ class XiboDisplayProfile extends XiboEntity
 		$this->name = $name;
 		$this->type = $type;
 		$this->isDefault = $isDefault;
+		$this->getLogger()->info('Editing Display profile ' . $this->displayProfileId);
 		$response = $this->doPut('/displayprofile/' . $this->displayProfileId, $this->toArray());
 		
 		return $this->hydrate($response);
@@ -95,6 +98,7 @@ class XiboDisplayProfile extends XiboEntity
 	 */
 	public function delete()
 	{
+		$this->getLogger()->info('Deleting Display profile ID ' . $this->displayProfileId);
 		$this->doDelete('/displayprofile/' . $this->displayProfileId);
 		
 		return true;

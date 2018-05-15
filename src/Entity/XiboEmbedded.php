@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboEmbedded extends XiboEntity
+class XiboEmbedded extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -34,21 +34,6 @@ class XiboEmbedded extends XiboEntity
     public $embedStyle;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboEmbedded
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-
-    /**
      * Create
      * @param $name
      * @param $duration
@@ -58,6 +43,8 @@ class XiboEmbedded extends XiboEntity
      * @param $embedHtml
      * @param $embedScript
      * @param $embedStyle
+     * @param $playlistId
+     * @return XiboEmbedded
      */
     public function create($name, $duration, $useDuration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $playlistId)
     {
@@ -71,6 +58,7 @@ class XiboEmbedded extends XiboEntity
         $this->embedScript = $embedScript;
         $this->embedStyle = $embedStyle;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating Embed HTML widget' . $name . ' in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/embedded/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -86,6 +74,8 @@ class XiboEmbedded extends XiboEntity
      * @param $embedHtml
      * @param $embedScript
      * @param $embedStyle
+     * @param $widgetId
+     * @return XiboEmbedded
      */
     public function edit($name, $duration, $useDuration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $widgetId)
     {
@@ -99,6 +89,7 @@ class XiboEmbedded extends XiboEntity
         $this->embedScript = $embedScript;
         $this->embedStyle = $embedStyle;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing Embed HTML widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -110,7 +101,8 @@ class XiboEmbedded extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

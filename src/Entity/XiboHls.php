@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboHls extends XiboEntity
+class XiboHls extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -32,27 +32,15 @@ class XiboHls extends XiboEntity
     public $transparency;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboHls
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-    /**
      * Create
      * @param $name
-     * @param $duration
      * @param $useDuration
+     * @param $duration
      * @param $uri
      * @param $mute
      * @param $transparency
+     * @param $playlistId
+     * @return XiboHls
      */
     public function create($name, $useDuration, $duration, $uri, $mute, $transparency, $playlistId)
     {
@@ -64,6 +52,7 @@ class XiboHls extends XiboEntity
         $this->mute = $mute;
         $this->transparency = $transparency;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating HLS widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/hls/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -72,11 +61,13 @@ class XiboHls extends XiboEntity
     /**
      * Edit
      * @param $name
-     * @param $duration
      * @param $useDuration
+     * @param $duration
      * @param $uri
      * @param $mute
      * @param $transparency
+     * @param $widgetId
+     * @return XiboHls
      */
     public function edit($name, $useDuration, $duration, $uri, $mute, $transparency, $widgetId)
     {
@@ -88,6 +79,7 @@ class XiboHls extends XiboEntity
         $this->mute = $mute;
         $this->transparency = $transparency;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing HLS widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -99,7 +91,8 @@ class XiboHls extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

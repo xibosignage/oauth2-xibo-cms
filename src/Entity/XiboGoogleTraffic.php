@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboGoogleTraffic extends XiboEntity
+class XiboGoogleTraffic extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -33,20 +33,6 @@ class XiboGoogleTraffic extends XiboEntity
     public $zoom;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboGoogleTraffic
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-    /**
      * Create
      * @param $name
      * @param $duration
@@ -55,6 +41,8 @@ class XiboGoogleTraffic extends XiboEntity
      * @param $longitude
      * @param $latitude
      * @param $zoom
+     * @param $playlistId
+     * @return XiboGoogleTraffic
      */
     public function create($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $zoom, $playlistId)
     {
@@ -67,6 +55,7 @@ class XiboGoogleTraffic extends XiboEntity
         $this->latitude = $latitude;
         $this->zoom = $zoom;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating Google Traffic widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/googleTraffic/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -76,11 +65,12 @@ class XiboGoogleTraffic extends XiboEntity
      * Edit
      * @param $name
      * @param $duration
-     * @param $useDuration
      * @param $useDisplayLocation
      * @param $longitude
      * @param $latitude
      * @param $zoom
+     * @param $widgetId
+     * @return XiboGoogleTraffic
      */
     public function edit($name, $duration, $useDisplayLocation, $longitude, $latitude, $zoom, $widgetId)
     {
@@ -92,6 +82,7 @@ class XiboGoogleTraffic extends XiboEntity
         $this->latitude = $latitude;
         $this->zoom = $zoom;
         $this->widgetId = $widgetId;
+        $this->getLogger()->info('Editing Google Traffic widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
@@ -103,7 +94,8 @@ class XiboGoogleTraffic extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }

@@ -32,7 +32,7 @@ class XiboResolution extends XiboEntity
     {
         $entries = [];
         $response = $this->doGet($this->url, $params);
-
+        $this->getLogger()->info('Getting list of resolutions');
         foreach ($response as $item) {
             $entries[] = clone $this->hydrate($item);
         }
@@ -47,6 +47,7 @@ class XiboResolution extends XiboEntity
      */
     public function getById($id)
     {
+        $this->getLogger()->info('Getting resolution ID ' . $id);
         $response = $this->doGet($this->url, [
             'resolutionId' => $id
         ]);
@@ -62,16 +63,17 @@ class XiboResolution extends XiboEntity
      * @param $resolution
      * @param $width
      * @param $height
+     * @return XiboResolution
      */
     public function create($resolution, $width, $height)
     {
-    $this->userId = $this->getEntityProvider()->getMe()->getId();
-    $this->resolution = $resolution;
-    $this->width = $width;
-    $this->height = $height;
-    $response = $this->doPost('/resolution', $this->toArray());
-   
-    return $this->hydrate($response);
+        $this->resolution = $resolution;
+        $this->width = $width;
+        $this->height = $height;
+        $this->getLogger()->info('Creating a new Resolution '. $this->resolution);
+        $response = $this->doPost('/resolution', $this->toArray());
+        $this->getLogger()->debug('Passing the response to Hydrate');
+        return $this->hydrate($response);
     }
 
     /**
@@ -83,11 +85,13 @@ class XiboResolution extends XiboEntity
      */
     public function edit($resolution, $width, $height)
     {
-    $this->resolution = $resolution;
-    $this->width = $width;
-    $this->height = $height;
-    $response = $this->doPut('/resolution/' . $this->resolutionId, $this->toArray());
-    return $this->hydrate($response);
+        $this->resolution = $resolution;
+        $this->width = $width;
+        $this->height = $height;
+        $this->getLogger()->info('Editing resolution ID ' . $this->resolutionId);
+        $response = $this->doPut('/resolution/' . $this->resolutionId, $this->toArray());
+        $this->getLogger()->debug('Passing the response to Hydrate');
+        return $this->hydrate($response);
     }
 
     /**
@@ -96,7 +100,9 @@ class XiboResolution extends XiboEntity
      */
     public function delete()
     {
-    $this->doDelete('/resolution/' . $this->resolutionId);
-    return true;
+        $this->getLogger()->info('Deleting resolution ID ' . $this->resolutionId);
+        $this->doDelete('/resolution/' . $this->resolutionId);
+
+        return true;
     }
 }

@@ -11,7 +11,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboTicker extends XiboEntity
+class XiboTicker extends XiboWidget
 {
     public $widgetId;
     public $playlistId;
@@ -56,21 +56,6 @@ class XiboTicker extends XiboEntity
     public $useFilteringClause;
 
     /**
-     * Get by Id
-     * @param $id
-     * @return $this|XiboTicker
-     * @throws XiboApiException
-     */
-    public function getById($id)
-    {
-        $response = $this->doGet('/playlist/widget', [
-            'playlistId' => $id
-        ]);
-
-        return clone $this->hydrate($response[0]);
-    }
-
-    /**
      * Create
      * @param $sourceId
      * @param $uri
@@ -78,6 +63,7 @@ class XiboTicker extends XiboEntity
      * @param $useDuration
      * @param $dataSetId
      * @param $playlistId
+     * @return XiboTicker
      */
     public function create($sourceId, $uri, $dataSetId, $duration, $useDuration, $playlistId)
     {
@@ -88,6 +74,7 @@ class XiboTicker extends XiboEntity
         $this->useDuration = $useDuration;
         $this->dataSetId = $dataSetId;
         $this->playlistId = $playlistId;
+        $this->getLogger()->info('Creating Ticker widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/ticker/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
@@ -99,7 +86,8 @@ class XiboTicker extends XiboEntity
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
-        $response = $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
 
         return true;
     }
