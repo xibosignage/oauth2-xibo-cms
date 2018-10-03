@@ -1,8 +1,23 @@
 <?php
-/*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
- * (XiboWidget.php)
+/**
+ * Copyright (C) 2018 Xibo Signage Ltd
+ *
+ * Xibo - Digital Signage - http://www.xibo.org.uk
+ *
+ * This file is part of Xibo.
+ *
+ * Xibo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * Xibo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Xibo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -17,23 +32,35 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
  */
 class XiboWidget extends XiboEntity
 {
-    public $widgetId;
+    /** @var int The Playlist ID */
     public $playlistId;
+
+    /** @var int The Widget ID */
+    public $widgetId;
+
+    /** @var int The Owner ID */
     public $ownerId;
+
+    /** @var string Widget Type */
     public $type;
+
+    /** @var int Widget duration */
     public $duration;
+
+    /** @var int Widget Display Order */
     public $displayOrder;
+
+    /** @var int Flag indicating whether to use custom duration */
     public $useDuration;
-    public $calculatedDuration;
+
     public $widgetOptions;
     public $mediaIds;
     public $audio;
     public $permissions;
-    public $module;
 
     /**
      * Get by Id
-     * @param $widgetId
+     * @param int $widgetId Widget ID
      * @return $this|XiboWidget
      * @throws XiboApiException
      */
@@ -49,5 +76,22 @@ class XiboWidget extends XiboEntity
             throw new XiboApiException('Invalid widget type');
 
         return $this;
+    }
+
+    /**
+     * Delete the widget.
+     *
+     * @param int $widgetId the Widget ID
+     *
+     * @return boolean
+     */
+    public function delete($widgetId)
+    {
+        $this->widgetId = $widgetId;
+        $this->userId = $this->getEntityProvider()->getMe()->getId();
+        $this->getLogger()->info('Deleting widget ID ' . $this->widgetId);
+        $this->doDelete('/playlist/widget/' . $this->widgetId , $this->toArray());
+
+        return true;
     }
 }

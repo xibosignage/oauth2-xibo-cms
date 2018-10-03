@@ -1,8 +1,23 @@
 <?php
-/*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
- * (XiboCommand.php)
+/**
+ * Copyright (C) 2018 Xibo Signage Ltd
+ *
+ * Xibo - Digital Signage - http://www.xibo.org.uk
+ *
+ * This file is part of Xibo.
+ *
+ * Xibo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * Xibo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Xibo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -15,16 +30,22 @@ class XiboCommand extends XiboEntity
 {
 	private $url = '/command';
 
+    /** @var int The command ID */
 	public $commandId;
+
+    /** @var string The command name */
 	public $command;
+
+    /** @var string Unique code for this command */
 	public $code;
+
+    /** @var string Command description */
 	public $description;
-	public $userId;
-	public $commandString;
-	public $validationString;
 
 	/**
-	 * @param array $params
+     * Get the list commands.
+     *
+	 * @param array $params filter the results by, commandId, command or code
 	 * @return array|XiboCommand
 	 */
 	public function get(array $params = [])
@@ -41,7 +62,9 @@ class XiboCommand extends XiboEntity
 
 
 	/**
-	 * @param $id
+     * Get the command by commandId.
+     *
+	 * @param int $id The Command ID to find
 	 * @return XiboCommand
 	 * @throws XiboApiException
 	 */
@@ -59,10 +82,11 @@ class XiboCommand extends XiboEntity
 
 
 	/**
-	 * Create
-	 * @param $name
-	 * @param $description
-	 * @param $code
+	 * Create a new command.
+     *
+	 * @param string $name Name of the command
+	 * @param string $description Command description
+	 * @param string $code Unique code for this command
 	 * @return XiboCommand
 	 */
 	public function create($name, $description, $code)
@@ -79,10 +103,11 @@ class XiboCommand extends XiboEntity
 
 
 	/**
-	 * Edit
-	 * @param $name
-	 * @param $description
-	 * @param $code
+	 * Edit the Command.
+     *
+     * @param string $name Name of the command
+     * @param string $description Command description
+     * @param string $code Unique code for this command
 	 * @return XiboCommand
 	 */
 	public function edit($name, $description, $code)
@@ -97,7 +122,8 @@ class XiboCommand extends XiboEntity
 	}
 
 	/**
-	 * Delete
+	 * Delete the command.
+     *
 	 * @return bool
 	 */
 	public function delete()

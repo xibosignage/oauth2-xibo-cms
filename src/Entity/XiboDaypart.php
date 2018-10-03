@@ -1,8 +1,23 @@
 <?php
-/*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
- * (XiboDaypart.php)
+/**
+ * Copyright (C) 2018 Xibo Signage Ltd
+ *
+ * Xibo - Digital Signage - http://www.xibo.org.uk
+ *
+ * This file is part of Xibo.
+ *
+ * Xibo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * Xibo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Xibo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -14,18 +29,35 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
 class XiboDaypart extends XiboEntity
 {
 	private $url = '/daypart';
-    
+
+    /** @var int The dayPrt ID */
 	public $dayPartId;
+
+    /** @var string The dayPart name */
 	public $name;
+
+    /** @var string The dayPart description */
 	public $description;
+
+    /** @var string The start time for this dayPart */
 	public $startTime;
+
+    /** @var string The end time for this dayPart */
 	public $endTime;
+
+    /** @var array[string] String array of exception days*/
 	public $exceptionDays;
+
+    /** @var array[]string] String array of exception start times to match the exception days */
 	public $exceptionStartTimes;
+
+    /** @var array[]string] String array of exception end times to match the exception days */
 	public $exceptionEndTimes;
 
 	/**
-     * @param array $params
+     * Get a list of dayparts.
+     *
+     * @param array $params ccan be filtered by dayPartId, name and embeddable parameter embed=exceptions
      * @return array|XiboDaypart
      */
     public function get(array $params = [])
@@ -42,7 +74,9 @@ class XiboDaypart extends XiboEntity
     }
 
     /**
-     * @param $id
+     * Get the DayPart by dayPartId.
+     *
+     * @param int $id The DayPart ID
      * @return XiboDaypart
      * @throws XiboApiException
      */
@@ -60,14 +94,15 @@ class XiboDaypart extends XiboEntity
     }
 
     /**
-     * Create
-     * @param $name
-     * @param $description
-     * @param $startTime
-     * @param $endTime
-     * @param $exceptionDays
-     * @param $exceptionStartTimes
-     * @param $exceptionEndTimes
+     * Create a new DayPrt.
+     *
+     * @param string $name The name for the daypart
+     * @param string $description The description for the daypart
+     * @param string $startTime The start time for this daypart
+     * @param string $endTime The end time for this daypart
+     * @param array[string] $exceptionDays String array of exception days
+     * @param array[string] $exceptionStartTimes String array of start times to match the exception days
+     * @param array[string] $exceptionEndTimes String array of end times to match the exception days
      * @return XiboDaypart
      */
     public function create($name, $description, $startTime, $endTime, $exceptionDays = [], $exceptionStartTimes = [], $exceptionEndTimes = [])
@@ -87,14 +122,15 @@ class XiboDaypart extends XiboEntity
     }
 
     /**
-     * Edit
-     * @param $name
-     * @param $description
-     * @param $startTime
-     * @param $endTime
-     * @param $exceptionDays
-     * @param $exceptionStartTimes
-     * @param $exceptionEndTimes
+     * Edit Daypart.
+     *
+     * @param string $name The name for the daypart
+     * @param string $description The description for the daypart
+     * @param string $startTime The start time for this daypart
+     * @param string $endTime The end time for this daypart
+     * @param array[string] $exceptionDays String array of exception days
+     * @param array[string] $exceptionStartTimes String array of start times to match the exception days
+     * @param array[string] $exceptionEndTimes String array of end times to match the exception days
      * @return XiboDaypart
      */
     public function edit($name, $description, $startTime, $endTime, $exceptionDays = [], $exceptionStartTimes = [], $exceptionEndTimes = [])
@@ -115,7 +151,8 @@ class XiboDaypart extends XiboEntity
     }
 
     /**
-     * Delete
+     * Delete the daypart.
+     *
      * @return bool
      */
     public function delete()

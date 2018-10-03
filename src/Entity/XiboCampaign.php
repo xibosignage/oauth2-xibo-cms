@@ -1,8 +1,23 @@
 <?php
-/*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
- * (XiboCampaign.php)
+/**
+ * Copyright (C) 2018 Xibo Signage Ltd
+ *
+ * Xibo - Digital Signage - http://www.xibo.org.uk
+ *
+ * This file is part of Xibo.
+ *
+ * Xibo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * Xibo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Xibo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -15,15 +30,30 @@ class XiboCampaign extends XiboEntity
 {
     private $url = '/campaign';
 
+    /** @var int The campaign ID */
     public $campaignId;
+
+    /** @var int user ID of the owner */
     public $ownerId;
+
+    /** @var string The of the campaign */
     public $campaign;
+
+    /** @var int flag is this layout specific campaign? */
     public $isLayoutSpecific = 0;
+
+    /** @var int Number of layout assigned to this campaign */
     public $numberLayouts;
+
+    /** @var int The total duration of all layouts in the campaign */
     public $totalDuration;
 
     /**
-     * @param array $params
+     * Returns a Grid of Campaigns.
+     *
+     * Search all Campaigns this user has access to
+     *
+     * @param array $params filter by campaignId, name, tags, hasLayouts, isLayoutSpecific, retired, totalDuration
      * @return array|XiboCampaign
      */
     public function get(array $params = [])
@@ -40,7 +70,9 @@ class XiboCampaign extends XiboEntity
     }
 
     /**
-     * @param $id
+     * Returns campaign with the specified ID.
+     *
+     * @param int $id campaignId to find
      * @return XiboCampaign
      * @throws XiboApiException
      */
@@ -58,7 +90,9 @@ class XiboCampaign extends XiboEntity
     }
 
     /**
-     * @param $campaign
+     * Add a new campaign with specified name.
+     *
+     * @param string $campaign name of the campaign
      * @return XiboCampaign
      */
     public function create($campaign)
@@ -78,7 +112,9 @@ class XiboCampaign extends XiboEntity
     }
 
     /**
-     * @param $campaign
+     * Edit campaign and change its name to the specified one.
+     *
+     * @param string $campaign name of the campaign
      * @return XiboCampaign
      */
     public function edit($campaign)
@@ -98,6 +134,8 @@ class XiboCampaign extends XiboEntity
     }
 
     /**
+     * Deletes the campaign.
+     *
      * @return bool
      */
     public function delete()
@@ -109,23 +147,88 @@ class XiboCampaign extends XiboEntity
     }
 
     /**
-     * Assign layout
-     * @param $layoutId
-     * @param int $campaignId
+     * Assign layout to the campaign.
+     *
+     * @param array $layoutId Array of layouts Ids to assign to this campaign
+     * @param array $displayOrder Array of Display Order numbers for the layouts to assign
+     * @param array $unassignLayoutId Array of layouts Ids to unassign from the campaign
      * @return XiboCampaign
      */
-    public function assignLayout($layoutId)
+    public function assignLayout($layoutId = [], $displayOrder = [], $unassignLayoutId = [])
     {
-        $this->getLogger()->info('Assigning Layout ID ' . $layoutId . ' To Campaign ID ' . $this->campaignId);
-        $response = $this->doPost('/campaign/layout/assign/' . $this->campaignId, [
-            'layoutId' => [
-                [
-                    'layoutId' => $layoutId,
-                    'displayOrder' => 1
-                ]
-            ]
-        ]);
+        // TODO Check if $layoutId and $displayOrderId have the same length, throw error otherwise
+
+        if ($layoutId != [] && $unassignLayoutId == []) {
+            for ($i = 0; $i < count($layoutId); $i++) {
+                $response = $this->doPost('/campaign/layout/assign/' . $this->campaignId, [
+                    'layoutId' => [
+                        [
+                            'layoutId' => $layoutId[$i],
+                            'displayOrder' => $displayOrder[$i]
+                        ]
+                    ]
+                ]);
+                $this->getLogger()->info('Assigning Layout ID ' . $layoutId[$i] . ' To Campaign ID ' . $this->campaignId);
+            }
+        } elseif ($layoutId != [] && $unassignLayoutId != []) {
+            for ($i = 0; $i < count($layoutId); $i++) {
+                for ($j = 0; $j < count($unassignLayoutId); $j++) {
+                    $response = $this->doPost('/campaign/layout/assign/' . $this->campaignId, [
+                        'layoutId' => [
+                            [
+                                'layoutId' => $layoutId[$i],
+                                'displayOrder' => $displayOrder[$i]
+                            ]
+                        ],
+                        'unassignLayoutId' => [
+                            [
+                                'layoutId' => $unassignLayoutId[$j],
+                            ]
+                        ]
+                    ]);
+                    $this->getLogger()->info('Assigning Layout ID ' . $layoutId[$i] . ' To Campaign ID ' . $this->campaignId);
+                    $this->getLogger()->info('Removing assignment Layout ID ' . $unassignLayoutId[$j] . ' From Campaign ID ' . $this->campaignId);
+                }
+            }
+        } elseif ($layoutId == [] && $unassignLayoutId != []) {
+            for ($j = 0; $j < count($unassignLayoutId); $j++) {
+                $response = $this->doPost('/campaign/layout/assign/' . $this->campaignId, [
+                    'unassignLayoutId' => [
+                        [
+                            'layoutId' => $unassignLayoutId[$j],
+                        ]
+                    ]
+                ]);
+                $this->getLogger()->info('Removing assignment Layout ID ' . $unassignLayoutId[$j] . ' From Campaign ID ' . $this->campaignId);
+            }
+        }
+
+        // TODO Throw an error if nothing is passed / found
 
         return $this;
     }
+
+    /**
+     * Unassign layout from the campaign.
+     *
+     * @param array $unassignLayoutId Array of layouts Ids to unassign from the campaign
+     * @return XiboCampaign
+     */
+    public function unassignLayout($unassignLayoutId = [])
+    {
+        for ($j = 0; $j < count($unassignLayoutId); $j++) {
+            $this->doPost('/campaign/layout/assign/' . $this->campaignId, [
+                'unassignLayoutId' => [
+                    [
+                        'layoutId' => $unassignLayoutId[$j],
+                    ]
+                ]
+            ]);
+            $this->getLogger()->info('Removing assignment Layout ID ' . $unassignLayoutId[$j] . ' From Campaign ID ' . $this->campaignId);
+        }
+
+        return $this;
+
+    }
 }
+

@@ -1,8 +1,23 @@
 <?php
-/*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
- * (XiboClock.php)
+/**
+ * Copyright (C) 2018 Xibo Signage Ltd
+ *
+ * Xibo - Digital Signage - http://www.xibo.org.uk
+ *
+ * This file is part of Xibo.
+ *
+ * Xibo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * Xibo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Xibo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -13,48 +28,73 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
 
 class XiboClock extends XiboWidget
 {
+    /** @var int The widget ID */
     public $widgetId;
+
+    /** @var int The playlist ID */
     public $playlistId;
+
+    /** @var int the userId of the owner */
     public $ownerId;
+
+    /** @var string The type of the widget */
     public $type;
+
+    /** @var int The widget duration*/
     public $duration;
+
+    /** @var int The widget displayOrder */
     public $displayOrder;
+
+    /** @var int flag (0, 1) set to 1 if the duration parameter is passed as well */
     public $useDuration;
-    public $calculatedDuration;
+
+    /** @var array An array of widget Options */
     public $widgetOptions;
-    public $mediaIds;
-    public $audio;
-    public $permissions;
-    public $module;
+
+    /** @var string The widget name */
     public $name;
-    public $theme;
+
+    /** @var int The clock theme ID */
+    public $themeId;
+
+    /** @var int The clock Type ID */
     public $clockTypeId;
+
+    /** @var string he offset in minutes that should be applied to the current time, if a counter is selected then date/time to run from in format Y-m-d H:i:s */
     public $offset;
+
+    /** @var string For digital clock, format in which the time should be displayed */
     public $format;
+
+    /** @var string For Flip Clock, should the clock show seconds or not */
     public $showSeconds;
+
+    /** @var string For Flip Clock, supported options are: TwelveHourClock, TwentyFourHourClock, DailyCounter, HourlyCounter, MinuteCounter */
     public $clockFace;
 
     /**
-     * Create
-     * @param $name
-     * @param $duration
-     * @param $useDuration
-     * @param $theme
-     * @param $clockTypeId
-     * @param $offset
-     * @param $format
-     * @param $showSeconds
-     * @param $clockFace
-     * @param $playlistId
+     * Create a new Clock Widget.
+     *
+     * @param string $name widget name
+     * @param int $duration widget duration
+     * @param int $useDuration flag (0, 1) set to 1 if the duration parameter is passed as well
+     * @param int $themeId For Analogue clock, light and dark themes
+     * @param int $clockTypeId Type of the clock 1- Analogue, 2- Digital, 3- Flip Clock
+     * @param string $offset The offset in minutes that should be applied to the current time, if a counter is selected then date/time to run from in format Y-m-d H:i:s
+     * @param string $format For digital clock, format in which the time should be displayed
+     * @param int $showSeconds For Flip Clock, should the clock show seconds or not
+     * @param string $clockFace For Flip Clock, supported options are: TwelveHourClock, TwentyFourHourClock, DailyCounter, HourlyCounter, MinuteCounter
+     * @param int $playlistId Playlist ID to which the clock widget should be added
      * @return XiboClock
      */
-    public function create($name, $duration, $useDuration, $theme, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $playlistId)
+    public function create($name, $duration, $useDuration, $themeId, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
         $this->useDuration = $useDuration;
-        $this->theme = $theme;
+        $this->themeId = $themeId;
         $this->clockTypeId = $clockTypeId;
         $this->offset = $offset;
         $this->format = $format;
@@ -68,26 +108,27 @@ class XiboClock extends XiboWidget
     }
 
     /**
-     * Edit
-     * @param $name
-     * @param $duration
-     * @param $useDuration
-     * @param $theme
-     * @param $clockTypeId
-     * @param $offset
-     * @param $format
-     * @param $showSeconds
-     * @param $clockFace
-     * @param $widgetId
+     * Edit the Clock widget.
+     *
+     * @param string $name widget name
+     * @param int $duration widget duration
+     * @param int $useDuration flag (0, 1) set to 1 if the duration parameter is passed as well
+     * @param int $themeId For Analogue clock, light and dark themes
+     * @param int $clockTypeId Type of the clock 1- Analogue, 2- Digital, 3- Flip Clock
+     * @param string $offset The offset in minutes that should be applied to the current time, if a counter is selected then date/time to run from in format Y-m-d H:i:s
+     * @param string $format For digital clock, format in which the time should be displayed
+     * @param int $showSeconds For Flip Clock, should the clock show seconds or not
+     * @param string $clockFace For Flip Clock, supported options are: TwelveHourClock, TwentyFourHourClock, DailyCounter, HourlyCounter, MinuteCounter
+     * @param int $widgetId Widget Id to Edit
      * @return XiboClock
      */
-    public function edit($name, $duration, $useDuration, $theme, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $widgetId)
+    public function edit($name, $duration, $useDuration, $themeId, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
         $this->useDuration = $useDuration;
-        $this->theme = $theme;
+        $this->themeId = $themeId;
         $this->clockTypeId = $clockTypeId;
         $this->offset = $offset;
         $this->format = $format;
@@ -101,7 +142,7 @@ class XiboClock extends XiboWidget
     }
 
     /**
-    * Delete
+    * Delete the widget
     */
     public function delete()
     {

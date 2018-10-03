@@ -1,8 +1,23 @@
 <?php
-/*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
- * (XiboDisplayGroup.php)
+/**
+ * Copyright (C) 2018 Xibo Signage Ltd
+ *
+ * Xibo - Digital Signage - http://www.xibo.org.uk
+ *
+ * This file is part of Xibo.
+ *
+ * Xibo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * Xibo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Xibo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -17,22 +32,35 @@ use Xibo\OAuth2\Client\Exception\XiboApiException;
  */
 class XiboDisplayGroup extends XiboEntity
 {
+    /** @var int The Display Group ID */
     public $displayGroupId;
+
+    /** @var string The Display Group Name */
     public $displayGroup;
+
+    /** @var string The Display Group Description */
     public $description;
+
+    /** @var string A comma separated list of tags for display group */
+    public $tags;
+
+    /** @var int Flag whether the Display Group belongs to a display or is user created */
     public $isDisplaySpecific = 0;
+
+    /** @var int Flag indicating whether this Display Group is dynamic */
     public $isDynamic = 0;
+
+    /** @var string The filter criteria for this dynamic group. A comma separated set of regular expressions to apply */
     public $dynamicCriteria;
+
+    /** @var int The User ID */
     public $userId = 0;
-    public $duration;
-    public $changeMode;
-    public $downloadRequired;
-    public $commandId;
-    public $layoutId;
-    public $mediaId;
+
 
     /**
-     * @param array $params
+     * Get a list of Display Groups.
+     *
+     * @param array $params can be filtered by: displayGroupId, displayGroup, displayId, nestedDisplayId, dynamicCriteria, isDisplaySpecific, forSchedule
      * @return array[XiboDisplayGroup]
      */
     public function get(array $params = [])
@@ -49,8 +77,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Get by Id
-     * @param $id
+     * Get Display Group by Id.
+     *
+     * @param int $id the Display Group ID
      * @return $this|XiboDisplayGroup
      * @throws XiboApiException
      */
@@ -68,11 +97,12 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Create
-     * @param $displayGroup
-     * @param $description
-     * @param $isDynamic
-     * @param $dynamicCriteria
+     * Create Display Group.
+     *
+     * @param string $displayGroup The display group name
+     * @param string $description The display group description
+     * @param int $isDynamic Flag indicating whether this Display Group is dynamic
+     * @param string $dynamicCriteria The filter criteria for this dynamic group. A comma separated set of regular expressions to apply
      * @return XiboDisplayGroup
      */
     public function create($displayGroup, $description, $isDynamic, $dynamicCriteria)
@@ -91,10 +121,10 @@ class XiboDisplayGroup extends XiboEntity
 
     /**
      * Edit
-     * @param $displayGroup
-     * @param $description
-     * @param $isDynamic
-     * @param $dynamicCriteria
+     * @param string $displayGroup The display group name
+     * @param string $description The display group description
+     * @param int $isDynamic Flag indicating whether this Display Group is dynamic
+     * @param string $dynamicCriteria The filter criteria for this dynamic group. A comma separated set of regular expressions to apply
      * @return XiboDisplayGroup
      */
     public function edit($displayGroup, $description, $isDynamic, $dynamicCriteria)
@@ -111,7 +141,8 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Delete
+     * Delete the display group.
+     *
      * @return bool
      */
     public function delete()
@@ -123,8 +154,9 @@ class XiboDisplayGroup extends XiboEntity
     }
     
     /**
-     * Assign display
-     * @param $displayId
+     * Assign display to the display group.
+     *
+     * @param int $displayId Display ID to assign
      * @return XiboDisplayGroup
      */
     public function assignDisplay($displayId)
@@ -138,8 +170,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Unassign display
-     * @param $displayId
+     * Unassign display from display group.
+     *
+     * @param int $displayId The Display ID to unassign
      * @return XiboDisplayGroup
      */
     public function unassignDisplay($displayId)
@@ -153,8 +186,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Assign display group
-     * @param int $displayGroupId
+     * Assign display group to a display group.
+     *
+     * @param int $displayGroupId The Display Group ID to assign
      * @return XiboDisplayGroup
      */
     public function assignDisplayGroup($displayGroupId)
@@ -167,8 +201,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Unassign display group
-     * @param int $displayGroupId
+     * Unassign display group from display group.
+     *
+     * @param int $displayGroupId The Display Group ID to unassign
      * @return XiboDisplayGroup
      */
     public function unassignDisplayGroup($displayGroupId)
@@ -181,8 +216,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Assign layout
-     * @param $layoutId
+     * Assign layout to display Group.
+     *
+     * @param int $layoutId The Layout ID to assign
      * @return XiboDisplayGroup
      */
     public function assignLayout($layoutId)
@@ -196,8 +232,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Unassign layout
-     * @param $layoutId
+     * Unassign layout from display group.
+     *
+     * @param int $layoutId The Layout ID to unassign
      * @return XiboDisplayGroup
      */
     public function unassignLayout($layoutId)
@@ -211,8 +248,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Assign media
-     * @param $mediaId
+     * Assign media to display group.
+     *
+     * @param int $mediaId Media ID to assign
      * @return XiboDisplayGroup
      */
     public function assignMedia($mediaId)
@@ -226,8 +264,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Unassign media
-     * @param $mediaId
+     * Unassign media from display group.
+     *
+     * @param int $mediaId Media ID to unassign
      * @return XiboDisplayGroup
      */
     public function unassignMedia($mediaId)
@@ -241,8 +280,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Version Instructions
-     * @param $mediaId
+     * Version Instructions.
+     *
+     * @param int $mediaId The Media ID to assign
      * @return XiboDisplayGroup
      */
     public function version($mediaId)
@@ -256,7 +296,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Collect Now
+     * Collect Now.
+     *
+     * Issue a CollectNow action to the displayGroup
      */
     public function collectNow()
     {
@@ -267,7 +309,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Clear Stats and logs
+     * Clear Stats and logs.
+     *
+     * Issue a clearStatsAndLogs action to the displayGroup
      */
     public function clear()
     {
@@ -278,11 +322,14 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * ChangeLayout
-     * @param $layoutId
-     * @param $duration
-     * @param $downloadRequired
-     * @param $changeMode
+     * ChangeLayout.
+     *
+     * Issue changeLayout action to the display Group
+     *
+     * @param int $layoutId Layout ID
+     * @param int $duration Duration in seconds for this layout change to remain in effect
+     * @param int $downloadRequired Flag indicating whether the player should perform a collect before playing the layout
+     * @param string $changeMode Whether to queue or replace layout with this action
      * @return XiboDisplayGroup
      */
     public function changeLayout($layoutId, $duration, $downloadRequired, $changeMode)
@@ -298,7 +345,9 @@ class XiboDisplayGroup extends XiboEntity
         return $this;
     }
     /**
-     * Revert to Schedule
+     * Revert to Schedule.
+     *
+     * Issue revertToSchedule action to the display Group
      */
     public function revertToSchedule()
     {
@@ -309,10 +358,13 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Overlay Layout
-     * @param $layoutId
-     * @param $duration
-     * @param $downloadRequired
+     * Overlay Layout.
+     *
+     * Issue overLayout action to the display group
+     *
+     * @param int $layoutId Layout ID
+     * @param int $duration Duration in seconds for this layout change to remain in effect
+     * @param int $downloadRequired Flag indicating whether the player should perform a collect before playing the layout
      * @return XiboDisplayGroup
      */
     public function overlayLayout($layoutId, $duration, $downloadRequired)
@@ -328,8 +380,9 @@ class XiboDisplayGroup extends XiboEntity
     }
 
     /**
-     * Command
-     * @param $commandId
+     * Send a command to the display group.
+     *
+     * @param int $commandId The Command ID
      * @return XiboDisplayGroup
      */
     public function command($commandId)
