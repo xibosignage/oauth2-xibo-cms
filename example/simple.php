@@ -27,14 +27,14 @@ $provider = new \Xibo\OAuth2\Client\Provider\Xibo([
 ], ['logger' => $log]);
 
 # Required for guzzle calls in this file.
-/*
+
 if (!isset($argv[1])) {
     $token = $provider->getAccessToken('client_credentials')->getToken();
     echo 'Token for next time: ' . $token;
 }
 else
     $token = $argv[1];
-*/
+
 
 # Create Xibo Entity Provider with logger
 $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider, [
@@ -44,14 +44,28 @@ $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider,
 # Each wrapper is using request function which calls getAccessToken
 
 # LAYOUT & REGION & Playlist & Library
-/*
-    $layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->get(['layoutId'=>42, 'embed'=>'regions,playlists,widgets']);
 
-	$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout', 'phpunit layout', '', 9);
-	$layout->edit('Edited phpunit layout', 'Edit', null, 0, $layout->backgroundColor, $layout->backgroundImageId, $layout->backgroundzIndex, $layout->resolutionId);
+ //   $layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->get(['layoutId'=>230, 'embed'=>'regions,playlists,widgets']);
+
+	//$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout', 'phpunit layout', '', 9);
+    //$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->getById(436);
+    //$layout->retire();
+    //$status = $layout->getStatus();
+    //print_r($status->status);
+	//$layout->addTag('tag1');
+	//$layout->removeTag('tag1');
+    //$template = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->createTemplate(245, 1, 'phpunit template', null, null);
+	//$layout->delete();
+
+	#$layout->edit('Edited phpunit layout', 'Edit', null, 0, $layout->backgroundColor, $layout->backgroundImageId, $layout->backgroundzIndex, $layout->resolutionId);
 	#$layoutCopy = $layout->copy('phpunit layout copy', 'copied layout', 0);
-	$layout->createRegion(200, 300, 500, 20);
-	$region = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($layout->layoutId, 400, 200, 20, 10);
+	#$layout->createRegion(200, 300, 500, 20);
+	#$region = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($layout->layoutId, 400, 200, 20, 10);
+    #$region2 = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($layout->layoutId, 400, 200, 20, 10);
+    #$region3 = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($layout->layoutId, 400, 200, 20, 10);
+    #$layout->positionAll([$region->regionId, $region2->regionId, $region3->regionId], [600, 200, 200], [500, 250, 800], [100, 230, 230], [500, 200, 500]);
+    #$position = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->positionAll($layout->layoutId, [$region->regionId, $region2->regionId, $region3->regionId], [600, 200, 200], [500, 250, 800], [100, 230, 230], [500, 200, 500]);
+/*
 	$media = (new \Xibo\OAuth2\Client\Entity\XiboLibrary($entityProvider))->create('API image', 'files\53.jpg');
 	$media2 = (new \Xibo\OAuth2\Client\Entity\XiboLibrary($entityProvider))->create('API image Replacement', 'files\20.png', $media->mediaId, 1, 1);
 	$playlist = (new \Xibo\OAuth2\Client\Entity\XiboPlaylist($entityProvider))->assign([$media2->mediaId], 10, $region->playlists[0]['playlistId']);
@@ -62,14 +76,25 @@ $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider,
 	$layout->delete();
 */
 
-# Campaign
+# Library search and download
 /*
-    $campaign = (new \Xibo\OAuth2\Client\Entity\XiboCampaign($entityProvider))->create('test campaign');
-    $layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout', 'phpunit layout', '', 9);
-    $campaign->assignLayout($layout->layoutId);
-    $campaign->delete();
-    $layout->delete();
+    $library = (new Xibo\OAuth2\Client\Entity\XiboLibrary($entityProvider))->get(['media'=> 'Image', 'start' => 0, 'length' => 1000]);
+
+    foreach ($library as $item) {
+        $media = (new Xibo\OAuth2\Client\Entity\XiboLibrary($entityProvider))->download($item->mediaId, $item->mediaType, 'files/' , $item->fileName);
+    }
 */
+
+
+# Campaign
+
+    //$campaign = (new \Xibo\OAuth2\Client\Entity\XiboCampaign($entityProvider))->create('test campaign');
+    //$campaign = (new \Xibo\OAuth2\Client\Entity\XiboCampaign($entityProvider))->getById(456);
+    //$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout', 'phpunit layout', '', 9);
+    //$campaign->assignLayout([435, 436, 425], [1, 3, 2]);
+    //$campaign->delete();
+    //$layout->delete();
+
 
 # RESOLUTION 
 /*
@@ -92,6 +117,9 @@ $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider,
 
 # DataSets dataSet View
 /*
+    $dataSet = (new Xibo\OAuth2\Client\Entity\XiboDataSet($entityProvider))->create('test dataSet', 'test description');
+    $copy = (new Xibo\OAuth2\Client\Entity\XiboDataSet($entityProvider))->copy($dataSet->dataSetId, 'new name', 'new description');
+
     $dataSet = (new \Xibo\OAuth2\Client\Entity\XiboDataSet($entityProvider))->getById(3);
     $dataSetColumn = $dataSet->getByColumnId(6);
     $dataSetRow = $dataSet->getData();
@@ -184,8 +212,8 @@ $layout->delete();
 
 # Stats
 /*
-$stats = (new \Xibo\OAuth2\Client\Entity\XiboStats($entityProvider))->get(['fromDt' => '2018-04-11 09:00:00', 'toDt' => '2018-04-12 09:00:00', 'type' => 'media']);
-print_r($stats[0]->media);
+$stats = (new \Xibo\OAuth2\Client\Entity\XiboStats($entityProvider))->get(['fromDt' => '2018-04-11 09:00:00', 'toDt' => '2019-04-12 09:00:00', 'type' => 'media']);
+$log->info(json_encode($stats, JSON_PRETTY_PRINT));
 */
 
 # Guzzle GET, PUT, POST
@@ -197,7 +225,7 @@ print_r($stats[0]->media);
             'Authorization' => 'Bearer ' . $token
         ],
     ]);
-    
+
     $response = $guzzle->request('PUT', 'http://192.168.0.26/api/layout/66', [
         'headers' => [
             'Authorization' => 'Bearer ' . $token , 'Content-type' => 'application/x-www-form-urlencoded'
