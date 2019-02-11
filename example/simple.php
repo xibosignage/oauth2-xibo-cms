@@ -19,9 +19,14 @@ $handlers = [
 $log = new Monolog\Logger('API LIBRARY', $handlers);
 
 # Create a Xibo provider
+$clientId20 = '98uQ4fn3I2MYaB6a9NQrnxpJoBwFFJV7ybjbH6gk';
+$clientSecret20 = 'BVrsnxW7kKtx0OKv0N3sfkEyyztIpgMaQ3NdgpyJIECqnO3L8gWMErDzys8iP360CgqJeFep0fawquHhAGeACSdsgMT9RIDjTlEZaVkb0b2DnPN4dfpGx8oNQbIVq2lsmK9CD9aXCaRuY2ijb4Ei4HK6aDO6UneqSQGqTNVGCU37b18jPrRrwzHcwXHD0HUZXArWnB5b7lTR2g8iL3ertnAKbWKjVad4giUjBBQgSNPeb16iQ4Q9kFZkHxEBnT';
+$clientId18 = 'xlWWgZbuydwhJxAoGtrUKRfXWlmpa83z7XTBl7gE';
+$clientSecret18 = 'tSKxZGTTrHLt1ZyacE3mqGpt0yzUzk2mTcYkqAlcPifWGnMJgLYFj0HJJmX2cXbnsc4FK8DeiQOv4HvwtSWqL0YSb1GaHLJfBHDWLGsrQY4CAO3gYyRTPL1LccsSAq3ZrZLsNRqb6hpLsgbYWu8kEkYwWBztd4nROufyANNTPKyX7DLg31onTyHhPs7i0bKuF97V7y94Y7885heTc2q1Xl2OX3QiY6S0a1nPZFs5KzAIzp21nPpZ66xOl1hM8i';
+
 $provider = new \Xibo\OAuth2\Client\Provider\Xibo([
-    'clientId' => 'ZbFqaYQ3lyIY2EUw4d5soTgQv7eOv6G4dDMFeQZS',    // The client ID assigned to you by the provider
-    'clientSecret' => 'oYe1bpapJcngVxQrMRxA9Vpiqe0mISc2OgIVLDbGYzN3k4ajXjeBnbk5Wl74dCgap8qOcCvJMolBjy9lFDsY1sQPgyBZ9i3lKpOr7863YpAVJBBqU86wE0KzPh3wSt7P9XgdLTHtyxniJerqL6AtI1nvzyXd6W1IJE2Feqr8LRiu1dthIo6j9ejuL1go7whkS2HOhpegZVIVAXlHhUq9sisYgO0qI9zmCxYE0wbUe9FTSvc1LrG7LJl9Alu0Ny',   // The client password assigned to you by the provider
+    'clientId' => $clientId20,    // The client ID assigned to you by the provider
+    'clientSecret' => $clientSecret20,   // The client password assigned to you by the provider
     'redirectUri' => '',
     'baseUrl' => 'http://localhost'
 ], ['logger' => $log]);
@@ -45,30 +50,43 @@ $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider,
 
 # LAYOUT & REGION & Playlist & Library
 
- //   $layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->get(['layoutId'=>230, 'embed'=>'regions,playlists,widgets']);
+    //$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->get(['layoutId'=>39, 'embed'=>'regions,playlists,widgets']);
 
-	//$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout', 'phpunit layout', '', 9);
-    //$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->getById(436);
+	#$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout2', 'phpunit layout', '', 1);
+    #$layoutId = $layout->layoutId;
+	//$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->getById(436);
     //$layout->retire();
     //$status = $layout->getStatus();
-    //print_r($status->status);
 	//$layout->addTag('tag1');
 	//$layout->removeTag('tag1');
     //$template = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->createTemplate(245, 1, 'phpunit template', null, null);
 	//$layout->delete();
-
-	#$layout->edit('Edited phpunit layout', 'Edit', null, 0, $layout->backgroundColor, $layout->backgroundImageId, $layout->backgroundzIndex, $layout->resolutionId);
+    #$layout->edit('Edited phpunit layout', 'Edit', null, 0, $layout->backgroundColor, $layout->backgroundImageId, $layout->backgroundzIndex, $layout->resolutionId);
 	#$layoutCopy = $layout->copy('phpunit layout copy', 'copied layout', 0);
-	#$layout->createRegion(200, 300, 500, 20);
-	#$region = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($layout->layoutId, 400, 200, 20, 10);
+    #$layoutDraft = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->checkout($layout->layoutId);
+	#$region = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($layoutDraft->layoutId, 400, 200, 20, 10);
     #$region2 = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($layout->layoutId, 400, 200, 20, 10);
     #$region3 = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->create($layout->layoutId, 400, 200, 20, 10);
     #$layout->positionAll([$region->regionId, $region2->regionId, $region3->regionId], [600, 200, 200], [500, 250, 800], [100, 230, 230], [500, 200, 500]);
     #$position = (new \Xibo\OAuth2\Client\Entity\XiboRegion($entityProvider))->positionAll($layout->layoutId, [$region->regionId, $region2->regionId, $region3->regionId], [600, 200, 200], [500, 250, 800], [100, 230, 230], [500, 200, 500]);
+    #$playlist = (new \Xibo\OAuth2\Client\Entity\XiboPlaylist($entityProvider))->assign([409], 10, $region->playlists[0]['playlistId']);
+    #$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->get(['layoutId'=>99, 'embed'=>'']);
+    #$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->getById(99, 'regions,playlists,widgets');
+    #print_r($layout->regions[0]->regionPlaylist->widgets[0]->widgetId);
+    #$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout', 'phpunit layout', '', 1);
+    #$layout->edit('boop', 'booooop', '', 0, '', null, 1, 1);
+    #$layoutDraft = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->checkout($layout->layoutId);
+    #$playlist = (new \Xibo\OAuth2\Client\Entity\XiboPlaylist($entityProvider))->assign([166], 10, $layoutDraft->regions[0]->regionPlaylist->playlistId);
+    #$widgetList = (new \Xibo\OAuth2\Client\Entity\XiboWidget($entityProvider))->get(['playlistId' => 136]);
+    #$playlist = (new \Xibo\OAuth2\Client\Entity\XiboPlaylist($entityProvider))->get(['playlistId' => 136, 'embed' => 'widgets']);
+    #$playlist = (new \Xibo\OAuth2\Client\Entity\XiboPlaylist($entityProvider))->add('BoopDynamic', '', 1, '', 'moonmoon');
+    #$layout->publish($layout->layoutId);
+    #$layout->delete();
+
 /*
 	$media = (new \Xibo\OAuth2\Client\Entity\XiboLibrary($entityProvider))->create('API image', 'files\53.jpg');
 	$media2 = (new \Xibo\OAuth2\Client\Entity\XiboLibrary($entityProvider))->create('API image Replacement', 'files\20.png', $media->mediaId, 1, 1);
-	$playlist = (new \Xibo\OAuth2\Client\Entity\XiboPlaylist($entityProvider))->assign([$media2->mediaId], 10, $region->playlists[0]['playlistId']);
+
 	$region->edit(200, 500, 30, 100, $region->zIndex, $region->loop);
 	$region->delete();
 	$media2->deleteAssigned();
@@ -194,27 +212,56 @@ $entityProvider = new \Xibo\OAuth2\Client\Provider\XiboEntityProvider($provider,
 
 # Display Groups
 /*
-$displayGroup = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->create('phpunit displaygroup', 'phpunit displaygroup', 0, '');
-print_r($displayGroup->displayGroup);
-$displayGroup->edit('edited name', 'edited description', 0, '');
-$displayGroup = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->getById($displayGroup->displayGroupId);
-print_r($displayGroup->displayGroup);
-$displayGroup->assignDisplay(9);
-$layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout', 'phpunit layout', '', 9);
-$displayGroup->assignLayout($layout->layoutId);
-$displayGroup->collectNow();
-$displayGroup->clear();
-$displayGroup->changeLayout($layout->layoutId, 10, 1, 'replace');
-$displayGroup->delete();
-$layout->delete();
+    $displayGroup = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->create('phpunit displaygroup', 'phpunit displaygroup', 0, '');
+    print_r($displayGroup->displayGroup);
+    $displayGroup->edit('edited name', 'edited description', 0, '');
+    $displayGroup = (new \Xibo\OAuth2\Client\Entity\XiboDisplayGroup($entityProvider))->getById($displayGroup->displayGroupId);
+    print_r($displayGroup->displayGroup);
+    $displayGroup->assignDisplay(9);
+    $layout = (new \Xibo\OAuth2\Client\Entity\XiboLayout($entityProvider))->create('phpunit layout', 'phpunit layout', '', 9);
+    $displayGroup->assignLayout($layout->layoutId);
+    $displayGroup->collectNow();
+    $displayGroup->clear();
+    $displayGroup->changeLayout($layout->layoutId, 10, 1, 'replace');
+    $displayGroup->delete();
+    $layout->delete();
 */
 
 
 # Stats
-/*
-$stats = (new \Xibo\OAuth2\Client\Entity\XiboStats($entityProvider))->get(['fromDt' => '2018-04-11 09:00:00', 'toDt' => '2019-04-12 09:00:00', 'type' => 'media']);
-$log->info(json_encode($stats, JSON_PRETTY_PRINT));
-*/
+    /*
+    $stats = (new \Xibo\OAuth2\Client\Entity\XiboStats($entityProvider))->get(['fromDt' => '2018-04-11 09:00:00', 'toDt' => '2019-04-12 09:00:00', 'type' => 'media']);
+    $log->info(json_encode($stats, JSON_PRETTY_PRINT));
+    */
+
+# Users User Groups and Permissions
+    #$users = (new \Xibo\OAuth2\Client\Entity\XiboUser($entityProvider))->get();
+    #$user = (new \Xibo\OAuth2\Client\Entity\XiboUser($entityProvider))->getById(3);
+    #$user = (new \Xibo\OAuth2\Client\Entity\XiboUser($entityProvider))->getMe();
+    #$user = (new \Xibo\OAuth2\Client\Entity\XiboUser($entityProvider))->create('test UserName', 1, 29, 'password', 1, 1, 0);
+    #$user = (new \Xibo\OAuth2\Client\Entity\XiboUser($entityProvider))->edit($user->userId,'test UserName Edited', 1, 29, 1, 1, 'newPassword', 'newPassword');
+
+    #$permissions = (new \Xibo\OAuth2\Client\Entity\XiboPermissions($entityProvider))->setPermissions('campaign', 4, 5, 1,1,1);
+    #$permissions = (new \Xibo\OAuth2\Client\Entity\XiboPermissions($entityProvider))->getPermissions('campaign', 4);
+
+    #$group = (new \Xibo\OAuth2\Client\Entity\XiboUserGroup($entityProvider))->get();
+    #$group = (new \Xibo\OAuth2\Client\Entity\XiboUserGroup($entityProvider))->getById(1);
+    #$group = (new \Xibo\OAuth2\Client\Entity\XiboUserGroup($entityProvider))->create('Api created UserGroup', 0);
+    #$group = (new \Xibo\OAuth2\Client\Entity\XiboUserGroup($entityProvider))->edit($group->groupId, 'Api edited UserGroup');
+    #$group = (new \Xibo\OAuth2\Client\Entity\XiboUserGroup($entityProvider))->assignUser($group->groupId, [$user->userId]);
+    #$group = (new \Xibo\OAuth2\Client\Entity\XiboUserGroup($entityProvider))->unassignUser($group->groupId, [$user->userId]);
+    #$groupCopy = (new \Xibo\OAuth2\Client\Entity\XiboUserGroup($entityProvider))->copy($group->groupId, 'User Group Copy');
+    #$user->delete();
+    #$group->delete();
+    #$groupCopy->delete();
+
+
+# Player Software
+    #$playerSoftware = (new \Xibo\OAuth2\Client\Entity\XiboPlayerSoftware($entityProvider))->get();
+    #$playerSoftware = (new \Xibo\OAuth2\Client\Entity\XiboPlayerSoftware($entityProvider))->getByMediaId(511);
+    #$playerSoftware = (new \Xibo\OAuth2\Client\Entity\XiboPlayerSoftware($entityProvider))->getByVersionId(39);
+    #$playerSoftware = (new \Xibo\OAuth2\Client\Entity\XiboPlayerSoftware($entityProvider))->edit(39, 'Edited Name', '1.8', 108);
+    #$playerSoftware->delete();
 
 # Guzzle GET, PUT, POST
 /*
