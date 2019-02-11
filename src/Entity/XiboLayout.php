@@ -56,7 +56,7 @@ class XiboLayout extends XiboEntity
     public $schemaVersion;
 
     /** @var string The Layout name */
-    public $name;
+    public $layout;
 
     /** @var string The layout description */
     public $description;
@@ -131,7 +131,8 @@ class XiboLayout extends XiboEntity
         $hydratedRegions = [];
         $hydratedWidgets = [];
         $response = $this->doGet($this->url, $params);
-        $embed = ($params['embed'] != null) ? explode(',', $params['embed']) : [];
+        if (isset($params['embed']))
+            $embed = ($params['embed'] != null) ? explode(',', $params['embed']) : [];
 
         foreach ($response as $item) {
             /** @var XiboLayout $layout */
@@ -224,7 +225,7 @@ class XiboLayout extends XiboEntity
      * @return XiboLayout
      * @throws InvalidArgumentException
      */
-    public function create($name, $description, $layoutId, $resolutionId = 9)
+    public function create($name, $description, $layoutId, $resolutionId)
     {
         $this->getLogger()->debug('Getting Resource Owner');
         $this->userId = $this->getEntityProvider()->getMe()->getId();
@@ -233,7 +234,7 @@ class XiboLayout extends XiboEntity
         $this->layoutId = $layoutId;
         $this->resolutionId = $resolutionId;
 
-        $this->getLogger()->info('Creating Layout ' . $this->name);
+        $this->getLogger()->info('Creating Layout ' . $this->layout);
         $response = $this->doPost('/layout', $this->toArray());
 
         $layout = $this->constructLayoutFromResponse($response);
@@ -507,7 +508,7 @@ class XiboLayout extends XiboEntity
         $this->getLogger()->info('Adding tag: ' . $tag . ' to layout ID ' . $this->layoutId);
         $response = $this->doPost('/layout/' . $this->layoutId . '/tag', [
             'tag' => [$tag]
-            ]);
+        ]);
         $tags = $this->hydrate($response);
         foreach ($response['tags'] as $item) {
             $tag = new XiboLayout($this->getEntityProvider());

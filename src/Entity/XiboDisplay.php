@@ -37,6 +37,11 @@ class XiboDisplay extends XiboEntity
     /** @var string The display description */
     public $description;
 
+    /**
+     * @var string Tags associated with this Display
+     */
+    public $tags;
+
     /** @var string Date this Display records auditing information until */
     public $auditingUntil;
 
@@ -183,6 +188,7 @@ class XiboDisplay extends XiboEntity
         ]);
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single display, found ' . count($response));
+
         return clone $this->hydrate($response[0]);
     }
     /**

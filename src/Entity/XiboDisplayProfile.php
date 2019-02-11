@@ -34,7 +34,7 @@ class XiboDisplayProfile extends XiboEntity
 	public $displayProfileId;
 
     /** @var string The Display Profile name */
-	public $displayProfile;
+	public $name;
 
     /** @var string Display Profile type (windows|android|lg) */
 	public $type;

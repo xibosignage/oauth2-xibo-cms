@@ -85,7 +85,9 @@ class XiboPlaylist extends XiboEntity
     public function get(array $params = [])
     {
         $this->getLogger()->info('Getting list of Playlists');
-        $embed = ($params['embed'] != null) ? explode(',', $params['embed']) : [];
+        if (isset($params['embed']))
+            $embed = ($params['embed'] != null) ? explode(',', $params['embed']) : [];
+
         $hydratedWidgets = [];
         $entries = [];
 
