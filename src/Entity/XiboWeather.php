@@ -26,7 +26,7 @@ namespace Xibo\OAuth2\Client\Entity;
 
 use Xibo\OAuth2\Client\Exception\XiboApiException;
 
-class XiboGoogleTraffic extends XiboWidget
+class XiboWeather extends XiboWidget
 {
     /** @var int The Widget ID */
     public $widgetId;
@@ -49,23 +49,35 @@ class XiboGoogleTraffic extends XiboWidget
     /** @var int Flag indicating whether to use custom duration */
     public $useDuration;
 
-    /** @var string Optionam Widget name */
+    /** @var string Optional widget name */
     public $name;
 
     /** @var int Flag Use the location configured on the Display? */
     public $useDisplayLocation;
 
-    /** @var double The longitude for this Google Traffic widget, only pass if useDisplayLocation set to 0 */
+    /** @var double The longitude for this Weather widget, only pass if useDisplayLocation set to 0 */
     public $longitude;
 
-    /** @var double The latitude for this Google Traffic widget, only pass if useDisplayLocation set to 0 */
+    /** @var double The latitude for this Weather widget, only pass if useDisplayLocation set to 0 */
     public $latitude;
 
-    /** @var int Map zoom, the higher value the closer the zoom */
-    public $zoom;
+    /** @var string Use pre-configured Templates */
+    public $templateId;
+
+    /** @var string Units you would like to use */
+    public $units;
+
+    /** @var int Update interval in minutes, should be kept as high as possible, if data change once per hour, this should be set to 60 */
+    public $updateInterval;
+
+    /** @var string Language you’d like to use */
+    public $lang;
+
+    /** @var int Flag whether to show only Daytime conditions or not */
+    public $dayConditionsOnly;
 
     /**
-     * Create Google Traffic Widget.
+     * Create Weather Widget.
      *
      * @param string $name Optional widget name
      * @param int $duration Widget Duration
@@ -73,11 +85,15 @@ class XiboGoogleTraffic extends XiboWidget
      * @param int $useDisplayLocation Flag Use the location configured on the Display?
      * @param double $longitude The longitude for this Google Traffic widget, only pass if useDisplayLocation set to 0
      * @param double $latitude he latitude for this Google Traffic widget, only pass if useDisplayLocation set to 0
-     * @param int $zoom How far should the map be zoomed in? The higher the value the closer the zoom, 1 represents the entire globe
+     * @param string $templateId Use pre-configured templates, available options: weather-module0-5day, weather-module0-singleday, weather-module0-singleday2, weather-module1l, weather-module1p, weather-module2l, weather-module2p, weather-module3l, weather-module3p, weather-module4l, weather-module4p, weather-module5l, weather-module6v, weather-module6h
+     * @param string $units Units you would like to use, available options: auto, ca, si, uk2, us
+     * @param int $updateInterval Update interval in minutes, should be kept as high as possible, if data change once per hour, this should be set to 60
+     * @param string $lang Language you’d like to use, supported languages ar, az, be, bs, cs, de, en, el, es, fr, hr, hu, id, it, is, kw, nb, nl, pl, pt, ru, sk, sr, sv, tet, tr, uk, x-pig-latin, zh, zh-tw
+     * @param int $dayConditionsOnly Flag (0, 1) Would you like to only show the Daytime weather conditions
      * @param int $playlistId Playlist ID
-     * @return XiboGoogleTraffic
+     * @return XiboWeather
      */
-    public function create($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $zoom, $playlistId)
+    public function create($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $templateId, $units, $updateInterval, $lang, $dayConditionsOnly, $playlistId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -86,27 +102,36 @@ class XiboGoogleTraffic extends XiboWidget
         $this->useDisplayLocation = $useDisplayLocation;
         $this->longitude = $longitude;
         $this->latitude = $latitude;
-        $this->zoom = $zoom;
+        $this->templateId = $templateId;
+        $this->units = $units;
+        $this->updateInterval = $updateInterval;
+        $this->lang = $lang;
+        $this->dayConditionsOnly = $dayConditionsOnly;
         $this->playlistId = $playlistId;
-        $this->getLogger()->info('Creating Google Traffic widget in playlist ID ' . $playlistId);
-        $response = $this->doPost('/playlist/widget/googleTraffic/' . $playlistId , $this->toArray());
+
+        $this->getLogger()->info('Creating Weather widget in playlist ID ' . $playlistId);
+        $response = $this->doPost('/playlist/widget/forecastIo/' . $playlistId , $this->toArray());
 
         return $this->hydrate($response);
     }
 
     /**
-     * Edit Google Traffic widget
+     * Edit Weather widget
      * @param string $name Optional widget name
      * @param int $duration Widget Duration
      * @param int $useDuration Flag indicating whether to use custom duration
      * @param int $useDisplayLocation Flag Use the location configured on the Display?
      * @param double $longitude The longitude for this Google Traffic widget, only pass if useDisplayLocation set to 0
      * @param double $latitude he latitude for this Google Traffic widget, only pass if useDisplayLocation set to 0
-     * @param int $zoom How far should the map be zoomed in? The higher the value the closer the zoom, 1 represents the entire globe
+     * @param string $templateId Use pre-configured templates, available options: weather-module0-5day, weather-module0-singleday, weather-module0-singleday2, weather-module1l, weather-module1p, weather-module2l, weather-module2p, weather-module3l, weather-module3p, weather-module4l, weather-module4p, weather-module5l, weather-module6v, weather-module6h
+     * @param string $units Units you would like to use, available options: auto, ca, si, uk2, us
+     * @param int $updateInterval Update interval in minutes, should be kept as high as possible, if data change once per hour, this should be set to 60
+     * @param string $lang Language you’d like to use, supported languages ar, az, be, bs, cs, de, en, el, es, fr, hr, hu, id, it, is, kw, nb, nl, pl, pt, ru, sk, sr, sv, tet, tr, uk, x-pig-latin, zh, zh-tw
+     * @param int $dayConditionsOnly Flag (0, 1) Would you like to only show the Daytime weather conditions
      * @param int $widgetId Widget ID
-     * @return XiboGoogleTraffic
+     * @return XiboWeather
      */
-    public function edit($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $zoom, $widgetId)
+    public function edit($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $templateId, $units, $updateInterval, $lang, $dayConditionsOnly, $widgetId)
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -115,18 +140,22 @@ class XiboGoogleTraffic extends XiboWidget
         $this->useDisplayLocation = $useDisplayLocation;
         $this->longitude = $longitude;
         $this->latitude = $latitude;
-        $this->zoom = $zoom;
+        $this->templateId = $templateId;
+        $this->units = $units;
+        $this->updateInterval = $updateInterval;
+        $this->lang = $lang;
+        $this->dayConditionsOnly = $dayConditionsOnly;
         $this->widgetId = $widgetId;
-        $this->getLogger()->info('Editing Google Traffic widget ID ' . $widgetId);
+        $this->getLogger()->info('Editing Weather widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
         return $this->hydrate($response);
     }
 
     /**
-    * Delete the widget.
+     * Delete the widget.
      *
-    */
+     */
     public function delete()
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
@@ -135,4 +164,5 @@ class XiboGoogleTraffic extends XiboWidget
 
         return true;
     }
+
 }

@@ -10,6 +10,8 @@ namespace Xibo\OAuth2\Client\Provider;
 use GuzzleHttp\Psr7\MultipartStream;
 use League\OAuth2\Client\Token\AccessToken;
 use Xibo\OAuth2\Client\Exception\EmptyProviderException;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class XiboEntityProvider
 {
@@ -19,13 +21,21 @@ class XiboEntityProvider
     private $me;
     /** @var  AccessToken */
     private $token;
+    /** @var LoggerInterface */
+    private $logger;
     
     /**
-     * Set Provider
+     * Xibo Entity Provider Constructor 
      * @param Xibo $provider
+     * @param array $logger
      */
-    public function __construct($provider)
+    public function __construct($provider, array $logger = [])
     {
+        if (isset($logger['logger']))
+            $this->logger = $logger['logger'];
+        else
+            $this->logger = new NullLogger();
+
         $this->provider = $provider;
     }
     
@@ -44,10 +54,18 @@ class XiboEntityProvider
      */
     public function getMe()
     {
+        $this->getLogger()->debug('Getting Resource Owner');
         if ($this->me == null) {
             $this->me = $this->provider->getResourceOwner($this->getAccessToken());
         }
         return $this->me;
+    }
+    /**
+     * Get Logger
+     */
+    public function getLogger()
+    {
+        return $this->logger;
     }
     
     /**
@@ -59,9 +77,14 @@ class XiboEntityProvider
     {
         if ($this->provider === null)
             throw new EmptyProviderException();
-        if ($this->token == null || $this->token->hasExpired()) {
+        $this->getLogger()->debug('Checking Access token and requesting a new one if necessary');
+        if ($this->token == null || $this->token->hasExpired() || $this->token->getExpires() <= time() + 10) {
             // Get and store a new token
+        $this->getLogger()->info('Getting a new Access Token');
             $this->token = $this->provider->getAccessToken('client_credentials');
+        }
+        else {
+            $this->token = $this->token;
         }
         return $this->token;
     }
@@ -73,6 +96,7 @@ class XiboEntityProvider
      */
     public function get($url, $params = [])
     {
+        $this->logger->debug('Passing GET params to request');
         return $this->request('GET', $url . '?' . http_build_query($params));
     }
     
@@ -83,6 +107,7 @@ class XiboEntityProvider
      */
     public function post($url, $params = [])
     {
+        $this->logger->debug('Passing POST params to request');
         return $this->request('POST', $url, $params);
     }
     
@@ -93,6 +118,7 @@ class XiboEntityProvider
      */
     public function put($url, $params = [])
     {
+        $this->logger->debug('Passing PUT params to request');
         return $this->request('PUT', $url, $params);
     }
     
@@ -103,6 +129,7 @@ class XiboEntityProvider
      */
     public function delete($url, $params = [])
     {
+        $this->logger->debug('Passing Delete params to request');
         return $this->request('DELETE', $url, $params);
     }
     
@@ -116,6 +143,7 @@ class XiboEntityProvider
      */
     private function request($method, $url, $params = [])
     {
+        $this->getLogger()->debug('Creating a new request with received parameters');
         $options = [
             'headers' => null, 'body' => null
         ];
@@ -133,7 +161,9 @@ class XiboEntityProvider
                 $options['body'] = http_build_query($params, null, '&');
             }
         }
+        $this->logger->debug('Getting Authenticated Request');
         $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
-        return $this->provider->getResponse($request);
+        $this->logger->debug('Getting parsed response from Abstract Provider');
+        return $this->provider->getParsedResponse($request);
     }
 }
