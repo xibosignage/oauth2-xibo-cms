@@ -25,7 +25,7 @@
   "require": {
     "php": ">=5.6.0",
     "league/oauth2-client": "2.2.*",
-    "psr/log": "dev-master"
+    "psr/log": "1.1.*"
   },
   "require-dev": {
     "monolog/monolog": "^1.22"
