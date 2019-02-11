@@ -66,8 +66,8 @@ class XiboRegion extends XiboEntity
     /** @var string The transition direction if required by the transition type. */
     public $transitionDirection;
 
-    /** @var array of playlists */
-    public $playlists;
+    /** @var XiboPlaylist The region playlist */
+    public $regionPlaylist;
 
 	/**
      * Create Region.
@@ -88,23 +88,18 @@ class XiboRegion extends XiboEntity
         $this->top = $top;
         $this->left = $left; 
         $this->layoutId = $layoutId;
-        $this->getLogger()->info('Creating Region in Layout Id ' . $this->layoutId);
         // Array response from CMS
         $response = $this->doPost('/region/' . $this->layoutId, $this->toArray());
         // Hydrate the Region object
         $this->getLogger()->debug('Passing the response to Hydrate');
+        /** @var XiboRegion $region */
         $region = $this->hydrate($response);
 
-        $this->getLogger()->debug('Creating child object Playlist and linking it to parent Region');
-        // Response Array from the CMS will contain a playlists entry, which holds the attributes for 
-        // each Playlist.
-        foreach ($response['playlists'] as $item) {
-            $playlist = new XiboPlaylist($this->getEntityProvider());
-            // Hydrate the Playlist object with the items from region->playlists
-            $playlist->hydrate($item);
-            // Add to parent object
-            $region->playlists[] = $playlist;
-        }
+        $this->getLogger()->debug('Creating child object Playlist and linking it to regionPlaylist');
+        /** @var XiboPlaylist $playlist */
+        $playlist = new XiboPlaylist($this->getEntityProvider());
+        $playlist->hydrate($response['regionPlaylist']);
+        $region->regionPlaylist = $playlist;
         
         return $region;
     }
@@ -139,8 +134,16 @@ class XiboRegion extends XiboEntity
 
         $this->getLogger()->info('Editing Region ID ' . $this->regionId . ' In Layout Id ' . $this->layoutId);
         $response = $this->doPut('/region/' . $this->regionId, $this->toArray());
-        
-        return $this->hydrate($response);
+        /** @var XiboRegion $region */
+        $region = $this->hydrate($response);
+
+        $this->getLogger()->debug('Creating child object Playlist and linking it to regionPlaylist');
+        /** @var XiboPlaylist $playlist */
+        $playlist = new XiboPlaylist($this->getEntityProvider());
+        $playlist->hydrate($response['regionPlaylist']);
+        $region->regionPlaylist = $playlist;
+
+        return $region;
     }
 
     /**
@@ -166,7 +169,7 @@ class XiboRegion extends XiboEntity
      * @param array $height array of height values for the regions
      * @param array $top array of top offset values for the regions
      * @param array $left array of left offset values for the regions
-     * @return XiboLayout
+     * @return XiboRegion
      */
 
     public function positionAll($layoutId, $regionId = [], $width = [], $height = [], $top = [], $left = [])
@@ -195,8 +198,16 @@ class XiboRegion extends XiboEntity
         }
 
         $this->getLogger()->info('Positioning Regions in Layout ID ' . $layoutId);
-        return $this->hydrate($response);
+        /** @var XiboRegion $region */
+        $region = $this->hydrate($response);
 
+        $this->getLogger()->debug('Creating child object Playlist and linking it to regionPlaylist');
+        /** @var XiboPlaylist $playlist */
+        $playlist = new XiboPlaylist($this->getEntityProvider());
+        $playlist->hydrate($response['regionPlaylist']);
+        $region->regionPlaylist = $playlist;
+
+        return $region;
     }
 
 }

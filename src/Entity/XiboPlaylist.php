@@ -35,40 +35,83 @@ class XiboPlaylist extends XiboEntity
     /** @var int The Playlist ID */
     public $playlistId;
 
-    /** @var int The Widget ID */
-    public $widgetId;
-
     /** @var int The Owner ID */
     public $ownerId;
 
-    /** @var int The Playlist ID */
-    public $widgetOptions;
+    /** @var string Playlist name */
+    public $name;
 
-    /** @var int The display order */
-    public $displayOrder;
+    /** @var int The region ID */
+    public $regionId;
 
-    /** @var int The duration */
+    /** @var int Flag indicating whether the playlist is dynamic */
+    public $isDynamic;
+
+    /** @var string For dynamic playlist the filter by media Name */
+    public $filterMediaName;
+
+    /** @var string For dynamic playlist the filter by media Tags  */
+    public $filterMediaTags;
+
+    /** @var string Date showing when playlist was created */
+    public $createdDt;
+
+    /** @var string Date showing when playlist was modified */
+    public $modifiedDt;
+
+    /** @var int Playlist duration */
     public $duration;
+
+    /** @var array Array of tags */
+    public $tags;
+
+    /** @var array of widgets in the playlist */
+    public $widgets;
+
+    /** @var array of permissions to the playlist */
+    public $permissions;
+
+    /** @var string Owner name */
+    public $owner;
+
+    public $groupsWithPermissions;
 
     /**
      * Return a list of playlists.
      *
-     * @param array $params can be filtered by: playlistId, widgetId
+     * @param array $params can be filtered by: playlistId, name, userId, tags, mediaLike, embeddable parameter embed=widgets
      * @return array|XiboPlaylist
      */
     public function get(array $params = [])
     {
         $this->getLogger()->info('Getting list of Playlists');
+        $embed = ($params['embed'] != null) ? explode(',', $params['embed']) : [];
+        $hydratedWidgets = [];
         $entries = [];
-        $response = $this->doGet('/playlist/widget', $params);
+
+        $response = $this->doGet('/playlist', $params);
         foreach ($response as $item) {
-            $entries[] = clone $this->hydrate($item);
+            /** @var XiboPlaylist $playlist */
+            $playlist = new XiboPlaylist($this->getEntityProvider());
+            $playlist->hydrate($item);
+            if (in_array('widgets', $embed) === true) {
+                foreach ($playlist->widgets as $widget) {
+                    /** @var XiboWidget $widgetObject */
+                    $widgetObject = new XiboWidget($this->getEntityProvider());
+                    $widgetObject->hydrate($widget);
+                    $hydratedWidgets[] = $widgetObject;
+                }
+                $playlist->widgets = $hydratedWidgets;
+            }
+            $entries[] = clone $playlist;
         }
 
         return $entries;
     }
+
     /**
-     * Assign media to playlist
+     * Assign media to playlist.
+     *
      * @param array[int] $media Array of Media IDs to assign
      * @param int $duration Optional duration for all Media in this assignment to use on the widget
      * @param int $playlistId The Playlist ID to assign to
@@ -95,5 +138,83 @@ class XiboPlaylist extends XiboEntity
         }
 
         return $this;
+    }
+
+    /**
+     * Create a new Playlist
+     *
+     * @param string $name Name of the playlist
+     * @param string $tags A Comma separated list of tags
+     * @param int $isDynamic Flag indicating whether the playlist is dynamic
+     * @param string $filterMediaName For dynamic playlist the filter by media Name
+     * @param string $filterMediaTags For dynamic playlist the filter by media Tag
+     * @return XiboPlaylist
+     */
+    public function add($name, $tags= '', $isDynamic = 0, $filterMediaName = '', $filterMediaTags = '')
+    {
+        $hydratedWidgets = [];
+        $this->name = $name;
+        $this->tags = $tags;
+        $this->isDynamic = $isDynamic;
+        $this->filterMediaName = $filterMediaName;
+        $this->filterMediaTags = $filterMediaTags;
+
+        $this->getLogger()->info('Creating Playlist ' . $this->name);
+        $response = $this->doPost('/playlist', $this->toArray());
+
+        /** @var XiboPlaylist $playlist */
+        $playlist = new XiboPlaylist($this->getEntityProvider());
+        $playlist->hydrate($response);
+        if (isset($playlist->widgets)) {
+            foreach ($playlist->widgets as $widget) {
+                /** @var XiboWidget $widgetObject */
+                $widgetObject = new XiboWidget($this->getEntityProvider());
+                $widgetObject->hydrate($widget);
+                $hydratedWidgets[] = $widgetObject;
+            }
+            $playlist->widgets = $hydratedWidgets;
+        }
+
+        return $playlist;
+    }
+
+    /**
+     * Edit an existing Playlist
+     *
+     * @param int $playlistId Playlist ID to edit
+     * @param string $name Name of the playlist
+     * @param string $tags A Comma separated list of tags
+     * @param int $isDynamic Flag indicating whether the playlist is dynamic
+     * @param string $filterMediaName For dynamic playlist the filter by media Name
+     * @param string $filterMediaTags For dynamic playlist the filter by media Tag
+     * @return XiboPlaylist
+     */
+    public function edit($playlistId, $name, $tags= '', $isDynamic = 0, $filterMediaName = '', $filterMediaTags = '')
+    {
+        $hydratedWidgets = [];
+        $this->playlistId = $playlistId;
+        $this->name = $name;
+        $this->tags = $tags;
+        $this->isDynamic = $isDynamic;
+        $this->filterMediaName = $filterMediaName;
+        $this->filterMediaTags = $filterMediaTags;
+
+        $this->getLogger()->info('Editing Playlist ID' . $playlistId);
+        $response = $this->doPut('/playlist/' . $playlistId, $this->toArray());
+
+        /** @var XiboPlaylist $playlist */
+        $playlist = new XiboPlaylist($this->getEntityProvider());
+        $playlist->hydrate($response);
+        if (isset($playlist->widgets)) {
+            foreach ($playlist->widgets as $widget) {
+                /** @var XiboWidget $widgetObject */
+                $widgetObject = new XiboWidget($this->getEntityProvider());
+                $widgetObject->hydrate($widget);
+                $hydratedWidgets[] = $widgetObject;
+            }
+            $playlist->widgets = $hydratedWidgets;
+        }
+
+        return $playlist;
     }
 }

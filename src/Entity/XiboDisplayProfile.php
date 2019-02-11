@@ -45,6 +45,9 @@ class XiboDisplayProfile extends XiboEntity
     /** @var int The User ID */
 	public $userId;
 
+    /** @var int The Media ID of the Player Software installer */
+    public $versionMediaId;
+
 	/**
      * Return a list of displayProfiles.
      *
@@ -110,13 +113,15 @@ class XiboDisplayProfile extends XiboEntity
      * @param string $name Display Profile name
      * @param string $type Display Profile type windws|android|lg
      * @param int $isDefault Flag indicating whether this is the default profile for the client type
+     * @param int $versionMediaId The Media ID of the Player Software installer
 	 * @return XiboDisplayProfile
 	 */
-	public function edit($name, $type, $isDefault)
+	public function edit($name, $type, $isDefault, $versionMediaId = 0)
 	{
 		$this->name = $name;
 		$this->type = $type;
 		$this->isDefault = $isDefault;
+		$this->versionMediaId = $versionMediaId;
 		$this->getLogger()->info('Editing Display profile ' . $this->displayProfileId);
 		$response = $this->doPut('/displayprofile/' . $this->displayProfileId, $this->toArray());
 		
@@ -135,4 +140,24 @@ class XiboDisplayProfile extends XiboEntity
 		
 		return true;
 	}
+
+    /**
+     * Copy Display Profile.
+     *
+     * @param int $displayProfileId The Display Profile ID to copy
+     * @param string $name Display Profile name
+     * @return XiboDisplayProfile
+     */
+    public function copy($displayProfileId, $name)
+    {
+        $this->name = $name;
+        $this->displayProfileId = $displayProfileId;
+
+        $this->getLogger()->info('Creating a Copy of Display Profile ' . $name);
+        $response = $this->doPost('/displayprofile/' . $displayProfileId . '/copy', [
+            'name' => $name
+        ]);
+
+        return $this->hydrate($response);
+    }
 }

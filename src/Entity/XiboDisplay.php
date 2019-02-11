@@ -103,9 +103,6 @@ class XiboDisplay extends XiboEntity
     /** @var string The timezone for this display, leave empty to use CMS timezone */
     public $timeZone;
 
-    /** @var string A JSON string representing the player installer that should be installed */
-    public $versionInstructions;
-
     /** @var string The Display Type */
     public $clientType;
 
@@ -150,6 +147,9 @@ class XiboDisplay extends XiboEntity
 
     /** @var int The last command success, 0 = failure, 1 = success, 2 = unknown */
     public $lastCommandSuccess;
+
+    /** @var int The Version Media ID to override one set in the Display Profile */
+    public $versionMediaId;
 
     /**
      * Get a list of displays.
@@ -208,9 +208,10 @@ class XiboDisplay extends XiboEntity
      * @param int $displayProfileId The Display Profile ID
      * @param int $clearCachedData A flag indicating whether to Clear all Cached data for this display
      * @param int $rekeyXmr A flag indicating whether to Clear the cached XMR configuration and send a rekey acction
+     * @param int $versionMediaId The Version Media ID to override one set in the Display Profile
      * @return XiboDisplay
      */
-    public function edit($display, $description, $tags, $auditingUntil = null, $defaultLayoutId, $licensed, $license, $incSchedule = 0, $emailAlert = 0, $alertTimeout = null, $wakeOnLanEnabled = 0, $wakeOnLanTime = null, $broadCastAddress = null, $secureOn = null, $cidr = null, $latitude = null, $longitude = null, $timeZone = null, $displayProfileId = null, $clearCachedData = 1, $rekeyXmr = 0)
+    public function edit($display, $description, $tags, $auditingUntil = null, $defaultLayoutId, $licensed, $license, $incSchedule = 0, $emailAlert = 0, $alertTimeout = null, $wakeOnLanEnabled = 0, $wakeOnLanTime = null, $broadCastAddress = null, $secureOn = null, $cidr = null, $latitude = null, $longitude = null, $timeZone = null, $displayProfileId = null, $clearCachedData = 1, $rekeyXmr = 0, $versionMediaId = 0)
     {
         $this->display = $display;
         $this->description = $description;
@@ -233,6 +234,8 @@ class XiboDisplay extends XiboEntity
         $this->displayProfileId = $displayProfileId;
         $this->clearCachedData = $clearCachedData;
         $this->rekeyXmr = $rekeyXmr;
+        $this->versionMediaId = $versionMediaId;
+
         $this->getLogger()->info('Editing display ' . $this->display);
         $response = $this->doPut('/display/' . $this->displayId, $this->toArray());
         

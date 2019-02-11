@@ -40,11 +40,23 @@ class XiboLayout extends XiboEntity
     /** @var int the Campaign ID */
     public $campaignId;
 
+    /** @var int the Parent ID */
+    public $parentId;
+
+    /** @var int Publised Status ID */
+    public $publishedStatusId;
+
+    /** @var string Publish Status Message*/
+    public $publishedStatus;
+
     /** @var int A media ID to use as the background image for this Layout. */
     public $backgroundImageId;
 
+    /** @var int Schema version ID */
+    public $schemaVersion;
+
     /** @var string The Layout name */
-    public $layout;
+    public $name;
 
     /** @var string The layout description */
     public $description;
@@ -85,8 +97,14 @@ class XiboLayout extends XiboEntity
     /** @var string Layout status message */
     public $statusMessage;
 
-    /** @var string Layout tags */
+    /** @var array|XiboRegion An Array of Layout regions */
+    public $regions;
+
+    /** @var array Array of Layout tags */
     public $tags;
+
+    /** @var array Array of permissions to the layout */
+    public $permissions;
 
     /** @var int flag indicating whether to treat the tags filter as an exact match */
     public $exactTags;
@@ -110,9 +128,38 @@ class XiboLayout extends XiboEntity
     {
         $this->getLogger()->info('Getting list of layouts ');
         $entries = [];
+        $hydratedRegions = [];
+        $hydratedWidgets = [];
         $response = $this->doGet($this->url, $params);
+        $embed = ($params['embed'] != null) ? explode(',', $params['embed']) : [];
+
         foreach ($response as $item) {
-            $entries[] = clone $this->hydrate($item);
+            /** @var XiboLayout $layout */
+            $layout = new XiboLayout($this->getEntityProvider());
+            $layout->hydrate($item);
+            foreach ($layout->regions as $reg) {
+                /** @var XiboRegion $region */
+                $region = new XiboRegion($this->getEntityProvider());
+                $region->hydrate($reg);
+                if (in_array('playlists', $embed) === true) {
+                    /** @var XiboPlaylist $playlist */
+                    $playlist = new XiboPlaylist($this->getEntityProvider());
+                    $playlist->hydrate($reg['regionPlaylist']);
+                    foreach ($playlist->widgets as $widget) {
+                        /** @var XiboWidget $widgetObject */
+                        $widgetObject = new XiboWidget($this->getEntityProvider());
+                        $widgetObject->hydrate($widget);
+                        $hydratedWidgets[] = $widgetObject;
+                    }
+                    $playlist->widgets = $hydratedWidgets;
+                    $region->regionPlaylist = $playlist;
+                }
+                // Add to parent object
+                $hydratedRegions[] = $region;
+            }
+            $layout->regions = $hydratedRegions;
+
+            $entries[] = clone $layout;
         }
 
         return $entries;
@@ -122,20 +169,48 @@ class XiboLayout extends XiboEntity
      * Get the layout by its ID.
      *
      * @param int $id LayoutId to search for
+     * @param string $embed A comma separated list of related data tp embed such as regions, playlists, widgets, tags, etc
      * @return XiboLayout
      * @throws XiboApiException
      */
-    public function getById($id)
+    public function getById($id, $embed = '')
     {
         $this->getLogger()->info('Getting layout ID ' . $id);
+        $hydratedRegions = [];
+        $hydratedWidgets = [];
         $response = $this->doGet($this->url, [
-            'layoutId' => $id, 'retired' => -1
+            'layoutId' => $id, 'retired' => -1, 'embed' => $embed
         ]);
 
         if (count($response) <= 0)
             throw new XiboApiException('Expecting a single record, found ' . count($response));
 
-        return clone $this->hydrate($response[0]);
+        /** @var XiboLayout $layout */
+        $layout = $this->hydrate($response[0]);
+
+        foreach ($layout->regions as $item) {
+            /** @var XiboRegion $region */
+            $region = new XiboRegion($this->getEntityProvider());
+            $region->hydrate($item);
+            if (strpos($embed, 'playlists') !== false) {
+                /** @var XiboPlaylist $playlist */
+                $playlist = new XiboPlaylist($this->getEntityProvider());
+                $playlist->hydrate($item['regionPlaylist']);
+                foreach ($playlist->widgets as $widget) {
+                    /** @var XiboWidget $widgetObject */
+                    $widgetObject = new XiboWidget($this->getEntityProvider());
+                    $widgetObject->hydrate($widget);
+                    $hydratedWidgets[] = $widgetObject;
+                }
+                $playlist->widgets = $hydratedWidgets;
+                $region->regionPlaylist = $playlist;
+            }
+            // Add to parent object
+            $hydratedRegions[] = $region;
+        }
+        $layout->regions = $hydratedRegions;
+
+        return clone $layout;
     }
 
     /**
@@ -157,24 +232,12 @@ class XiboLayout extends XiboEntity
         $this->description = $description;
         $this->layoutId = $layoutId;
         $this->resolutionId = $resolutionId;
-/*
-        if (strlen($name) > 50 || strlen($name) < 1){
-            throw new InvalidArgumentException('Layout Name must be between 1 and 50 characters', 'name');
-        }
-*/
+
         $this->getLogger()->info('Creating Layout ' . $this->name);
         $response = $this->doPost('/layout', $this->toArray());
-        $this->getLogger()->debug('Passing the response to Hydrate');
-        $layout = $this->hydrate($response);
-        
-        $this->getLogger()->debug('Creating child object Region and linking it to parent Layout');
-        foreach ($response['regions'] as $item) {
-            $region = new XiboRegion($this->getEntityProvider());
-            $region->hydrate($item);
-            // Add to parent object
-            $layout->regions[] = $region;
-        }
-        
+
+        $layout = $this->constructLayoutFromResponse($response);
+
         return $layout;
     }
 
@@ -201,10 +264,13 @@ class XiboLayout extends XiboEntity
         $this->backgroundImageId = $backgroundImageId;
         $this->backgroundzIndex = $backgroundzIndex;
         $this->resolutionId = $resolutionId;
+
         $this->getLogger()->info('Editing Layout ID ' . $this->layoutId);
         $response = $this->doPut('/layout/' . $this->layoutId, $this->toArray());
-        $this->getLogger()->debug('Passing the response to Hydrate');
-        return $this->hydrate($response);
+
+        $layout = $this->constructLayoutFromResponse($response);
+
+        return $layout;
     }
 
 
@@ -252,7 +318,9 @@ class XiboLayout extends XiboEntity
         $response = $this->doPost('/layout/copy/' . $this->layoutId, $this->toArray());
         
         $this->getLogger()->debug('Passing the response to Hydrate');
-        return $this->hydrate($response);
+        $layout = $this->constructLayoutFromResponse($response);
+
+        return $layout;
     }
 
 
@@ -263,7 +331,7 @@ class XiboLayout extends XiboEntity
      * @param int $height Height of the region
      * @param int $top Offset from top
      * @param int $left Offset from left
-     * @return XiboLayout
+     * @return XiboRegion
      */
 
     public function createRegion($width, $height, $top, $left)
@@ -284,16 +352,17 @@ class XiboLayout extends XiboEntity
     /**
      * Edit Region.
      *
+     * @param int $regionId Region ID to Edit
      * @param int $width New width for the region
      * @param int $height New height for the region
      * @param int $top new offset from Top
      * @param int $left new offset from Left
      * @param int $zIndex The layer of the region
      * @param int $loop Flag indicating whether this region should loop if there is only one widget in the timeline
-     * @return XiboLayout
+     * @return XiboRegion
      */
 
-    public function editRegion($width, $height, $top, $left, $zIndex, $loop)
+    public function editRegion($regionId, $width, $height, $top, $left, $zIndex, $loop)
     {
         $this->width = $width;
         $this->height = $height;
@@ -301,8 +370,8 @@ class XiboLayout extends XiboEntity
         $this->left = $left; 
         $this->zIndex = $zIndex;
         $this->loop = $loop;
-        $this->getLogger()->info('Editing Region ID ' . $this->regionId . 'In Layout ID ' . $this->layoutId);
-        $response = $this->doPut('/region/' . $this->regionId, $this->toArray());
+        $this->getLogger()->info('Editing Region ID ' . $regionId . 'In Layout ID ' . $this->layoutId);
+        $response = $this->doPut('/region/' . $regionId, $this->toArray());
         
         $this->getLogger()->debug('Passing the response to Hydrate');
         return $this->hydrate($response);
@@ -311,12 +380,13 @@ class XiboLayout extends XiboEntity
     /**
      * Delete Region.
      *
+     * @param int $regionId Region ID to delete
      * @return bool
      */
-    public function deleteRegion()
+    public function deleteRegion($regionId)
     {
-        $this->getLogger()->info('Deleting Region ID ' . $this->regionId . 'In Layout ID ' . $this->layoutId);
-        $this->doDelete('/region/' . $this->regionId);
+        $this->getLogger()->info('Deleting Region ID ' . $regionId . 'In Layout ID ' . $this->layoutId);
+        $this->doDelete('/region/' . $regionId);
         
         return true;
     }
@@ -482,5 +552,96 @@ class XiboLayout extends XiboEntity
 
         $this->getLogger()->debug('Passing the response to Hydrate');
         return $this->hydrate($response);
+    }
+
+    /**
+     * Checkout a layout
+     * @param int layoutId The ID of the layout to checkout
+     * @return XiboLayout
+     */
+    public function checkout($layoutId)
+    {
+        $this->getLogger()->info('Checking out layout ID ' . $layoutId);
+        $response = $this->doPut('/layout/checkout/' . $layoutId);
+
+        $layout = $this->constructLayoutFromResponse($response);
+
+        $this->getLogger()->info('LayoutId is now: ' . $layout->layoutId);
+
+        return $layout;
+    }
+
+    /**
+     * Publish a layout
+     * @param int layoutId The ID of the layout to checkout
+     * @return XiboLayout
+     */
+    public function publish($layoutId)
+    {
+        $this->getLogger()->info('Publishing layout ID ' . $layoutId);
+        $response = $this->doPut('/layout/publish/' . $layoutId);
+
+        $layout = $this->constructLayoutFromResponse($response);
+
+        $this->getLogger()->debug('LayoutId is now: ' . $layout->layoutId);
+
+        return $layout;
+    }
+
+    /**
+     * Discard a layouts draft
+     * @param int layoutId The ID of the layout to checkout
+     * @return XiboLayout
+     */
+    public function discard($layoutId)
+    {
+        $this->getLogger()->info('Discarding draft of layout ID ' . $layoutId);
+        $response = $this->doPut('/layout/discard/' . $layoutId);
+
+        $layout = $this->constructLayoutFromResponse($response);
+
+        $this->getLogger()->debug('LayoutId is now: ' . $layout->layoutId);
+
+        return $layout;
+    }
+
+    /**
+     * @param $response
+     * @return \Xibo\OAuth2\Client\Entity\XiboEntity|XiboLayout
+     */
+    private function constructLayoutFromResponse($response)
+    {
+        $hydratedRegions = [];
+        $hydratedWidgets = [];
+        /** @var XiboLayout $layout */
+        $layout = new XiboLayout($this->getEntityProvider());
+        $layout = $layout->hydrate($response);
+
+        $this->getLogger()->debug('Constructing Layout from Response: ' . $layout->layoutId);
+
+        if (isset($response['regions'])) {
+            foreach ($response['regions'] as $item) {
+                /** @var XiboRegion $region */
+                $region = new XiboRegion($this->getEntityProvider());
+                $region->hydrate($item);
+                /** @var XiboPlaylist $playlist */
+                $playlist = new XiboPlaylist($this->getEntityProvider());
+                $playlist->hydrate($item['regionPlaylist']);
+                foreach ($playlist->widgets as $widget) {
+                    /** @var XiboWidget $widgetObject */
+                    $widgetObject = new XiboWidget($this->getEntityProvider());
+                    $widgetObject->hydrate($widget);
+                    $hydratedWidgets[] = $widgetObject;
+                }
+                $playlist->widgets = $hydratedWidgets;
+                $region->regionPlaylist = $playlist;
+                $hydratedRegions[] = $region;
+            }
+            $layout->regions = $hydratedRegions;
+        } else {
+            $this->getLogger()->debug('No regions returned with Layout object');
+        }
+
+        return $layout;
     }
 }

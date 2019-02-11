@@ -59,6 +59,24 @@ class XiboWidget extends XiboEntity
     public $permissions;
 
     /**
+     * Return a list of playlists.
+     *
+     * @param array $params can be filtered by: playlistId, widgetId
+     * @return array|XiboWidget
+     */
+    public function get(array $params = [])
+    {
+        $this->getLogger()->info('Getting list of Widgets in Playlist');
+        $entries = [];
+        $response = $this->doGet('/playlist/widget', $params);
+        foreach ($response as $item) {
+            $entries[] = clone $this->hydrate($item);
+        }
+
+        return $entries;
+    }
+
+    /**
      * Get by Id
      * @param int $widgetId Widget ID
      * @return $this|XiboWidget
