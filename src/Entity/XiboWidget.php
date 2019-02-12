@@ -103,7 +103,7 @@ class XiboWidget extends XiboEntity
      *
      * @return boolean
      */
-    public function delete($widgetId)
+    public function deleteWidget($widgetId)
     {
         $this->widgetId = $widgetId;
         $this->userId = $this->getEntityProvider()->getMe()->getId();

@@ -156,7 +156,7 @@ class XiboDisplayGroup extends XiboEntity
     /**
      * Assign display to the display group.
      *
-     * @param int $displayId Display ID to assign
+     * @param array|int $displayId Display ID to assign
      * @return XiboDisplayGroup
      */
     public function assignDisplay($displayId)
@@ -172,7 +172,7 @@ class XiboDisplayGroup extends XiboEntity
     /**
      * Unassign display from display group.
      *
-     * @param int $displayId The Display ID to unassign
+     * @param array|int $displayId The Display ID to unassign
      * @return XiboDisplayGroup
      */
     public function unassignDisplay($displayId)
@@ -188,7 +188,7 @@ class XiboDisplayGroup extends XiboEntity
     /**
      * Assign display group to a display group.
      *
-     * @param int $displayGroupId The Display Group ID to assign
+     * @param array|int $displayGroupId The Display Group ID to assign
      * @return XiboDisplayGroup
      */
     public function assignDisplayGroup($displayGroupId)
@@ -203,7 +203,7 @@ class XiboDisplayGroup extends XiboEntity
     /**
      * Unassign display group from display group.
      *
-     * @param int $displayGroupId The Display Group ID to unassign
+     * @param array|int $displayGroupId The Display Group ID to unassign
      * @return XiboDisplayGroup
      */
     public function unassignDisplayGroup($displayGroupId)
@@ -218,7 +218,7 @@ class XiboDisplayGroup extends XiboEntity
     /**
      * Assign layout to display Group.
      *
-     * @param int $layoutId The Layout ID to assign
+     * @param array|int $layoutId The Layout ID to assign
      * @return XiboDisplayGroup
      */
     public function assignLayout($layoutId)
@@ -234,7 +234,7 @@ class XiboDisplayGroup extends XiboEntity
     /**
      * Unassign layout from display group.
      *
-     * @param int $layoutId The Layout ID to unassign
+     * @param array|int $layoutId The Layout ID to unassign
      * @return XiboDisplayGroup
      */
     public function unassignLayout($layoutId)
@@ -250,7 +250,7 @@ class XiboDisplayGroup extends XiboEntity
     /**
      * Assign media to display group.
      *
-     * @param int $mediaId Media ID to assign
+     * @param array|int $mediaId Media ID to assign
      * @return XiboDisplayGroup
      */
     public function assignMedia($mediaId)
@@ -266,29 +266,13 @@ class XiboDisplayGroup extends XiboEntity
     /**
      * Unassign media from display group.
      *
-     * @param int $mediaId Media ID to unassign
+     * @param array|int $mediaId Media ID to unassign
      * @return XiboDisplayGroup
      */
     public function unassignMedia($mediaId)
     {
         $this->getLogger()->info('Unassigning media ID ' . $mediaId . ' From display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/unassign', [
-            'mediaId' => $mediaId
-            ]);
-
-        return $this;
-    }
-
-    /**
-     * Version Instructions.
-     *
-     * @param int $mediaId The Media ID to assign
-     * @return XiboDisplayGroup
-     */
-    public function version($mediaId)
-    {
-        $this->getLogger()->info('Assigning media ID ' . $mediaId . ' To display Group ID ' . $this->displayGroupId);
-        $this->doPost('/displaygroup/' . $this->displayGroupId . '/version', [
             'mediaId' => $mediaId
             ]);
 
