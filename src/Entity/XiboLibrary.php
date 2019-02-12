@@ -166,6 +166,8 @@ class XiboLibrary extends XiboEntity
             ];
     	}
             $response = $this->doPost('/library', ['multipart' => $payload]);
+
+        if (isset($response['files'][0]['mediaId']))
             $this->getLogger()->debug('Uploaded media ' . $response['files'][0]['name'] . ' Media ID ' . $response['files'][0]['mediaId'] . ' Stored as ' . $response['files'][0]['storedas']);
         	// Response will have the format:
         	/*{

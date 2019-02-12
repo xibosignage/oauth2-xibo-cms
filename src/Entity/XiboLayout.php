@@ -103,6 +103,9 @@ class XiboLayout extends XiboEntity
     /** @var array Array of Layout tags */
     public $tags;
 
+    /** @var int The template ID */
+    public $templateId;
+
     /** @var array Array of permissions to the layout */
     public $permissions;
 
