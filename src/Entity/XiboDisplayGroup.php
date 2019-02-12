@@ -161,7 +161,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function assignDisplay($displayId)
     {
-        $this->getLogger()->info('Assigning display ID ' . $displayId . ' To display Group ID ' . $this->displayGroupId);
+        $this->getLogger()->info('Assigning display ID ' . json_encode($displayId) . ' To display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/assign', [
             'displayId' => $displayId
             ]);
@@ -177,7 +177,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function unassignDisplay($displayId)
     {
-        $this->getLogger()->info('Unassigning display ID ' . $displayId . ' From display Group ID ' . $this->displayGroupId);
+        $this->getLogger()->info('Unassigning display ID ' . json_encode($displayId) . ' From display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/display/unassign', [
             'displayId' => $displayId
             ]);
@@ -193,7 +193,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function assignDisplayGroup($displayGroupId)
     {
-        $this->getLogger()->info('Assigning display Group ID ' . $displayGroupId . ' To display Group ID ' . $this->displayGroupId);
+        $this->getLogger()->info('Assigning display Group ID ' . json_encode($displayGroupId) . ' To display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/assign', [
         'displayGroupId' => $displayGroupId
         ]);
@@ -208,7 +208,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function unassignDisplayGroup($displayGroupId)
     {
-        $this->getLogger()->info('Unassigning display Group ID ' . $displayGroupId . ' From display Group ID ' . $this->displayGroupId);
+        $this->getLogger()->info('Unassigning display Group ID ' . json_encode($displayGroupId) . ' From display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/displayGroup/unassign', [
         'displayGroupId' => $displayGroupId
         ]);
@@ -223,7 +223,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function assignLayout($layoutId)
     {
-        $this->getLogger()->info('Assigning Layout ID ' . $layoutId . ' To display Group ID ' . $this->displayGroupId);
+        $this->getLogger()->info('Assigning Layout ID ' . json_encode($layoutId) . ' To display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/layout/assign', [
             'layoutId' => $layoutId
             ]);
@@ -239,7 +239,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function unassignLayout($layoutId)
     {
-        $this->getLogger()->info('Unassigning Layout ID ' . $layoutId . ' From display Group ID ' . $this->displayGroupId);
+        $this->getLogger()->info('Unassigning Layout ID ' . json_encode($layoutId) . ' From display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/layout/unassign', [
             'layoutId' => $layoutId
             ]);
@@ -255,7 +255,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function assignMedia($mediaId)
     {
-        $this->getLogger()->info('Assigning media ID ' . $mediaId . ' To display Group ID ' . $this->displayGroupId);
+        $this->getLogger()->info('Assigning media ID ' . json_encode($mediaId) . ' To display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/assign', [
             'mediaId' => $mediaId
             ]);
@@ -271,7 +271,7 @@ class XiboDisplayGroup extends XiboEntity
      */
     public function unassignMedia($mediaId)
     {
-        $this->getLogger()->info('Unassigning media ID ' . $mediaId . ' From display Group ID ' . $this->displayGroupId);
+        $this->getLogger()->info('Unassigning media ID ' . json_encode($mediaId) . ' From display Group ID ' . $this->displayGroupId);
         $this->doPost('/displaygroup/' . $this->displayGroupId . '/media/unassign', [
             'mediaId' => $mediaId
             ]);
