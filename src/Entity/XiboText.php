@@ -83,9 +83,10 @@ class XiboText extends XiboWidget
      * @param string $text The Text to display in the widget
      * @param string $javaScript Optional JavaScript
      * @param int $playlistId Playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboText
      */
-    public function create($name, $duration, $useDuration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $playlistId)
+    public function create($name, $duration, $useDuration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -98,6 +99,7 @@ class XiboText extends XiboWidget
         $this->text = $text;
         $this->javaScript = $javaScript; 
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating a new Text widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/text/' . $playlistId , $this->toArray());
 
@@ -117,9 +119,10 @@ class XiboText extends XiboWidget
      * @param string $text The Text to display in the widget
      * @param string $javaScript Optional JavaScript
      * @param int $widgetId the Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboText
      */
-    public function edit($name, $duration, $useDuration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $widgetId)
+    public function edit($name, $duration, $useDuration, $effect, $speed, $backgroundColor, $marqueeInlineSelector, $text, $javaScript, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -132,6 +135,7 @@ class XiboText extends XiboWidget
         $this->text = $text;
         $this->javaScript = $javaScript; 
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

@@ -67,9 +67,10 @@ class XiboLocalVideo extends XiboWidget
      * @param string $scaleTypeId How should the video be scaled, available options: aspect, stretch
      * @param int $mute Flag Should the video be muted?
      * @param int $playlistId Playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboLocalVideo
      */
-    public function create($uri, $duration, $useDuration, $scaleTypeId, $mute, $playlistId)
+    public function create($uri, $duration, $useDuration, $scaleTypeId, $mute, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->uri = $uri;
@@ -78,6 +79,7 @@ class XiboLocalVideo extends XiboWidget
         $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating Local Video widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/localVideo/' . $playlistId , $this->toArray());
 
@@ -92,9 +94,10 @@ class XiboLocalVideo extends XiboWidget
      * @param string $scaleTypeId How should the video be scaled, available options: aspect, stretch
      * @param int $mute Flag Should the video be muted?
      * @param int $widgetId The Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboLocalVideo
      */
-    public function edit($uri, $duration, $useDuration, $scaleTypeId, $mute, $widgetId)
+    public function edit($uri, $duration, $useDuration, $scaleTypeId, $mute, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->uri = $uri;
@@ -103,6 +106,7 @@ class XiboLocalVideo extends XiboWidget
         $this->scaleTypeId = $scaleTypeId;
         $this->mute = $mute;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing Local Video widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

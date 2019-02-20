@@ -71,9 +71,10 @@ class XiboVideo extends XiboWidget
      * @param int $mute Flag Should the video be muted?
      * @param int $loop Flag Should the video loop (only for duration > 0 )?
      * @param int $widgetId The Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboVideo
      */
-    public function edit($name, $duration, $useDuration, $scaleTypeId, $mute, $loop, $widgetId)
+    public function edit($name, $duration, $useDuration, $scaleTypeId, $mute, $loop, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -83,6 +84,7 @@ class XiboVideo extends XiboWidget
         $this->mute = $mute;
         $this->loop = $loop;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

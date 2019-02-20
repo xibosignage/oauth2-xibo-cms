@@ -97,7 +97,6 @@ class XiboCurrencies extends XiboWidget
     /** @var string Optional StyleSheet  */
     public $styleSheet;
 
-
     /** @var string Optional JavaScript */
     public $javaScript;
 
@@ -128,9 +127,10 @@ class XiboCurrencies extends XiboWidget
      * @param int $updateInterval Update interval in minutes, should be kept as high as possible, if data change once per hour, this should be set to 60
      * @param int $durationIsPerPage Flag The duration specified is per page/item, otherwise the widget duration is divided between the number of pages/items
      * @param int $playlistId The Playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboCurrencies
      */
-    public function create($templateId, $name, $duration, $useDuration, $base, $items, $reverseConversion, $effect, $speed, $backgroundColor, $noRecordsMessage, $dateFormat, $updateInterval, $durationIsPerPage, $playlistId)
+    public function create($templateId, $name, $duration, $useDuration, $base, $items, $reverseConversion, $effect, $speed, $backgroundColor, $noRecordsMessage, $dateFormat, $updateInterval, $durationIsPerPage, $playlistId, $enableStat = 'Off')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->overrideTemplate = 0;
@@ -149,6 +149,7 @@ class XiboCurrencies extends XiboWidget
         $this->updateInterval = $updateInterval;
         $this->durationIsPerPage = $durationIsPerPage;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
 
         $this->getLogger()->info('Creating Currencies widget and assigning it to playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/currencies/' . $playlistId , $this->toArray());
@@ -174,9 +175,10 @@ class XiboCurrencies extends XiboWidget
      * @param int $updateInterval Update interval in minutes, should be kept as high as possible, if data change once per hour, this should be set to 60
      * @param int $durationIsPerPage Flag The duration specified is per page/item, otherwise the widget duration is divided between the number of pages/items
      * @param int $widgetId The Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboCurrencies
      */
-    public function edit($templateId, $name, $duration, $useDuration, $base, $items, $reverseConversion, $effect, $speed, $backgroundColor, $noRecordsMessage, $dateFormat, $updateInterval, $durationIsPerPage, $widgetId)
+    public function edit($templateId, $name, $duration, $useDuration, $base, $items, $reverseConversion, $effect, $speed, $backgroundColor, $noRecordsMessage, $dateFormat, $updateInterval, $durationIsPerPage, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->overrideTemplate = 0;
@@ -195,6 +197,7 @@ class XiboCurrencies extends XiboWidget
         $this->updateInterval = $updateInterval;
         $this->durationIsPerPage = $durationIsPerPage;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing widget ID' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
