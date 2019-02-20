@@ -71,9 +71,10 @@ class XiboHls extends XiboWidget
      * @param int $mute Flag Should the video be muted?
      * @param int $transparency Flag This causes some android devices to switch to a hardware accelerated web view
      * @param int $playlistId The playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboHls
      */
-    public function create($name, $useDuration, $duration, $uri, $mute, $transparency, $playlistId)
+    public function create($name, $useDuration, $duration, $uri, $mute, $transparency, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -83,6 +84,7 @@ class XiboHls extends XiboWidget
         $this->mute = $mute;
         $this->transparency = $transparency;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating HLS widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/hls/' . $playlistId , $this->toArray());
 
@@ -99,9 +101,10 @@ class XiboHls extends XiboWidget
      * @param int $mute Flag Should the video be muted?
      * @param int $transparency Flag This causes some android devices to switch to a hardware accelerated web view
      * @param int $widgetId the Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboHls
      */
-    public function edit($name, $useDuration, $duration, $uri, $mute, $transparency, $widgetId)
+    public function edit($name, $useDuration, $duration, $uri, $mute, $transparency, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -111,6 +114,7 @@ class XiboHls extends XiboWidget
         $this->mute = $mute;
         $this->transparency = $transparency;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing HLS widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

@@ -156,9 +156,10 @@ class XiboTicker extends XiboWidget
      * @param int $useDuration Flag indicating whether to use custom duration
      * @param int $dataSetId The DataSet ID for sourceId=2
      * @param int $playlistId The playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboTicker
      */
-    public function create($sourceId, $uri, $dataSetId, $duration, $useDuration, $playlistId)
+    public function create($sourceId, $uri, $dataSetId, $duration, $useDuration, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->sourceId = $sourceId;
@@ -167,6 +168,7 @@ class XiboTicker extends XiboWidget
         $this->useDuration = $useDuration;
         $this->dataSetId = $dataSetId;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating Ticker widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/ticker/' . $playlistId , $this->toArray());
 
@@ -202,9 +204,10 @@ class XiboTicker extends XiboWidget
      * @param string $javaScript Optional CSS
      * @param int $randomiseItems Flag whether to randomise the feed
      * @param int $widgetId The Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboTicker
      */
-    public function editFeed($name, $duration, $useDuration, $updateInterval, $effect, $speed, $copyright = '', $numItems, $takeItemsFrom, $durationIsPerItem, $itemsSideBySide, $itemsPerPage, $dateFormat, $allowedAttributes, $stripTags, $backgroundColor, $disableDateSort, $textDirection, $noDataMessage, $templateId, $overrideTemplate, $template, $css = '', $javaScript = '', $randomiseItems, $widgetId)
+    public function editFeed($name, $duration, $useDuration, $updateInterval, $effect, $speed, $copyright = '', $numItems, $takeItemsFrom, $durationIsPerItem, $itemsSideBySide, $itemsPerPage, $dateFormat, $allowedAttributes, $stripTags, $backgroundColor, $disableDateSort, $textDirection, $noDataMessage, $templateId, $overrideTemplate, $template, $css = '', $javaScript = '', $randomiseItems, $widgetId, $enableStat = '')
     {
         $this->name = $name;
         $this->duration = $duration;
@@ -231,6 +234,7 @@ class XiboTicker extends XiboWidget
         $this->css = $css;
         $this->javaScript = $javaScript;
         $this->randomiseItems = $randomiseItems;
+        $this->enableStat = $enableStat;
 
         $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
@@ -263,11 +267,12 @@ class XiboTicker extends XiboWidget
      * @param int $useOrderingClause Use advanced order clause - set to 1 if ordering is provided
      * @param int $useFilteringClause Use advanced filter clause - set to 1 if filter is provided
      * @param int $widgetId The Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      *
      * @return XiboTicker
      */
 
-    public function editDataSet($name, $duration, $useDuration, $updateInterval, $effect, $speed, $durationIsPerItem, $itemsSideBySide, $itemsPerPage, $upperLimit, $lowerLimit, $dateFormat, $backgroundColor, $noDataMessage, $template, $css = '', $filter, $ordering, $useOrderingClause, $useFilteringClause, $widgetId)
+    public function editDataSet($name, $duration, $useDuration, $updateInterval, $effect, $speed, $durationIsPerItem, $itemsSideBySide, $itemsPerPage, $upperLimit, $lowerLimit, $dateFormat, $backgroundColor, $noDataMessage, $template, $css = '', $filter, $ordering, $useOrderingClause, $useFilteringClause, $widgetId, $enableStat = '')
     {
         $this->name = $name;
         $this->duration = $duration;

@@ -83,9 +83,10 @@ class XiboShellCommand extends XiboWidget
      * @param int $useTaskkill Flag Windows only, should the player use taskkill to terminate commands
      * @param string $commandCode Enter a reference code for exiting command in CMS
      * @param int $playlistId Playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboShellCommand
      */
-    public function create($name, $duration, $useDuration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $playlistId)
+    public function create($name, $duration, $useDuration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -98,6 +99,7 @@ class XiboShellCommand extends XiboWidget
         $this->useTaskkill = $useTaskkill;
         $this->commandCode = $commandCode;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating new Schell Command widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/shellCommand/' . $playlistId , $this->toArray());
 
@@ -117,9 +119,10 @@ class XiboShellCommand extends XiboWidget
      * @param int $useTaskkill Flag Windows only, should the player use taskkill to terminate commands
      * @param string $commandCode Enter a reference code for exiting command in CMS
      * @param int $widgetId the Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboShellCommand
      */
-    public function edit($name, $duration, $useDuration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $widgetId)
+    public function edit($name, $duration, $useDuration, $windowsCommand, $linuxCommand, $launchThroughCmd, $terminateCommand, $useTaskkill, $commandCode, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -132,6 +135,7 @@ class XiboShellCommand extends XiboWidget
         $this->useTaskkill = $useTaskkill;
         $this->commandCode = $commandCode;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing a widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

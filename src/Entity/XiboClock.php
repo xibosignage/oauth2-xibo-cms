@@ -43,35 +43,14 @@ class XiboClock extends XiboWidget
     /** @var int The widget duration*/
     public $duration;
 
-    /** @var int The widget displayOrder */
-    public $displayOrder;
-
     /** @var int flag (0, 1) set to 1 if the duration parameter is passed as well */
     public $useDuration;
 
-    /** @var array An array of widget Options */
-    public $widgetOptions;
+    /** @var int The widget displayOrder */
+    public $displayOrder;
 
     /** @var string The widget name */
     public $name;
-
-    /** @var int The clock theme ID */
-    public $themeId;
-
-    /** @var int The clock Type ID */
-    public $clockTypeId;
-
-    /** @var string he offset in minutes that should be applied to the current time, if a counter is selected then date/time to run from in format Y-m-d H:i:s */
-    public $offset;
-
-    /** @var string For digital clock, format in which the time should be displayed */
-    public $format;
-
-    /** @var string For Flip Clock, should the clock show seconds or not */
-    public $showSeconds;
-
-    /** @var string For Flip Clock, supported options are: TwelveHourClock, TwentyFourHourClock, DailyCounter, HourlyCounter, MinuteCounter */
-    public $clockFace;
 
     /**
      * Create a new Clock Widget.
@@ -86,9 +65,10 @@ class XiboClock extends XiboWidget
      * @param int $showSeconds For Flip Clock, should the clock show seconds or not
      * @param string $clockFace For Flip Clock, supported options are: TwelveHourClock, TwentyFourHourClock, DailyCounter, HourlyCounter, MinuteCounter
      * @param int $playlistId Playlist ID to which the clock widget should be added
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboClock
      */
-    public function create($name, $duration, $useDuration, $themeId, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $playlistId)
+    public function create($name, $duration, $useDuration, $themeId, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -101,6 +81,7 @@ class XiboClock extends XiboWidget
         $this->showSeconds = $showSeconds;
         $this->clockFace = $clockFace;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating Clock widget and assigning it to playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/clock/' . $playlistId, $this->toArray());
 
@@ -120,9 +101,10 @@ class XiboClock extends XiboWidget
      * @param int $showSeconds For Flip Clock, should the clock show seconds or not
      * @param string $clockFace For Flip Clock, supported options are: TwelveHourClock, TwentyFourHourClock, DailyCounter, HourlyCounter, MinuteCounter
      * @param int $widgetId Widget Id to Edit
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboClock
      */
-    public function edit($name, $duration, $useDuration, $themeId, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $widgetId)
+    public function edit($name, $duration, $useDuration, $themeId, $clockTypeId, $offset, $format, $showSeconds, $clockFace, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -135,6 +117,7 @@ class XiboClock extends XiboWidget
         $this->showSeconds = $showSeconds;
         $this->clockFace = $clockFace;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

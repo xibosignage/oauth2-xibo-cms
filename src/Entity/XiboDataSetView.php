@@ -105,13 +105,15 @@ class XiboDataSetView extends XiboWidget
      *
      * @param int $dataSetId The dataSet ID to use as a source for dataSetView widget
      * @param int $playlistId The playlist ID to which this dataSetView widget should be added
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboDataSetView
      */
-    public function create($dataSetId, $playlistId)
+    public function create($dataSetId, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->dataSetId = $dataSetId;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating DataSet View widget and assigning it to playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/dataSetView/' . $playlistId , $this->toArray());
 
@@ -138,9 +140,10 @@ class XiboDataSetView extends XiboWidget
      * @param int $useFilteringClause Flag whether to use advanced filer, set to 1 ifd filter is provided
      * @param string $noDataMessage A message to display when there is no data returned from the source
      * @param int $widgetId The Widget ID to edit
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboDataSetView
      */
-    public function edit($name, $duration, $useDuration, $dataSetColumnId = [], $updateInterval, $rowsPerPage, $showHeadings, $upperLimit = 0, $lowerLimit = 0, $filter = null, $ordering = null, $templateId = 'empty', $overrideTemplate = 0, $useOrderingClause = 0, $useFilteringClause = 0, $noDataMessage = '', $widgetId)
+    public function edit($name, $duration, $useDuration, $dataSetColumnId = [], $updateInterval, $rowsPerPage, $showHeadings, $upperLimit = 0, $lowerLimit = 0, $filter = null, $ordering = null, $templateId = 'empty', $overrideTemplate = 0, $useOrderingClause = 0, $useFilteringClause = 0, $noDataMessage = '', $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -160,6 +163,7 @@ class XiboDataSetView extends XiboWidget
         $this->useFilteringClause = $useFilteringClause;
         $this->noDataMessage = $noDataMessage;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId, $this->toArray());
 

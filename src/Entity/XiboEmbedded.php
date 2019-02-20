@@ -79,9 +79,10 @@ class XiboEmbedded extends XiboWidget
      * @param string $embedScript HEAD content to embed, including script tags
      * @param string $embedStyle Custom Style Sheets (CSS)
      * @param int $playlistId The playlist ID to which this widget should be assigned
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboEmbedded
      */
-    public function create($name, $duration, $useDuration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $playlistId)
+    public function create($name, $duration, $useDuration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -93,6 +94,7 @@ class XiboEmbedded extends XiboWidget
         $this->embedScript = $embedScript;
         $this->embedStyle = $embedStyle;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating Embed HTML widget' . $name . ' in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/embedded/' . $playlistId , $this->toArray());
 
@@ -111,9 +113,10 @@ class XiboEmbedded extends XiboWidget
      * @param string $embedScript HEAD content to embed, including script tags
      * @param string $embedStyle Custom Style Sheets (CSS)
      * @param int $widgetId The Widget ID to edit
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboEmbedded
      */
-    public function edit($name, $duration, $useDuration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $widgetId)
+    public function edit($name, $duration, $useDuration, $transparency, $scaleContent, $embedHtml, $embedScript, $embedStyle, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -125,6 +128,7 @@ class XiboEmbedded extends XiboWidget
         $this->embedScript = $embedScript;
         $this->embedStyle = $embedStyle;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing Embed HTML widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

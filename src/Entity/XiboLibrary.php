@@ -68,6 +68,9 @@ class XiboLibrary extends XiboEntity
     /** @var string media file name */
     public $fileName;
 
+    /** @var string The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit */
+    public $enableStat;
+
     /** @var string Media tags */
     public $tags;
 
@@ -206,23 +209,25 @@ class XiboLibrary extends XiboEntity
         return $this->create($this->name, $fileLocation, $this->mediaId, $this->updateInLayouts, $this->deleteOldRevisions);
     }
 
-	/**
-	 * Edit existing media file.
+    /**
+     * Edit existing media file.
      *
-	 * @param string $name optional media name
-	 * @param int $duration Media duration
-	 * @param int $retired Flag indicating if this media is retired
-	 * @param string $tags Comma separated list of Tags
-	 * @param int $updateInLayouts Flag indicating whether to update the duration in all Layouts the Media is assigned to
-	 * @return XiboLibrary
-	 */
-	public function edit($name, $duration, $retired, $tags, $updateInLayouts)
+     * @param string $name optional media name
+     * @param int $duration Media duration
+     * @param int $retired Flag indicating if this media is retired
+     * @param string $tags Comma separated list of Tags
+     * @param int $updateInLayouts Flag indicating whether to update the duration in all Layouts the Media is assigned to
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
+     * @return XiboLibrary
+     */
+	public function edit($name, $duration, $retired, $tags, $updateInLayouts, $enableStat = 'Off')
 	{
 		$this->name = $name;
 		$this->duration = $duration;
 		$this->retired = $retired;
 		$this->tags = $tags;
 		$this->updateInLayouts = $updateInLayouts;
+		$this->enableStat = $enableStat;
 		$this->getLogger()->info('Editing Media ID ' . $this->mediaId);
 		$response = $this->doPut('/library/' . $this->mediaId, $this->toArray());
 		

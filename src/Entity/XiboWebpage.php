@@ -92,9 +92,10 @@ class XiboWebpage extends XiboWidget
      * @param int $pageHeight For Manual Position and Best Fit, The height of the page - if empty it will use region height
      * @param int $modeId The mode option for Web page, 1- Open Natively, 2- Manual Position, 3- Best Ft
      * @param int $playlistId The Playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboWebpage
      */
-    public function create($name, $duration, $useDuration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $playlistId)
+    public function create($name, $duration, $useDuration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $playlistId, $enableStat ='')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -130,9 +131,10 @@ class XiboWebpage extends XiboWidget
      * @param int $pageHeight For Manual Position and Best Fit, The height of the page - if empty it will use region height
      * @param int $modeId The mode option for Web page, 1- Open Natively, 2- Manual Position, 3- Best Ft
      * @param int $widgetId The Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboWebpage
      */
-    public function edit($name, $duration, $useDuration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $widgetId)
+    public function edit($name, $duration, $useDuration, $transparency, $uri, $scaling, $offsetLeft, $offsetTop, $pageWidth, $pageHeight, $modeId, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -147,6 +149,7 @@ class XiboWebpage extends XiboWidget
         $this->pageHeight = $pageHeight;
         $this->modeId = $modeId;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

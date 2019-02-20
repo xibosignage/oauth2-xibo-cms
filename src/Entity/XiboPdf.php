@@ -59,15 +59,17 @@ class XiboPdf extends XiboWidget
      * @param int $duration Widget duration
      * @param int $useDuration Flag indicating whether to use custom duration
      * @param int $widgetId Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboPdf
      */
-    public function edit($name, $duration, $useDuration, $widgetId)
+    public function edit($name, $duration, $useDuration, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
         $this->duration = $duration;
         $this->useDuration = $useDuration;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing PDF widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

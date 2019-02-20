@@ -75,9 +75,10 @@ class XiboGoogleTraffic extends XiboWidget
      * @param double $latitude he latitude for this Google Traffic widget, only pass if useDisplayLocation set to 0
      * @param int $zoom How far should the map be zoomed in? The higher the value the closer the zoom, 1 represents the entire globe
      * @param int $playlistId Playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboGoogleTraffic
      */
-    public function create($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $zoom, $playlistId)
+    public function create($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $zoom, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -88,6 +89,7 @@ class XiboGoogleTraffic extends XiboWidget
         $this->latitude = $latitude;
         $this->zoom = $zoom;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating Google Traffic widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/googleTraffic/' . $playlistId , $this->toArray());
 
@@ -104,9 +106,10 @@ class XiboGoogleTraffic extends XiboWidget
      * @param double $latitude he latitude for this Google Traffic widget, only pass if useDisplayLocation set to 0
      * @param int $zoom How far should the map be zoomed in? The higher the value the closer the zoom, 1 represents the entire globe
      * @param int $widgetId Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboGoogleTraffic
      */
-    public function edit($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $zoom, $widgetId)
+    public function edit($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $zoom, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -117,6 +120,7 @@ class XiboGoogleTraffic extends XiboWidget
         $this->latitude = $latitude;
         $this->zoom = $zoom;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing Google Traffic widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
