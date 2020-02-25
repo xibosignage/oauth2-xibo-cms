@@ -37,23 +37,17 @@ class XiboAudio extends XiboWidget
     /** @var int user ID of the owner */
     public $ownerId;
 
+    /** @var string The Widget Type */
+    public $type;
+
+    /** @var string Name for this widget */
+    public $name;
+
     /** @var int The Widget Duration */
     public $duration;
 
     /** @var int Flag, set to 1 if the custom duration is passed */
     public $useDuration;
-
-    /** @var array An array of widget Options */
-    public $widgetOptions;
-
-    /** @var string Name for this widget */
-    public $name;
-
-    /** @var int Flag should this audio widget be muted? */
-    public $mute;
-
-    /** @var int Flag should this widget loop? */
-    public $loop;
 
     /**
      * Edit Audio Widget.
@@ -64,15 +58,17 @@ class XiboAudio extends XiboWidget
      * @param int $mute Flag (0, 1) Set the widget to mute
      * @param int $loop Flag (0, 1) Set the widget to loop
      * @param int $widgetId Id of the widget to edit
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboAudio
      */
-    public function edit($name, $useDuration, $duration, $mute, $loop, $widgetId)
+    public function edit($name, $useDuration, $duration, $mute, $loop, $widgetId, $enableStat = '')
     {
         $this->name = $name;
         $this->useDuration = $useDuration;
         $this->duration = $duration;
         $this->mute = $mute;
         $this->loop = $loop;
+        $this->enableStat = $enableStat;
         $this->widgetId = $widgetId;
 
         $this->getLogger()->info('Editing widget ID ' . $widgetId);

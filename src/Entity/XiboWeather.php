@@ -91,9 +91,10 @@ class XiboWeather extends XiboWidget
      * @param string $lang Language you’d like to use, supported languages ar, az, be, bs, cs, de, en, el, es, fr, hr, hu, id, it, is, kw, nb, nl, pl, pt, ru, sk, sr, sv, tet, tr, uk, x-pig-latin, zh, zh-tw
      * @param int $dayConditionsOnly Flag (0, 1) Would you like to only show the Daytime weather conditions
      * @param int $playlistId Playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboWeather
      */
-    public function create($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $templateId, $units, $updateInterval, $lang, $dayConditionsOnly, $playlistId)
+    public function create($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $templateId, $units, $updateInterval, $lang, $dayConditionsOnly, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -108,6 +109,7 @@ class XiboWeather extends XiboWidget
         $this->lang = $lang;
         $this->dayConditionsOnly = $dayConditionsOnly;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
 
         $this->getLogger()->info('Creating Weather widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/forecastIo/' . $playlistId , $this->toArray());
@@ -116,7 +118,8 @@ class XiboWeather extends XiboWidget
     }
 
     /**
-     * Edit Weather widget
+     * Edit Weather widget.
+     *
      * @param string $name Optional widget name
      * @param int $duration Widget Duration
      * @param int $useDuration Flag indicating whether to use custom duration
@@ -129,9 +132,10 @@ class XiboWeather extends XiboWidget
      * @param string $lang Language you’d like to use, supported languages ar, az, be, bs, cs, de, en, el, es, fr, hr, hu, id, it, is, kw, nb, nl, pl, pt, ru, sk, sr, sv, tet, tr, uk, x-pig-latin, zh, zh-tw
      * @param int $dayConditionsOnly Flag (0, 1) Would you like to only show the Daytime weather conditions
      * @param int $widgetId Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboWeather
      */
-    public function edit($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $templateId, $units, $updateInterval, $lang, $dayConditionsOnly, $widgetId)
+    public function edit($name, $duration, $useDuration, $useDisplayLocation, $longitude, $latitude, $templateId, $units, $updateInterval, $lang, $dayConditionsOnly, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -146,6 +150,7 @@ class XiboWeather extends XiboWidget
         $this->lang = $lang;
         $this->dayConditionsOnly = $dayConditionsOnly;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing Weather widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

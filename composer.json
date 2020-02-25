@@ -18,13 +18,13 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Spring Signage Ltd",
-      "homepage": "https://springsignage.com"
+      "name": "Xibo Signage Ltd",
+      "homepage": "https://xibo.org.uk"
     }
   ],
   "require": {
     "php": ">=5.6.0",
-    "league/oauth2-client": "2.2.*",
+    "league/oauth2-client": "^2.4",
     "psr/log": "1.1.*"
   },
   "require-dev": {

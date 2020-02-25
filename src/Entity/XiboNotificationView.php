@@ -83,9 +83,10 @@ class XiboNotificationView extends XiboWidget
      * @param int $durationIsPerItem Flag The duration specified is per page/item, otherwise the widget duration is divided between the number of pages/items
      * @param string $embedStyle Custom Style Sheets (CSS)
      * @param int $playlistId Playlist ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboNotificationView
      */
-    public function create($name, $duration, $useDuration, $age, $noDataMessage, $effect, $speed, $durationIsPerItem, $embedStyle = null, $playlistId)
+    public function create($name, $duration, $useDuration, $age, $noDataMessage, $effect, $speed, $durationIsPerItem, $embedStyle = null, $playlistId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -98,6 +99,7 @@ class XiboNotificationView extends XiboWidget
         $this->durationIsPerItem = $durationIsPerItem;
         $this->embedStyle = $embedStyle;
         $this->playlistId = $playlistId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Creating Notification widget in playlist ID ' . $playlistId);
         $response = $this->doPost('/playlist/widget/notificationview/' . $playlistId, $this->toArray());
 
@@ -117,9 +119,10 @@ class XiboNotificationView extends XiboWidget
      * @param int $durationIsPerItem Flag The duration specified is per page/item, otherwise the widget duration is divided between the number of pages/items
      * @param string $embedStyle Custom Style Sheets (CSS)
      * @param int $widgetId Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboNotificationView
      */
-    public function edit($name, $duration, $useDuration, $age, $noDataMessage, $effect, $speed, $durationIsPerItem, $embedStyle = null, $widgetId)
+    public function edit($name, $duration, $useDuration, $age, $noDataMessage, $effect, $speed, $durationIsPerItem, $embedStyle = null, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -132,6 +135,7 @@ class XiboNotificationView extends XiboWidget
         $this->durationIsPerItem = $durationIsPerItem;
         $this->embedStyle = $embedStyle;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 

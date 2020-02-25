@@ -97,6 +97,9 @@ class XiboLayout extends XiboEntity
     /** @var string Layout status message */
     public $statusMessage;
 
+    /** @var int Flag indicating whether the Layout stat is enabled */
+    public $enableStat;
+
     /** @var array|XiboRegion An Array of Layout regions */
     public $regions;
 
@@ -225,10 +228,10 @@ class XiboLayout extends XiboEntity
      * @param string $description Optional description of the layout
      * @param int $layoutId If layout should be created from the template, provide the layoutId of the template
      * @param int $resolutionId If template is not provided, provide resolutionId
+     * @param int $enableStat Flag indicating whether the Layout stat is enabled
      * @return XiboLayout
-     * @throws InvalidArgumentException
      */
-    public function create($name, $description, $layoutId, $resolutionId)
+    public function create($name, $description, $layoutId, $resolutionId, $enableStat = null)
     {
         $this->getLogger()->debug('Getting Resource Owner');
         $this->userId = $this->getEntityProvider()->getMe()->getId();
@@ -236,6 +239,7 @@ class XiboLayout extends XiboEntity
         $this->description = $description;
         $this->layoutId = $layoutId;
         $this->resolutionId = $resolutionId;
+        $this->enableStat = $enableStat;
 
         $this->getLogger()->info('Creating Layout ' . $this->layout);
         $response = $this->doPost('/layout', $this->toArray());
@@ -256,9 +260,10 @@ class XiboLayout extends XiboEntity
      * @param int $backgroundImageId Media ID to use as a layout background
      * @param int $backgroundzIndex The layer number to use for the background
      * @param int $resolutionId new Resolution to use for this layout
+     * @param int $enableStat Flag indicating whether the Layout stat is enabled
      * @return XiboLayout
      */
-    public function edit($name, $description, $tags, $retired, $backgroundColor,$backgroundImageId, $backgroundzIndex, $resolutionId)
+    public function edit($name, $description, $tags, $retired, $backgroundColor, $backgroundImageId, $backgroundzIndex, $resolutionId, $enableStat = null)
     {
         $this->name = $name;
         $this->description = $description;
@@ -268,6 +273,7 @@ class XiboLayout extends XiboEntity
         $this->backgroundImageId = $backgroundImageId;
         $this->backgroundzIndex = $backgroundzIndex;
         $this->resolutionId = $resolutionId;
+        $this->enableStat = $enableStat;
 
         $this->getLogger()->info('Editing Layout ID ' . $this->layoutId);
         $response = $this->doPut('/layout/' . $this->layoutId, $this->toArray());

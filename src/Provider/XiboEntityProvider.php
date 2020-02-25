@@ -1,8 +1,8 @@
 <?php
-/*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
- * (XiboEntity.php)
+/**
+ * Copyright (C) 2020 Xibo Signage Ltd
+ *
+ * Xibo - Digital Signage - http://www.xibo.org.uk
  */
 
 
@@ -144,9 +144,9 @@ class XiboEntityProvider
     private function request($method, $url, $params = [])
     {
         $this->getLogger()->debug('Creating a new request with received parameters');
-        $options = [
-            'headers' => null, 'body' => null
-        ];
+
+        $options = [];
+
         // Multipart
         if (array_key_exists('multipart', $params)) {
             // Build the multipart message

@@ -40,26 +40,17 @@ class XiboImage extends XiboWidget
     /** @var string The Widget Type */
     public $type;
 
+    /** @var string optional widget name */
+    public $name;
+
     /** @var int The Widget Duration */
     public $duration;
-
-    /** @var int The Display Order of the Widget */
-    public $displayOrder;
 
     /** @var int Flag indicating whether to use custom duration */
     public $useDuration;
 
-    /** @var string optional widget name */
-    public $name;
-
-    /** @var string Select scale type available options: center, stretch */
-    public $scaleTypeId;
-
-    /** @var string Horizontal alignment - left, center, bottom */
-    public $alignId;
-
-    /** @var string Vertical alignment - top, middle, bottom */
-    public $valignId;
+    /** @var int The Display Order of the Widget */
+    public $displayOrder;
 
     /**
      * Edit the Image Widget.
@@ -71,9 +62,10 @@ class XiboImage extends XiboWidget
      * @param string $alignId Horizontal alignment - left, center, bottom
      * @param string $valignId Vertical alignment - top, middle, bottom
      * @param int $widgetId The Widget ID
+     * @param string $enableStat The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit
      * @return XiboImage
      */
-    public function edit($name, $duration, $useDuration, $scaleTypeId, $alignId, $valignId, $widgetId)
+    public function edit($name, $duration, $useDuration, $scaleTypeId, $alignId, $valignId, $widgetId, $enableStat = '')
     {
         $this->userId = $this->getEntityProvider()->getMe()->getId();
         $this->name = $name;
@@ -83,6 +75,7 @@ class XiboImage extends XiboWidget
         $this->alignId = $alignId;
         $this->valignId = $valignId;
         $this->widgetId = $widgetId;
+        $this->enableStat = $enableStat;
         $this->getLogger()->info('Editing Image widget ID ' . $widgetId);
         $response = $this->doPut('/playlist/widget/' . $widgetId , $this->toArray());
 
