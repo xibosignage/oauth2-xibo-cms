@@ -38,7 +38,7 @@ class XiboReportSchedule extends XiboEntity
     /** @var string The schedule report name */
     public $reportName;
 
-    /** @var string The last saved report Id of a report schedule */
+    /** @var int The last saved report Id of a report schedule */
     public $lastSavedReportId;
 
     /**
@@ -55,7 +55,7 @@ class XiboReportSchedule extends XiboEntity
      * @return XiboReportSchedule
      */
     public function create($name, $reportName, $filter,
-       $groupByFilter = null, $sendEmail = null, $displayId = null, $hiddenFields = null)
+                           $groupByFilter = null, $sendEmail = null, $displayId = null, $hiddenFields = null)
     {
         $this->getLogger()->debug('Getting Resource Owner');
         $this->userId = $this->getEntityProvider()->getMe()->getId();
@@ -83,8 +83,8 @@ class XiboReportSchedule extends XiboEntity
     public function delete()
     {
         $this->getLogger()->info('Deleting Report Schedule ID ' . $this->reportScheduleId);
-        $this->doDelete($this->url . $this->reportScheduleId);
-        
+        $this->doDelete($this->url . '/' . $this->reportScheduleId);
+
         return true;
     }
 
