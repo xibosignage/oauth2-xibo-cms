@@ -9,9 +9,9 @@
 namespace Xibo\OAuth2\Client\Provider;
 use GuzzleHttp\Psr7\MultipartStream;
 use League\OAuth2\Client\Token\AccessToken;
-use Xibo\OAuth2\Client\Exception\EmptyProviderException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Xibo\OAuth2\Client\Exception\EmptyProviderException;
 
 class XiboEntityProvider
 {
@@ -145,7 +145,7 @@ class XiboEntityProvider
     {
         $this->getLogger()->debug('Creating a new request with received parameters');
         $options = [
-            'headers' => null, 'body' => null
+            'headers' => [], 'body' => null
         ];
         // Multipart
         if (array_key_exists('multipart', $params)) {
