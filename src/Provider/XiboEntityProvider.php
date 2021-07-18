@@ -67,6 +67,17 @@ class XiboEntityProvider
     {
         return $this->logger;
     }
+
+    /**
+     * Set the access token
+     *  for example, if the access token has been stored in a data store, we should not have to get a new one
+     * @param $accessToken
+     * @return $this
+     */
+    public function setAccessToken($accessToken) {
+        $this->token = $accessToken;
+        return $this;
+    }
     
     /**
      * Get Access Token
@@ -75,17 +86,18 @@ class XiboEntityProvider
      */
     private function getAccessToken()
     {
-        if ($this->provider === null)
+        if ($this->provider === null) {
             throw new EmptyProviderException();
+        }
+
         $this->getLogger()->debug('Checking Access token and requesting a new one if necessary');
+
         if ($this->token == null || $this->token->hasExpired() || $this->token->getExpires() <= time() + 10) {
             // Get and store a new token
-        $this->getLogger()->info('Getting a new Access Token');
+            $this->getLogger()->info('Getting a new Access Token');
             $this->token = $this->provider->getAccessToken('client_credentials');
         }
-        else {
-            $this->token = $this->token;
-        }
+
         return $this->token;
     }
     
