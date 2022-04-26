@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Xibo Signage Ltd
+ * Copyright (C) 2022 Xibo Signage Ltd
  *
  * Xibo - Digital Signage - http://www.xibo.org.uk
  *
@@ -75,6 +75,8 @@ class XiboLibrary extends XiboEntity
     public $enableStat;
     /** @var string The orientation of the Media file */
     public $orientation;
+    /** @var int The id of the Folder this Media belongs to */
+    public $folderId;
     /** @var int Id of an existing media file which should be replaced with the new upload */
     public $oldMediaId;
 
