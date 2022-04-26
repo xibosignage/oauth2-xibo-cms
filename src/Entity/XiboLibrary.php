@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Xibo Signage Ltd
+ * Copyright (C) 2022 Xibo Signage Ltd
  *
  * Xibo - Digital Signage - http://www.xibo.org.uk
  *
@@ -31,13 +31,52 @@ class XiboLibrary extends XiboEntity
 
     /** @var int Media ID */
 	public $mediaId;
-
+    /** @var int Owner ID */
+    public $ownerId;
+    /** @var int The Parent ID of this Media if it has been revised */
+    public $parentId;
     /** @var string Media name */
-	public $media;
-
+    public $name;
     /** @var string Media type */
 	public $mediaType;
-
+    /** @var string Media stored as */
+    public $storedAs;
+    /** @var string media file name */
+    public $fileName;
+    /** @var string A number or less-than,greater-than,less-than-equal or great-than-equal followed by a | followed by a number */
+    public $fileSize;
+    /** @var string Media tags */
+    public $tags;
+    /** @var int media Duration */
+    public $duration;
+    /** @var int Flag indicating whether this media is valid*/
+    public $valid;
+    /** @var int Flag indicating whether this media is a system file or not */
+    public $moduleSystemFile;
+    /** @var int Timestamp indicating when this media should expire */
+    public $expires;
+    /** @var int Flag indicating if this media is retired */
+    public $retired;
+    /** @var int Flag indicating whether this media has been edited and replaced with a newer file */
+    public $isEdited;
+    /** @var string A MD5 checksum of the stored media file" */
+    public $md5;
+    /** @var string The username of the User that owns this media */
+    public $owner;
+    /** @var string A comma separated list of groups/users with permissions to this Media */
+    public $groupsWithPermissions;
+    /** @var int A flag indicating whether this media has been released */
+    public $released;
+    /** @var string Date showing when media was created */
+    public $createdDt;
+    /** @var string Date showing when media was modified */
+    public $modifiedDt;
+    /** @var string The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit */
+    public $enableStat;
+    /** @var string The orientation of the Media file */
+    public $orientation;
+    /** @var int The id of the Folder this Media belongs to */
+    public $folderId;
     /** @var int Id of an existing media file which should be replaced with the new upload */
     public $oldMediaId;
 
@@ -47,44 +86,11 @@ class XiboLibrary extends XiboEntity
     /** @var int Flag, set to 1 to update this media in all layouts (use with oldMediaId) */
     public $updateInLayouts;
 
-    /** @var int media Duration */
-	public $duration;
-
-    /** @var string A number or less-than,greater-than,less-than-equal or great-than-equal followed by a | followed by a number */
-	public $fileSize;
-
-    /** @var string Media name */
-	public $name;
-
-    /** @var int Owner ID */
-	public $ownerId;
-
-    /** @var int Flag indicating if this media is retired */
-    public $retired;
-
-    /** @var string Media stored as */
-	public $storedAs;
-
-    /** @var string media file name */
-    public $fileName;
-
-    /** @var string The settings to enable the collection of Proof of Play statistics, available options: ON, Off, Inherit */
-    public $enableStat;
-
-    /** @var string Media tags */
-    public $tags;
-
     /** @var int flag indicating whether to treat the tags filter as an exact match */
     public $exactTags;
 
     /** @var int User Group ID */
     public $ownerUserGroupId;
-
-    /** @var string Date showing when media was created */
-    public $createdDt;
-
-    /** @var string Date showing when media was modified */
-    public $modifiedDt;
 
 	/**
      * Get an array of media.

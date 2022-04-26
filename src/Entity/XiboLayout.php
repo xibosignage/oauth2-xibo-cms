@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Xibo Signage Ltd
+ * Copyright (C) 2022 Xibo Signage Ltd
  *
  * Xibo - Digital Signage - http://www.xibo.org.uk
  *
@@ -49,6 +49,9 @@ class XiboLayout extends XiboEntity
     /** @var string Publish Status Message*/
     public $publishedStatus;
 
+    /** @var string The Date Layout should be published on */
+    public $publishedDate;
+
     /** @var int A media ID to use as the background image for this Layout. */
     public $backgroundImageId;
 
@@ -88,6 +91,9 @@ class XiboLayout extends XiboEntity
     /** @var int Layout height */
     public $height;
 
+    /** @var string The Layout Orientation */
+    public $orientation;
+
     /** @var int Layout display Order */
     public $displayOrder;
 
@@ -100,8 +106,17 @@ class XiboLayout extends XiboEntity
     /** @var int Flag indicating whether the Layout stat is enabled */
     public $enableStat;
 
+    /** @var int Flag indicating whether the default transitions should be applied to this Layout */
+    public $autoApplyTransitions;
+
+    /** @var string Code identifier for this Layout */
+    public $code;
+
     /** @var array|XiboRegion An Array of Layout regions */
     public $regions;
+
+    public $drawers;
+    public $actions;
 
     /** @var array Array of Layout tags */
     public $tags;
@@ -111,6 +126,9 @@ class XiboLayout extends XiboEntity
 
     /** @var array Array of permissions to the layout */
     public $permissions;
+    public $campaigns;
+    /** @var int The id of the Folder this Layout belongs to */
+    public $folderId;
 
     /** @var int flag indicating whether to treat the tags filter as an exact match */
     public $exactTags;
@@ -589,7 +607,7 @@ class XiboLayout extends XiboEntity
     public function publish($layoutId)
     {
         $this->getLogger()->info('Publishing layout ID ' . $layoutId);
-        $response = $this->doPut('/layout/publish/' . $layoutId);
+        $response = $this->doPut('/layout/publish/' . $layoutId, ['publishNow' => 1]);
 
         $layout = $this->constructLayoutFromResponse($response);
 
