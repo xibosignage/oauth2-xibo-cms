@@ -97,7 +97,7 @@ class XiboEntityProvider
     public function get($url, $params = [])
     {
         $this->logger->debug('Passing GET params to request');
-        return $this->request('GET', $url . '?' . http_build_query($params));
+        return $this->delayedRetryRequest('GET', $url, $params);
     }
     
     /**
@@ -108,7 +108,7 @@ class XiboEntityProvider
     public function post($url, $params = [])
     {
         $this->logger->debug('Passing POST params to request');
-        return $this->request('POST', $url, $params);
+        return $this->delayedRetryRequest('POST', $url, $params);
     }
     
     /**
@@ -119,7 +119,7 @@ class XiboEntityProvider
     public function put($url, $params = [])
     {
         $this->logger->debug('Passing PUT params to request');
-        return $this->request('PUT', $url, $params);
+        return $this->delayedRetryRequest('PUT', $url, $params);
     }
     
     /**
@@ -130,7 +130,7 @@ class XiboEntityProvider
     public function delete($url, $params = [])
     {
         $this->logger->debug('Passing Delete params to request');
-        return $this->request('DELETE', $url, $params);
+        return $this->delayedRetryRequest('DELETE', $url, $params);
     }
     
     /**
@@ -143,10 +143,18 @@ class XiboEntityProvider
      */
     private function request($method, $url, $params = [])
     {
+        //Capture Statistics on Xibo API Calls
+        $this->getLogger()->info('request-statistics', array('method' => $method, 'url' => $url, 'params' => http_build_query($params)));
+
         $this->getLogger()->debug('Creating a new request with received parameters');
         $options = [
             'headers' => null, 'body' => null
         ];
+
+        if($method == 'GET'){
+            $url = $url . '?' . http_build_query($params);
+        }
+
         // Multipart
         if (array_key_exists('multipart', $params)) {
             // Build the multipart message
@@ -165,5 +173,56 @@ class XiboEntityProvider
         $request = $this->provider->getAuthenticatedRequest($method, $this->provider->getCmsApiUrl() . rtrim($url, '/'), $this->getAccessToken(), $options);
         $this->logger->debug('Getting parsed response from Abstract Provider');
         return $this->provider->getParsedResponse($request);
+    }
+
+    /**
+     * delayedRetryRequest
+     * @param $method
+     * @param $url
+     * @param array $params
+     * @return mixed
+     * @throws EmptyProviderException
+     */
+    private function delayedRetryRequest($method, $url, $params = [])
+    {
+		// Set delayed retry time in seconds
+		$delayedRetryTime = defined($GLOBALS['delayedRetryTime']) ? $GLOBALS['delayedRetryTime']: 20;
+			
+        $res = null;
+        try {
+            $res = $this->request($method, $url, $params);
+        }catch(\Xibo\OAuth2\Client\Exception\XiboApiException | \Exception $ex) {
+            //TODO:  Check response for 500 error or rate limited error
+            $this->logger->error($ex->getMessage());
+
+            $retryCount = 0;
+            do {
+                sleep($delayedRetryTime);
+
+                try {
+
+                    $this->logger->info("Waited ".$delayedRetryTime." seconds, retry #$retryCount of Xibo call");
+                    $res = $this->request($method, $url, $params);
+
+                    //Break delayed retry loop request successful
+                    if(isset($res)){
+                        $this->logger->info("Delayed retry successful!");
+                        break;
+                    }
+                } catch (\Xibo\OAuth2\Client\Exception\XiboApiException | \Exception $ex1) {
+                    //TODO:  Check response for 500 error or rate limited error
+                    $this->logger->error($ex1->getMessage());
+                }
+            } while (++$retryCount < 2);
+
+
+            //Re-throw exception delayed retry failed
+            if (!isset($res)) {
+                $this->logger->error("Delayed retry failed!");
+                throw $ex;
+            }
+        }
+
+        return $res;
     }
 }
