@@ -9,9 +9,9 @@
 namespace Xibo\OAuth2\Client\Provider;
 use GuzzleHttp\Psr7\MultipartStream;
 use League\OAuth2\Client\Token\AccessToken;
-use Xibo\OAuth2\Client\Exception\EmptyProviderException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Xibo\OAuth2\Client\Exception\EmptyProviderException;
 
 class XiboEntityProvider
 {
@@ -83,10 +83,18 @@ class XiboEntityProvider
         $this->getLogger()->info('Getting a new Access Token');
             $this->token = $this->provider->getAccessToken('client_credentials');
         }
-        else {
-            $this->token = $this->token;
-        }
         return $this->token;
+    }
+
+    /**
+     * Set a new access token to use
+     * @param $token
+     * @return $this
+     */
+    public function setAccessToken($token)
+    {
+        $this->token = $token;
+        return $this;
     }
     
     /**
